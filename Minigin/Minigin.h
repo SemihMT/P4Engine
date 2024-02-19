@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
 #include <functional>
-
+#include <thread>
+#include <chrono>
 namespace dae
 {
 	class Minigin

@@ -32,19 +32,19 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 
 	SDL_TTF_VERSION(&version)
-	printf("We compiled against SDL_ttf version %u.%u.%u ...\n",
-		version.major, version.minor, version.patch);
+		printf("We compiled against SDL_ttf version %u.%u.%u ...\n",
+			version.major, version.minor, version.patch);
 
 	version = *TTF_Linked_Version();
 	printf("We are linking against SDL_ttf version %u.%u.%u.\n",
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath)
+dae::Minigin::Minigin(const std::string& dataPath)
 {
 	PrintSDLVersion();
-	
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
@@ -57,7 +57,7 @@ dae::Minigin::Minigin(const std::string &dataPath)
 		480,
 		SDL_WINDOW_OPENGL
 	);
-	if (g_window == nullptr) 
+	if (g_window == nullptr)
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
@@ -83,12 +83,41 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
-	// todo: this update loop could use some work.
+
+
+	//using directive to shorten chrono calls
+	using namespace std::chrono;
+
 	bool doContinue = true;
+	auto last_time = high_resolution_clock::now();
+	float lag = 0.0f;
+	float ms_per_frame = 1.0f / 60.0f;
+	float fixed_time_step = 0.02f; // Changed fixed time step to 0.02 seconds (20ms) for 50 FPS.
+
 	while (doContinue)
 	{
+		const auto current_time = high_resolution_clock::now();
+		const float delta_time = duration<float>(current_time - last_time).count();
+		last_time = current_time;
+		lag += delta_time;
 		doContinue = input.ProcessInput();
+
+		while (lag >= fixed_time_step)
+		{
+			//TODO: Implement this 
+			//fixed_update(fixed_time_step); 
+			lag -= fixed_time_step;
+		}
+
 		sceneManager.Update();
+
+		//NOTE: Implement this
+		//sceneManager.LateUpdate();
+
 		renderer.Render();
+
+		const auto sleep_duration = duration_cast<milliseconds>(duration<float>(ms_per_frame) - (current_time - high_resolution_clock::now()));
+		if (sleep_duration.count() > 0)
+			std::this_thread::sleep_for(sleep_duration);
 	}
 }
