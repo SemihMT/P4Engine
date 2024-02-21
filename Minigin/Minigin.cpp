@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "TimeManager.h"
 
 SDL_Window* g_window{};
 
@@ -82,31 +83,32 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
-
+	auto& time = TimeManager::GetInstance();
 
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
+	auto lastTime = high_resolution_clock::now();
+	double lag = 0.0f;
+
+	time.SetFrameTime(60);
+	double secPerFrame = time.FrameTime();
+
+	double fixedTimeStep = 0.02f;
 
 	bool doContinue = true;
-	auto last_time = high_resolution_clock::now();
-	float lag = 0.0f;
-	float ms_per_frame = 1.0f / 60.0f;
-	float fixed_time_step = 0.02f; // Changed fixed time step to 0.02 seconds (20ms) for 50 FPS.
-
 	while (doContinue)
 	{
-		const auto current_time = high_resolution_clock::now();
-		const float delta_time = duration<float>(current_time - last_time).count();
-		last_time = current_time;
-		lag += delta_time;
+		time.Update();
+		lag += time.DeltaTime();
+
 		doContinue = input.ProcessInput();
 
-		while (lag >= fixed_time_step)
+		while (lag >= fixedTimeStep)
 		{
 			//TODO: Implement this 
 			//fixed_update(fixed_time_step); 
-			lag -= fixed_time_step;
+			lag -= fixedTimeStep;
 		}
 
 		sceneManager.Update();
@@ -116,8 +118,11 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		renderer.Render();
 
-		const auto sleep_duration = duration_cast<milliseconds>(duration<float>(ms_per_frame) - (current_time - high_resolution_clock::now()));
-		if (sleep_duration.count() > 0)
-			std::this_thread::sleep_for(sleep_duration);
+
+		auto timeSinceStartOfFrame = (time.Current() - high_resolution_clock::now());
+		auto timeUntilNextFrame = duration<double>(secPerFrame) - timeSinceStartOfFrame;
+		const auto sleepDuration = duration_cast<milliseconds>(timeUntilNextFrame);
+		if (sleepDuration.count() > 0)
+			std::this_thread::sleep_for(sleepDuration);
 	}
 }

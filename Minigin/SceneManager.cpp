@@ -19,7 +19,11 @@ void dae::SceneManager::Render()
 
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
+	//Create scene
 	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
+	//Update ID
+	Scene::m_idCounter++;
+	//Store scene in SceneManager
 	m_scenes.push_back(scene);
 	return *scene;
 }
