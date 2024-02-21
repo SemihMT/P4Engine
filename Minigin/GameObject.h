@@ -67,6 +67,26 @@ namespace dae
 			return nullptr;
 		}
 
+		template<typename T>
+		T* AddComponent(std::unique_ptr<T> component)
+		{
+			static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+
+			// Check if a component of the same type already exists
+			for (const auto& comp : m_Components)
+			{
+				if (dynamic_cast<T*>(comp.get()) != nullptr)
+				{
+					std::cout << "Component of the same type already exists!\n";
+					return nullptr;
+				}
+			}
+
+			T* rawPtr = component.get();
+			m_Components.push_back(std::move(component));
+			return rawPtr;
+		}
+
 		template<typename T, typename... Args>
 		T* AddComponent(Args&&... args)
 		{
