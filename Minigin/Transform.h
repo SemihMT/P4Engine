@@ -8,14 +8,10 @@ namespace dae
 	{
 	public:
 		Transform() = default;
-		Transform(float x, float y, float z) : m_position({ x,y,z }) {};
-		const glm::vec3& GetPosition() const { return m_position; }
-		void SetPosition(float x, float y, float z)
-		{
-			m_position.x = x;
-			m_position.y = y;
-			m_position.z = z;
-		}
+		Transform(float x, float y, float z);
+		const glm::vec3& GetPosition() const;
+		void SetPosition(float x, float y, float z);
+
 	private:
 		glm::vec3 m_position{};
 	};

@@ -11,9 +11,9 @@ namespace dae
 	{
 	public:
 		Texture() = default;
-		virtual ~Texture() = default;
+		~Texture() override = default;
 
-		Texture(const std::string& fileName)
+		explicit Texture(const std::string& fileName)
 		{
 			SetTexture(fileName);
 		};
@@ -29,17 +29,17 @@ namespace dae
 		};
 		void Render() const override 
 		{
-			auto owner = GetOwner();
-			auto transform = owner->GetComponent<Transform>();
-			auto pos = transform->GetPosition();
-			Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
+			const auto owner = GetOwner();
+			const auto transform = owner->GetComponent<Transform>();
+			const auto pos = transform->GetPosition();
+			Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
 		};
 	public:
 		void SetTexture(const std::string& fileName)
 		{
-			m_Texture = ResourceManager::GetInstance().LoadTexture(fileName);
+			m_texture = ResourceManager::GetInstance().LoadTexture(fileName);
 		};
 	private:
-		std::shared_ptr<Texture2D> m_Texture{};
+		std::shared_ptr<Texture2D> m_texture{};
 	};
 }

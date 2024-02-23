@@ -18,7 +18,7 @@ namespace dae
 	public:
 		//Construction
 		explicit GameObject() = default; // No need for any non-default behaviour
-		virtual ~GameObject() = default; // ditto.
+		~GameObject() = default; // ditto.
 
 		GameObject(const GameObject& other) = delete; //disable copy constructing
 		GameObject(GameObject&& other) = delete; //disable move constructing
@@ -27,40 +27,20 @@ namespace dae
 
 	private:
 		//General Functions
-		void FixedUpdate() 
-		{
-			for (auto& component : m_Components)
-			{
-				component->FixedUpdate();
-			}
-		}; 
-		void Update() 
-		{
-			for (auto& component : m_Components)
-			{
-				component->Update();
-			}
-		};
-		void Render() const 
-		{
-			for (auto& component : m_Components)
-			{
-				component->Render();
-			}
-		};
-		void LateUpdate() 
-		{
-			for (auto& component : m_Components)
-			{
-				component->LateUpdate();
-			}
-		};
+		void FixedUpdate();
+
+		void Update();
+
+		void Render() const;
+
+		void LateUpdate();
+
 	public:
 		//Helper Functions
 		template<typename T>
 		T* GetComponent() const
 		{
-			for (const auto& component : m_Components)
+			for (const auto& component : m_components)
 			{
 				if (auto castedComponent = dynamic_cast<T*>(component.get()))
 				{
@@ -74,10 +54,10 @@ namespace dae
 		template<typename T>
 		T* AddComponent(std::unique_ptr<T> component)
 		{
-			static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+			static_assert(std::is_base_of_v<BaseComponent, T>, "T must derive from BaseComponent");
 
 			// Check if a component of the same type already exists
-			for (const auto& comp : m_Components)
+			for (const auto& comp : m_components)
 			{
 				if (dynamic_cast<T*>(comp.get()) != nullptr)
 				{
@@ -88,7 +68,7 @@ namespace dae
 
 			component->SetOwner(shared_from_this());
 			T* rawPtr = component.get();
-			m_Components.push_back(std::move(component));
+			m_components.push_back(std::move(component));
 			return rawPtr;
 		}
 
@@ -97,10 +77,10 @@ namespace dae
 		template<typename T, typename... Args>
 		T* AddComponent(Args&&... args)
 		{
-			static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+			static_assert(std::is_base_of_v<BaseComponent, T>, "T must derive from BaseComponent");
 			
 			// Check if a component of the same type already exists
-			for (const auto& component : m_Components)
+			for (const auto& component : m_components)
 			{
 				if (dynamic_cast<T*>(component.get()) != nullptr)
 				{
@@ -114,7 +94,7 @@ namespace dae
 			auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
 			newComponent->SetOwner(shared_from_this());
 			T* rawPtr = newComponent.get();
-			m_Components.push_back(std::move(newComponent));
+			m_components.push_back(std::move(newComponent));
 			return rawPtr;
 		}
 
@@ -122,10 +102,10 @@ namespace dae
 		template<typename T>
 		std::shared_ptr<GameObject> AddComponentLinkable(std::unique_ptr<T> component)
 		{
-			static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+			static_assert(std::is_base_of_v<BaseComponent, T>, "T must derive from BaseComponent");
 
 			// Check if a component of the same type already exists
-			for (const auto& comp : m_Components)
+			for (const auto& comp : m_components)
 			{
 				if (dynamic_cast<T*>(comp.get()) != nullptr)
 				{
@@ -136,7 +116,7 @@ namespace dae
 
 			component->SetOwner(shared_from_this());
 			//T* rawPtr = component.get();
-			m_Components.push_back(std::move(component));
+			m_components.push_back(std::move(component));
 			return shared_from_this();
 		}
 
@@ -145,10 +125,10 @@ namespace dae
 		template<typename T, typename... Args>
 		std::shared_ptr<GameObject> AddComponentLinkable(Args&&... args)
 		{
-			static_assert(std::is_base_of<BaseComponent, T>::value, "T must derive from BaseComponent");
+			static_assert(std::is_base_of_v<BaseComponent, T>, "T must derive from BaseComponent");
 
 			// Check if a component of the same type already exists
-			for (const auto& component : m_Components)
+			for (const auto& component : m_components)
 			{
 				if (dynamic_cast<T*>(component.get()) != nullptr)
 				{
@@ -162,26 +142,24 @@ namespace dae
 			auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
 			newComponent->SetOwner(shared_from_this());
 			//T* rawPtr = newComponent.get();
-			m_Components.push_back(std::move(newComponent));
+			m_components.push_back(std::move(newComponent));
 			return shared_from_this();
 		}
 
 		template<typename T>
 		void RemoveComponent()
 		{
-			m_Components.erase(
-				std::remove_if(m_Components.begin(), m_Components.end(),
+			m_components.erase(
+				std::remove_if(m_components.begin(), m_components.end(),
 					[](const ComponentPtr& component)
 					{
 						return dynamic_cast<T*>(component.get()) != nullptr;
 					}),
-				m_Components.end());
+				m_components.end());
 		}
 
 	private:
 
-		std::vector<ComponentPtr> m_Components;
-
-
+		std::vector<ComponentPtr> m_components;
 	};
 }
