@@ -13,6 +13,11 @@ namespace dae
 		Texture() = default;
 		virtual ~Texture() = default;
 
+		Texture(const std::string& fileName)
+		{
+			SetTexture(fileName);
+		};
+
 		Texture(const Texture& other) = delete;
 		Texture(Texture&& other) = delete;
 		Texture& operator=(const Texture& other) = delete;
