@@ -31,5 +31,5 @@ double dae::TimeManager::FrameTime() const
 
 void dae::TimeManager::SetFrameTime(int preferredFPS)
 {
-	m_frameTime = 1.0 / preferredFPS;
+	m_frameTime = static_cast<double>(1000) / preferredFPS;
 }

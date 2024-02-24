@@ -17,6 +17,22 @@ void dae::SceneManager::Render()
 	}
 }
 
+void dae::SceneManager::FixedUpdate()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->FixedUpdate();
+	}
+}
+
+void dae::SceneManager::LateUpdate()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->LateUpdate();
+	}
+}
+
 dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 {
 	//Create scene

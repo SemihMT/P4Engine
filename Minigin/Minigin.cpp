@@ -88,13 +88,12 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
-	auto lastTime = high_resolution_clock::now();
 	double lag = 0.0f;
 
 	time.SetFrameTime(60);
-	double secPerFrame = time.FrameTime();
+	const milliseconds frameTime(static_cast<long long>(time.FrameTime()));
 
-	double fixedTimeStep = 0.02f;
+	const double fixedTimeStep = 0.02f;
 
 	bool doContinue = true;
 	while (doContinue)
@@ -106,23 +105,24 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		while (lag >= fixedTimeStep)
 		{
-			//TODO: Implement this 
-			//fixed_update(fixed_time_step); 
+			sceneManager.FixedUpdate();
 			lag -= fixedTimeStep;
 		}
 
 		sceneManager.Update();
-
-		//NOTE: Implement this
-		//sceneManager.LateUpdate();
+		sceneManager.LateUpdate();
 
 		renderer.Render();
 
 
-		auto timeSinceStartOfFrame = (time.Current() - high_resolution_clock::now());
-		auto timeUntilNextFrame = duration<double>(secPerFrame) - timeSinceStartOfFrame;
-		const auto sleepDuration = duration_cast<milliseconds>(timeUntilNextFrame);
-		if (sleepDuration.count() > 0)
-			std::this_thread::sleep_for(sleepDuration);
+		//Make the thread sleep for some time, so we don't update unnecessarily fast
+		auto endTime = steady_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<milliseconds>(endTime - time.Current());
+
+		auto sleepTime = frameTime - elapsedTime;
+		if (sleepTime > milliseconds::zero()) {
+			std::this_thread::sleep_for(sleepTime);
+		}
+
 	}
 }

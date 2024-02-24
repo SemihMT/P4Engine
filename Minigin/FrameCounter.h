@@ -1,4 +1,7 @@
 #pragma once
+#include <deque>
+#include <vector>
+
 #include "BaseComponent.h"
 namespace dae
 {
@@ -15,11 +18,12 @@ namespace dae
 
 	public:
 		void Update() override;
+		void Render() const override;
 		float GetFPS() const;
 	private:
-		float m_fps{};
-		int m_frames{};
-		double m_lastFpsTime{};
+		double m_lastFrameTime = 0.0;
+		std::vector<double> m_frameTimes{60,60};
+		float m_fps = 0.0f;
 
 		void PrintFPS() const;
 	};
