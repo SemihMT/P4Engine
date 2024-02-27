@@ -88,26 +88,16 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
-	double lag = 0.0f;
 
 	time.SetFrameTime(60);
-	const milliseconds frameTime(static_cast<long long>(time.FrameTime()));
-
-	const double fixedTimeStep = 0.02f;
+	//const milliseconds frameTime(static_cast<long long>(time.FrameTime()));
 
 	bool doContinue = true;
 	while (doContinue)
 	{
 		time.Update();
-		lag += time.DeltaTime();
 
 		doContinue = input.ProcessInput();
-
-		while (lag >= fixedTimeStep)
-		{
-			sceneManager.FixedUpdate();
-			lag -= fixedTimeStep;
-		}
 
 		sceneManager.Update();
 		sceneManager.LateUpdate();
@@ -119,7 +109,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		auto endTime = steady_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<milliseconds>(endTime - time.Current());
 
-		auto sleepTime = frameTime - elapsedTime;
+		auto sleepTime = milliseconds(static_cast<long long>(time.FrameTime())) - elapsedTime;
 		if (sleepTime > milliseconds::zero()) {
 			std::this_thread::sleep_for(sleepTime);
 		}

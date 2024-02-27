@@ -2,7 +2,11 @@
 
 using namespace dae;
 
-Transform::Transform(float x, float y, float z) : m_position({ x,y,z })
+Transform::Transform(const std::shared_ptr<GameObject>& owner) : BaseComponent(owner)
+{
+}
+
+Transform::Transform(const std::shared_ptr<GameObject>& owner, float x, float y, float z) : BaseComponent(owner), m_position({ x,y,z })
 {
 
 }

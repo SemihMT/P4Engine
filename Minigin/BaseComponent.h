@@ -7,7 +7,6 @@ namespace dae
 	{
 		
 	public:
-		BaseComponent() = default;
 		virtual ~BaseComponent() = default;
 
 		BaseComponent(const BaseComponent& other) = delete;
@@ -17,15 +16,14 @@ namespace dae
 	public:
 		virtual void Update();
 		virtual void Render() const;
-		virtual void FixedUpdate();
 		virtual void LateUpdate();
 
 	public:
-
-		void SetOwner(std::shared_ptr<GameObject> owner);
-
+		//void SetOwner(std::shared_ptr<GameObject> owner);
 		std::shared_ptr<GameObject> GetOwner() const;
 
+	protected:
+		BaseComponent(const std::shared_ptr<GameObject>& owner);
 	private:
 		//Non-owning reference to shared ptr (GameObjects are owned by scenes, preferably only one scene)
 		//Allows the component to access its owner's state

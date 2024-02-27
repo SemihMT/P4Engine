@@ -25,17 +25,8 @@ namespace dae
 		GameObject& operator=(const GameObject& other) = delete; //disable copy assignment
 		GameObject& operator=(GameObject&& other) = delete; //disable move assignment
 
-	private:
-		//General Functions
-		void FixedUpdate();
 
-		void Update();
 
-		void Render() const;
-
-		void LateUpdate();
-
-	public:
 		//Helper Functions
 		template<typename T>
 		T* GetComponent() const
@@ -66,7 +57,14 @@ namespace dae
 				}
 			}
 
-			component->SetOwner(shared_from_this());
+			//Check if the owner of the component we're passing in is this object
+			if(component->GetOwner() != shared_from_this())
+			{
+				std::cout << "Component "<< typeid(T).name() <<" has the wrong owner!\n";
+				return nullptr;;
+				
+			}
+
 			T* rawPtr = component.get();
 			m_components.push_back(std::move(component));
 			return rawPtr;
@@ -78,7 +76,7 @@ namespace dae
 		T* AddComponent(Args&&... args)
 		{
 			static_assert(std::is_base_of_v<BaseComponent, T>, "T must derive from BaseComponent");
-			
+
 			// Check if a component of the same type already exists
 			for (const auto& component : m_components)
 			{
@@ -86,13 +84,12 @@ namespace dae
 				{
 					//NOTE: Should probably replace std::cout with a logger with overloaded << operator
 					std::cout << "Component of the same type already exists!\n";
-					
+
 					return nullptr;
 				}
 			}
 
-			auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
-			newComponent->SetOwner(shared_from_this());
+			auto newComponent = std::make_unique<T>(shared_from_this(), std::forward<Args>(args)...);
 			T* rawPtr = newComponent.get();
 			m_components.push_back(std::move(newComponent));
 			return rawPtr;
@@ -114,8 +111,15 @@ namespace dae
 				}
 			}
 
-			component->SetOwner(shared_from_this());
-			//T* rawPtr = component.get();
+			//Check if the owner of the component we're passing in is this object
+			if (component->GetOwner() != shared_from_this())
+			{
+				std::cout << "Component "<< typeid(T).name() << " has the wrong owner!\nSkipped adding to GameObject\n";
+				//Return the object without adding the component, 
+				return shared_from_this();
+
+			}
+
 			m_components.push_back(std::move(component));
 			return shared_from_this();
 		}
@@ -138,10 +142,8 @@ namespace dae
 					return nullptr;
 				}
 			}
-
-			auto newComponent = std::make_unique<T>(std::forward<Args>(args)...);
-			newComponent->SetOwner(shared_from_this());
-			//T* rawPtr = newComponent.get();
+			
+			auto newComponent = std::make_unique<T>(shared_from_this(), std::forward<Args>(args)...);
 			m_components.push_back(std::move(newComponent));
 			return shared_from_this();
 		}
@@ -157,9 +159,18 @@ namespace dae
 					}),
 				m_components.end());
 		}
-
 	private:
+		//General Functions
+
+		void Update();
+
+		void Render() const;
+
+		void LateUpdate();
+
+
 
 		std::vector<ComponentPtr> m_components;
+		bool m_isDead{ false };
 	};
 }

@@ -9,22 +9,27 @@
 #include "Transform.h"
 using namespace dae;
 std::string Text::s_defaultFont = "Lingua.otf";
-Text::Text(std::shared_ptr<Font> font, const std::string& text) : m_needsUpdate(true),
-m_text{ text },
-m_font{ std::move(font) }
+Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font, const std::string& text)
+	: BaseComponent(owner),
+	m_needsUpdate(true),
+	m_text{ text },
+	m_font{ std::move(font) }
 {
 }
 
-Text::Text(std::shared_ptr<Font> font)
-: m_needsUpdate(true),
-  m_font(std::move(font))
+Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font)
+	:BaseComponent(owner),
+	m_needsUpdate(true),
+	m_text{},
+	m_font(std::move(font))
 {
 }
 
-Text::Text(const std::string& text)
-: m_needsUpdate(true),
-  m_text(text),
-  m_font(ResourceManager::GetInstance().LoadFont(s_defaultFont,36))
+Text::Text(const std::shared_ptr<GameObject>& owner, const std::string& text)
+	:BaseComponent(owner),
+	m_needsUpdate(true),
+	m_text(text),
+	m_font(ResourceManager::GetInstance().LoadFont(s_defaultFont, 36))
 
 {
 }

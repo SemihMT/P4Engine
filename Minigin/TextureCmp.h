@@ -10,13 +10,10 @@ namespace dae
 	class Texture final : public BaseComponent
 	{
 	public:
-		Texture() = default;
+		Texture(const std::shared_ptr<GameObject>& owner);
 		~Texture() override = default;
 
-		explicit Texture(const std::string& fileName)
-		{
-			SetTexture(fileName);
-		};
+		explicit Texture(const std::shared_ptr<GameObject>& owner, const std::string& fileName);
 
 		Texture(const Texture& other) = delete;
 		Texture(Texture&& other) = delete;
@@ -24,22 +21,13 @@ namespace dae
 		Texture& operator=(Texture&& other) = delete;
 
 	public:
-		void Update() override 
-		{
-		};
-		void Render() const override 
-		{
-			const auto owner = GetOwner();
-			const auto transform = owner->GetComponent<Transform>();
-			const auto pos = transform->GetPosition();
-			Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-		};
+		void Render() const override;
+
 	public:
-		void SetTexture(const std::string& fileName)
-		{
-			m_texture = ResourceManager::GetInstance().LoadTexture(fileName);
-		};
+		void SetTexture(const std::string& fileName);
+
 	private:
 		std::shared_ptr<Texture2D> m_texture{};
 	};
+
 }

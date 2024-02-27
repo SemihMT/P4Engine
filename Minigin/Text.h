@@ -9,10 +9,9 @@ namespace dae
 	{
 		
 	public:
-		Text() = default;
-		Text(std::shared_ptr<Font> font, const std::string& text);
-		Text(std::shared_ptr<Font> font);
-		Text(const std::string& text);
+		Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font, const std::string& text);
+		Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font);
+		Text(const std::shared_ptr<GameObject>& owner, const std::string& text);
 		~Text() override = default;
 
 		Text(const Text& other) = delete;
@@ -30,7 +29,7 @@ namespace dae
 
 	private: 
 		bool m_needsUpdate;
-		std::string m_text;
+		std::string m_text {};
 		std::shared_ptr<Font> m_font;
 		std::shared_ptr<Texture2D> m_textTexture;
 
