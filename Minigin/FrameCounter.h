@@ -27,6 +27,7 @@ namespace dae
 		std::vector<double> m_frameTimes{60,60};
 		float m_fps = 0.0f;
 		Text* m_pTextCmp;
+		double m_averageFrameTime;
 		void PrintFPS() const;
 	};
 

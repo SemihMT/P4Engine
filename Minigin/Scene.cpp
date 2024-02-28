@@ -18,7 +18,11 @@ void Scene::Add(std::shared_ptr<GameObject> object)
 
 void Scene::Remove(std::shared_ptr<GameObject> object)
 {
-	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	//m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	//C++20
+	std::erase_if(m_objects, [&](const auto& ptr) {
+		return ptr == object;
+		});
 }
 
 void Scene::RemoveAll()
@@ -28,17 +32,22 @@ void Scene::RemoveAll()
 
 void Scene::Update()
 {
-	for(auto& object : m_objects)
+	for (auto& object : m_objects)
 	{
-		object->Update();
+		if (!object->IsDead() && !object->IsDisabled())
+			object->Update();
 	}
+
+	std::erase_if(m_objects, [](const auto& object) { return object->IsDead(); });
+
 }
 
 void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
-		object->Render();
+		if (!object->IsDisabled())
+			object->Render();
 	}
 }
 
@@ -48,7 +57,8 @@ void Scene::LateUpdate()
 {
 	for (auto& object : m_objects)
 	{
-		object->LateUpdate();
+		if (!object->IsDisabled())
+			object->LateUpdate();
 	}
 }
 

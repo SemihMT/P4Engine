@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include "InputManager.h"
 
+#include "TimeManager.h"
+
 
 bool dae::InputManager::ProcessInput()
 {
@@ -13,7 +15,7 @@ bool dae::InputManager::ProcessInput()
 			return false;
 		}
 		break;
-		/*case SDL_KEYDOWN:
+		case SDL_KEYDOWN:
 			switch (e.key.keysym.sym)
 			{
 			case SDLK_a:
@@ -26,7 +28,7 @@ bool dae::InputManager::ProcessInput()
 				TimeManager::GetInstance().SetFrameTime(60);
 			}
 			}
-			break;*/
+			break;
 		default:
 			return true;
 		}

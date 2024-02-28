@@ -1,6 +1,32 @@
 #include "BaseComponent.h"
 using namespace dae;
 
+bool BaseComponent::IsDead() const
+{
+	return m_isDead;
+}
+
+bool BaseComponent::IsDisabled() const
+{
+	return m_isDisabled;
+}
+
+void BaseComponent::Disable()
+{
+	m_isDisabled = true;
+}
+
+void BaseComponent::Enable()
+{
+	m_isDisabled = false;
+}
+
+
+void BaseComponent::Kill()
+{
+	m_isDead = true;
+}
+
 void BaseComponent::Update()
 {}
 

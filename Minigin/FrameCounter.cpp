@@ -19,21 +19,17 @@ void FrameCounter::Update()
 	const double currentTime = TimeManager::GetInstance().TotalTime();
 	const double frameTime = TimeManager::GetInstance().DeltaTime();
 
-	// Add the frame time to the vector
-	m_frameTimes.push_back(frameTime);
-
-	// If we have more than a second's worth of frame times, remove the oldest one
-	if (m_frameTimes.size() > 60) {
-		m_frameTimes.erase(m_frameTimes.begin());
+	// Calculate exponential moving average (EMA) of frame times
+	const double alpha = 0.2; // You can adjust this smoothing factor
+	if (m_lastFrameTime > 0.0) {
+		m_averageFrameTime = alpha * frameTime + (1.0 - alpha) * m_averageFrameTime;
+	}
+	else {
+		m_averageFrameTime = frameTime;
 	}
 
-	// Calculate the median frame time
-	std::vector<double> sortedFrameTimes = m_frameTimes;
-	std::ranges::sort(sortedFrameTimes);
-	const double medianFrameTime = sortedFrameTimes[sortedFrameTimes.size() / 2];
-
-	// Convert the median frame time to FPS
-	m_fps = 1.0f / static_cast<float>(medianFrameTime);
+	// Update FPS based on EMA
+	m_fps = 1.0f / static_cast<float>(m_averageFrameTime);
 
 	m_lastFrameTime = currentTime;
 
@@ -51,7 +47,8 @@ float FrameCounter::GetFPS() const
 
 void FrameCounter::PrintFPS() const
 {
-
-	m_pTextCmp->SetText(std::to_string((int)m_fps) + " FPS    -   " + std::to_string(TimeManager::GetInstance().DeltaTime()));
-
+	// Format FPS with one point of precision
+	const std::string fpsText = std::format("{:.1f} FPS - {}s", m_fps, TimeManager::GetInstance().DeltaTime());
+	// Update the FPS text component
+	m_pTextCmp->SetText(fpsText);
 }
