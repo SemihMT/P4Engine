@@ -1,10 +1,10 @@
 #include "TextureCmp.h"
 
-dae::Texture::Texture(const std::shared_ptr<GameObject>& owner) : BaseComponent(owner)
+dae::Texture::Texture(GameObject* owner) : BaseComponent(owner)
 {
 }
 
-dae::Texture::Texture(const std::shared_ptr<GameObject>& owner, const std::string& fileName): BaseComponent(owner)
+dae::Texture::Texture(GameObject* owner, const std::string& fileName): BaseComponent(owner)
 {
 	SetTexture(fileName);
 }

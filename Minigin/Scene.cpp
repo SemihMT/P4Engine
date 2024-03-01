@@ -11,54 +11,48 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(std::shared_ptr<GameObject> object)
+void Scene::Add(std::unique_ptr<GameObject> object)
 {
-	m_objects.emplace_back(std::move(object));
+    m_objects.emplace_back(std::move(object));
 }
 
-void Scene::Remove(std::shared_ptr<GameObject> object)
+void Scene::Remove(GameObject* object)
 {
-	//m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
-	//C++20
-	std::erase_if(m_objects, [&](const auto& ptr) {
-		return ptr == object;
-		});
+    std::erase_if(m_objects, [&](const auto& ptr) {
+        return ptr.get() == object;
+    });
 }
 
 void Scene::RemoveAll()
 {
-	m_objects.clear();
+    m_objects.clear();
 }
 
 void Scene::Update()
 {
-	for (auto& object : m_objects)
-	{
-		if (!object->IsDead() && !object->IsDisabled())
-			object->Update();
-	}
+    for (auto& object : m_objects)
+    {
+        if (!object->IsDead() && !object->IsDisabled())
+            object->Update();
+    }
 
-	std::erase_if(m_objects, [](const auto& object) { return object->IsDead(); });
-
+    std::erase_if(m_objects, [](const auto& object) { return object->IsDead(); });
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_objects)
-	{
-		if (!object->IsDisabled())
-			object->Render();
-	}
+    for (const auto& object : m_objects)
+    {
+        if (!object->IsDisabled())
+            object->Render();
+    }
 }
-
-
 
 void Scene::LateUpdate()
 {
-	for (auto& object : m_objects)
-	{
-		if (!object->IsDisabled())
-			object->LateUpdate();
-	}
+    for (auto& object : m_objects)
+    {
+        if (!object->IsDisabled())
+            object->LateUpdate();
+    }
 }
-

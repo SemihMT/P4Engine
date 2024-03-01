@@ -8,7 +8,7 @@
 using namespace dae;
 
 
-FrameCounter::FrameCounter(const std::shared_ptr<GameObject>& owner)
+FrameCounter::FrameCounter(GameObject* owner)
 	: BaseComponent(owner),
 	m_pTextCmp(owner->GetComponent<Text>())
 {

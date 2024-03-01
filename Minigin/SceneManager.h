@@ -1,12 +1,11 @@
-#pragma once
-#include <vector>
-#include <string>
-#include <memory>
-#include "Singleton.h"
+#ifndef SCENEMANAGER_H
+#define SCENEMANAGER_H
 
+#include "Singleton.h"
+#include "Scene.h"
 namespace dae
 {
-	class Scene;
+	//class Scene;
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
@@ -19,6 +18,8 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
-		std::vector<std::shared_ptr<Scene>> m_scenes;
+		std::vector<std::unique_ptr<Scene>> m_scenes;
 	};
 }
+
+#endif // SCENEMANAGER_H

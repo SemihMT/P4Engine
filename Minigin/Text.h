@@ -9,9 +9,9 @@ namespace dae
 	{
 		
 	public:
-		Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font, const std::string& text);
-		Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font);
-		Text(const std::shared_ptr<GameObject>& owner, const std::string& text);
+		Text(GameObject* owner, std::shared_ptr<Font> font, const std::string& text);
+		Text(GameObject* owner, std::shared_ptr<Font> font);
+		Text(GameObject* owner, const std::string& text);
 		~Text() override = default;
 
 		Text(const Text& other) = delete;

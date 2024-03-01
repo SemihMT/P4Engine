@@ -18,8 +18,7 @@ namespace dae
 		virtual void Render() const;
 		virtual void LateUpdate();
 
-		//Could extend the lifetime of the owning game object if the result of this function gets stored somewhere
-		std::shared_ptr<GameObject> GetOwner() const;
+		
 		bool IsDead() const;
 		bool IsDisabled() const;
 		void Kill();
@@ -27,12 +26,12 @@ namespace dae
 		void Enable();
 
 	protected:
-		
-		BaseComponent(const std::shared_ptr<GameObject>& owner);
+		GameObject* GetOwner() const;
+		BaseComponent(GameObject* owner);
 	private:
-		//Non-owning reference to shared ptr (GameObjects are owned by scenes, preferably only one scene)
+		//Non-owning reference! (GameObjects are owned by scenes, preferably only one scene)
 		//Allows the component to access its owner's state
-		std::weak_ptr<GameObject> m_owner;
+		GameObject* m_owner;
 		bool m_isDisabled{ false };
 		bool m_isDead{ false };
 	};

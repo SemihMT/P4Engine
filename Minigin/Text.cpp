@@ -9,7 +9,7 @@
 #include "Transform.h"
 using namespace dae;
 std::string Text::s_defaultFont = "Lingua.otf";
-Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font, const std::string& text)
+Text::Text(GameObject* owner, std::shared_ptr<Font> font, const std::string& text)
 	: BaseComponent(owner),
 	m_needsUpdate(true),
 	m_text{ text },
@@ -17,7 +17,7 @@ Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font,
 {
 }
 
-Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font)
+Text::Text(GameObject* owner, std::shared_ptr<Font> font)
 	:BaseComponent(owner),
 	m_needsUpdate(true),
 	m_text{},
@@ -25,7 +25,7 @@ Text::Text(const std::shared_ptr<GameObject>& owner, std::shared_ptr<Font> font)
 {
 }
 
-Text::Text(const std::shared_ptr<GameObject>& owner, const std::string& text)
+Text::Text(GameObject* owner, const std::string& text)
 	:BaseComponent(owner),
 	m_needsUpdate(true),
 	m_text(text),

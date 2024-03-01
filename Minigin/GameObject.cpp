@@ -1,5 +1,15 @@
 #include "GameObject.h"
+
+#include "Transform.h"
 using namespace dae;
+
+GameObject::GameObject() :
+	m_components(),
+	m_isDisabled(),
+	m_isDead()
+{
+	AddComponent<Transform>();
+}
 
 bool GameObject::IsDead() const
 {

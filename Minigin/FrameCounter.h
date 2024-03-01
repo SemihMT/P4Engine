@@ -10,7 +10,7 @@ namespace dae
 	class FrameCounter : public BaseComponent
 	{
 	public:
-		FrameCounter(const std::shared_ptr<GameObject>& owner);
+		FrameCounter(GameObject* owner);
 		~FrameCounter() override = default;
 
 		FrameCounter(const FrameCounter& other) = delete;

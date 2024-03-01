@@ -10,10 +10,10 @@ namespace dae
 	class Texture final : public BaseComponent
 	{
 	public:
-		Texture(const std::shared_ptr<GameObject>& owner);
+		Texture(GameObject* owner);
 		~Texture() override = default;
 
-		explicit Texture(const std::shared_ptr<GameObject>& owner, const std::string& fileName);
+		explicit Texture(GameObject* owner, const std::string& fileName);
 
 		Texture(const Texture& other) = delete;
 		Texture(Texture&& other) = delete;

@@ -41,11 +41,11 @@ void BaseComponent::LateUpdate()
 //	m_owner = owner;
 //}
 
-std::shared_ptr<GameObject> BaseComponent::GetOwner() const
+GameObject* BaseComponent::GetOwner() const
 {
-	return m_owner.lock();
+	return m_owner;
 }
 
-BaseComponent::BaseComponent(const std::shared_ptr<GameObject>& owner) : m_owner(owner)
+BaseComponent::BaseComponent(GameObject* owner) : m_owner(owner)
 {
 }

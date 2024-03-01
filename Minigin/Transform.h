@@ -7,8 +7,8 @@ namespace dae
 	class Transform final : public BaseComponent
 	{
 	public:
-		explicit Transform(const std::shared_ptr<GameObject>& owner);
-		Transform(const std::shared_ptr<GameObject>& owner ,float x, float y, float z);
+		explicit Transform(GameObject* owner);
+		Transform(GameObject* owner ,float x, float y, float z);
 		const glm::vec3& GetPosition() const;
 		void SetPosition(float x, float y, float z);
 
