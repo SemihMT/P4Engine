@@ -10,7 +10,7 @@ using namespace dae;
 
 FrameCounter::FrameCounter(GameObject* owner)
 	: BaseComponent(owner),
-	m_pTextCmp(owner->GetComponent<Text>())
+	  m_pTextCmp(owner->GetComponent<Text>()), m_averageFrameTime(0)
 {
 }
 

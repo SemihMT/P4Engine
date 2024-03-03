@@ -4,3 +4,4 @@
 #include "Text.h"
 #include "TextureCmp.h"
 #include "FrameCounter.h"
+#include "RotationCmp.h"

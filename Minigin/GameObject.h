@@ -3,12 +3,10 @@
 #include <memory>
 #include <vector>
 #include "BaseComponent.h"
+#include "Transform.h"
 
 namespace dae
 {
-	//Enable_shared_from_this allows us to safely create a shared_ptr from the raw 'this' pointer
-	//Useful for us, as we're giving the GameObject the responsibility to assign itself as the owner 
-	//to any components that get added to it
 	class GameObject final
 	{
 		using ComponentPtr = std::unique_ptr<BaseComponent>;
@@ -16,23 +14,41 @@ namespace dae
 		friend class Scene;
 
 	public:
+#pragma region ctors
 		//Construction
-		explicit GameObject(); // No need for any non-default behaviour
-		~GameObject() = default; // ditto.
+		explicit GameObject();
+		explicit GameObject(const glm::vec3& position);
+		explicit GameObject(float x, float y, float z);
+		explicit GameObject(GameObject* parent);
+		explicit GameObject(GameObject* parent, const glm::vec3& localPosition);
+		explicit GameObject(GameObject* parent, float x, float y, float z);
+#pragma endregion
+		~GameObject() = default;
 
 		GameObject(const GameObject& other) = delete; //disable copy constructing
 		GameObject(GameObject&& other) = delete; //disable move constructing
 		GameObject& operator=(const GameObject& other) = delete; //disable copy assignment
 		GameObject& operator=(GameObject&& other) = delete; //disable move assignment
 
-	public:
+		//SceneGraph
+		GameObject* GetParent(); //returns the pointer -> can be nullptr
+		bool IsChild(GameObject* gObject);
+		void SetParent(GameObject* parent, bool keepWorldPos);
+		size_t GetChildCount() const;
+		GameObject* GetChildAt(int idx) const;
+
+		Transform* GetTransform() const { return m_transform; }
+
+
+#pragma region Enable/Disable GameObject
 		bool IsDead() const;
 		bool IsDisabled() const;
 		void Kill();
 		void Disable();
 		void Enable();
+#pragma endregion
 
-
+#pragma region Templates
 		//Helper Functions
 		template<typename T>
 		T* GetComponent() const;
@@ -59,22 +75,30 @@ namespace dae
 
 		template<typename T>
 		void RemoveComponent();
-
+#pragma endregion 
 	private:
 		//General Functions
 		void Update();
-
 		void Render() const;
-
 		void LateUpdate();
 
+		//SceneGraph
+		GameObject* m_parent{nullptr};
+		std::vector<std::unique_ptr<GameObject>> m_children{};
 
-
-		std::vector<ComponentPtr> m_components;
+		Transform* m_transform{nullptr};
+		std::vector<ComponentPtr> m_components{};
 		bool m_isDisabled{ false };
 		bool m_isDead{ false };
 	};
 
+
+
+	//=================================
+	//
+	//  Template Function Definitions
+	//
+	//=================================
 	template <typename T>
 	T* GameObject::GetComponent() const
 	{
@@ -155,16 +179,16 @@ namespace dae
 		}
 
 		//Check if the owner of the component we're passing in is this object
-		if (component->GetOwner() != this())
+		if (component->GetOwner() != this)
 		{
 			std::cout << "Component "<< typeid(T).name() << " has the wrong owner!\nSkipped adding to GameObject\n";
 			//Return the object without adding the component, 
-			return this();
+			return this;
 
 		}
 
 		m_components.push_back(std::move(component));
-		return this();
+		return this;
 	}
 
 	template <typename T, typename ... Args>

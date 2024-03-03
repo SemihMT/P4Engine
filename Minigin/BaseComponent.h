@@ -29,7 +29,7 @@ namespace dae
 		GameObject* GetOwner() const;
 		BaseComponent(GameObject* owner);
 	private:
-		//Non-owning reference! (GameObjects are owned by scenes, preferably only one scene)
+		//Non-owning! (GameObjects are owned by scenes, preferably only one scene)
 		//Allows the component to access its owner's state
 		GameObject* m_owner;
 		bool m_isDisabled{ false };

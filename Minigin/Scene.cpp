@@ -13,6 +13,11 @@ Scene::~Scene() = default;
 
 void Scene::Add(std::unique_ptr<GameObject> object)
 {
+    if(object->GetParent() != nullptr)
+    {
+        std::cout << "Object has parent, should not get added to the scene!\n";
+	   return; 
+    }
     m_objects.emplace_back(std::move(object));
 }
 

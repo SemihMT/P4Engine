@@ -72,6 +72,9 @@
     <ClInclude Include="Components.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="RotationCmp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -123,6 +126,9 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="FrameCounter.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationCmp.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
