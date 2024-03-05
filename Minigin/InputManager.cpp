@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include "InputManager.h"
 
+#include "imgui_impl_sdl2.h"
 #include "TimeManager.h"
 
 
@@ -8,6 +9,7 @@ bool dae::InputManager::ProcessInput()
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
+		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch (e.type)
 		{
 		case SDL_QUIT:
@@ -32,7 +34,7 @@ bool dae::InputManager::ProcessInput()
 		default:
 			return true;
 		}
-
+		
 	}
 
 	return true;

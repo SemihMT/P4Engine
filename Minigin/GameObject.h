@@ -24,6 +24,7 @@ namespace dae
 		explicit GameObject(GameObject* parent, float x, float y, float z);
 #pragma endregion
 		~GameObject() = default;
+	
 
 		GameObject(const GameObject& other) = delete; //disable copy constructing
 		GameObject(GameObject&& other) = delete; //disable move constructing
@@ -80,6 +81,7 @@ namespace dae
 		//General Functions
 		void Update();
 		void Render() const;
+		void RenderImGui() const;
 		void LateUpdate();
 
 		//SceneGraph

@@ -10,7 +10,7 @@ namespace dae
 	class RotationCmp : public BaseComponent
 	{
 	public:
-		RotationCmp(GameObject* owner, float radius, float rotationTime);
+		RotationCmp(GameObject* owner, float radius);
 		~RotationCmp() override = default;
 
 		RotationCmp(const RotationCmp& other) = delete; //disable copy constructing
@@ -20,14 +20,12 @@ namespace dae
 
 
 		void Update() override;
-
+		void RenderImGui() const override;
 	private:
-		Transform* m_ownerTransform { nullptr };
-		Transform* m_parentTransform { nullptr };
-
+		float m_angle;
+		float m_speed{ 1 };
 		float m_radius;
-		float m_rotationTime;
-		float m_currentAngle;
+		
 	};
 
 }

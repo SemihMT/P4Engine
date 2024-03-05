@@ -13,6 +13,7 @@ namespace dae
 
 		void Update();
 		void Render();
+		void RenderImGui();
 		void LateUpdate();
 
 	private:

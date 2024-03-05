@@ -167,15 +167,35 @@ void GameObject::Render() const
 		if (!component->IsDisabled())
 		{
 			component->Render();
-			if (!m_children.empty())
-			{
-				for (const auto& child : m_children)
-				{
-					child->Render();
-				}
-			}
-		}
 
+		}
+	}
+
+	if (!m_children.empty())
+	{
+		for (const auto& child : m_children)
+		{
+			child->Render();
+		}
+	}
+}
+
+void GameObject::RenderImGui() const
+{
+	for (auto& component : m_components)
+	{
+		if (!component->IsDisabled())
+		{
+			component->RenderImGui();
+			
+		}
+	}
+	if (!m_children.empty())
+	{
+		for (const auto& child : m_children)
+		{
+			child->RenderImGui();
+		}
 	}
 }
 

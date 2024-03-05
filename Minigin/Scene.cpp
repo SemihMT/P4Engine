@@ -53,6 +53,15 @@ void Scene::Render() const
     }
 }
 
+void Scene::RenderImGui() const
+{
+    for (const auto& object : m_objects)
+    {
+        if (!object->IsDisabled())
+            object->RenderImGui();
+    }
+}
+
 void Scene::LateUpdate()
 {
     for (auto& object : m_objects)

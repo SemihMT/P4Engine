@@ -1,43 +1,24 @@
 #include "RotationCmp.h"
 #include "GameObject.h"
 #include "TimeManager.h"
-#include "glm/gtc/constants.hpp"
+#include <numbers>
+
+#include "imgui.h"
 
 namespace dae {
 
-    RotationCmp::RotationCmp(GameObject* owner, float radius, float rotationTime)
-        : BaseComponent(owner),
-        m_radius(radius),
-        m_rotationTime(rotationTime),
-        m_currentAngle(0),
-        m_ownerTransform(owner->GetTransform()),
-        m_parentTransform(nullptr)
-    {
-        if (const GameObject* parent = owner->GetParent())
-            m_parentTransform = parent->GetTransform();
-    }
+	RotationCmp::RotationCmp(GameObject* owner, float radius)
+		: BaseComponent(owner),
+		m_angle(0),
+		m_radius(radius)
+	{
+	}
 
-    void RotationCmp::Update()
-    {
-        if (!m_ownerTransform) return;
-
-        m_currentAngle += glm::two_pi<float>() * static_cast<float>(TimeManager::GetInstance().DeltaTime()) / m_rotationTime;
-
-       
-
-        const glm::vec3 center = m_parentTransform ? m_parentTransform->GetWorldPosition() : m_ownerTransform->GetWorldPosition();
-
-        const glm::vec3 circlePos{
-            center.x + (m_radius * cosf(m_currentAngle)),
-            center.y + (m_radius * sinf(m_currentAngle)),
-            0
-        }; 
-
-        if(m_parentTransform)
-            m_ownerTransform->SetLocalPosition(circlePos - center);
-        else
-            m_ownerTransform->SetLocalPosition(circlePos);
-
-    }
-
+	void RotationCmp::Update()
+	{
+		constexpr float two_pi = 2 * static_cast<float>(std::numbers::pi);
+		m_angle += static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed;
+		if (m_angle > two_pi) m_angle -= two_pi;
+		GetOwner()->GetTransform()->SetLocalPosition({ cos(m_angle) * m_radius, sin(m_angle) * m_radius, 0 });
+	}
 } // namespace dae

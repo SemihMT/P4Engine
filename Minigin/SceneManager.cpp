@@ -10,9 +10,19 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Render()
 {
+	//Rendering all scenes? should probably have one scene selected and render that one
 	for (const auto& scene : m_scenes)
 	{
 		scene->Render();
+	}
+}
+
+void dae::SceneManager::RenderImGui()
+{
+	//Rendering all scenes? should probably have one scene selected and render that one
+	for (const auto& scene : m_scenes)
+	{
+		scene->RenderImGui();
 	}
 }
 

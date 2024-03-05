@@ -8,6 +8,7 @@ namespace dae
 		
 	public:
 		virtual ~BaseComponent() = default;
+		
 
 		BaseComponent(const BaseComponent& other) = delete;
 		BaseComponent(BaseComponent&& other) = delete;
@@ -16,6 +17,7 @@ namespace dae
 		
 		virtual void Update();
 		virtual void Render() const;
+		virtual void RenderImGui() const;
 		virtual void LateUpdate();
 
 		
