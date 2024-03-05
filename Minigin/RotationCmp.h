@@ -20,7 +20,7 @@ namespace dae
 
 
 		void Update() override;
-		void RenderImGui() const override;
+		
 	private:
 		float m_angle;
 		float m_speed{ 1 };

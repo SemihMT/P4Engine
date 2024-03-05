@@ -105,6 +105,9 @@
     <ClInclude Include="imgui_impl_opengl3_loader.h">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="TrashTheCacheCmp.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="TrashTheCacheCmp.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
