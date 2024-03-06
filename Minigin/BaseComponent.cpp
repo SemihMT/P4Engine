@@ -33,7 +33,7 @@ void BaseComponent::Update()
 void BaseComponent::Render() const
 {}
 
-void BaseComponent::RenderImGui() const
+void BaseComponent::RenderImGui()
 {
 }
 

@@ -81,7 +81,7 @@ namespace dae
 		//General Functions
 		void Update();
 		void Render() const;
-		void RenderImGui() const;
+		void RenderImGui();
 		void LateUpdate();
 
 		//SceneGraph

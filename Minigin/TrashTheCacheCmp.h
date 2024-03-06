@@ -17,26 +17,28 @@ namespace dae
 		TrashTheCacheCmp& operator=(const TrashTheCacheCmp&) = delete;
 		TrashTheCacheCmp& operator=(TrashTheCacheCmp&&) = delete;
 
-		void RenderImGui() const override;
+		void RenderImGui() override;
 	private:
 
 		class gameobject;
 		class gameobjectAlt;
 
-		constexpr size_t m_bufferSize{ 1 << 20 };
-		constexpr int m_iterations{ 100 };
+		size_t m_bufferSize{ 1 << 20 };
+		int m_iterations{ 100 };
 
 		const size_t m_maxStepSize = 1024;
-		std::vector<std::vector<double>> m_timings{ 11 };
-		std::vector<std::vector<double>> m_goTimings{ 11 };
-		std::vector<std::vector<double>> m_goTimingsAlt{ 11 };
+		std::vector<std::vector<double>> m_timings{ m_maxStepSize + 1 };
+		std::vector<std::vector<double>> m_goTimings{ m_maxStepSize + 1 };
+		std::vector<std::vector<double>> m_goTimingsAlt{ m_maxStepSize + 1 };
 		
 
+		std::vector<float> m_intAvg{};
+		std::vector<float> m_goAvg{};
+		std::vector<float> m_goAltAvg{};
 
 		int* m_intArr{};
 		gameobject* m_goArr{};
 		gameobjectAlt* m_goArrAlt{};
-		void InitArrays();
 
 		void TrashTheCacheEX1();
 		void TrashTheCacheEX2();

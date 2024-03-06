@@ -180,7 +180,7 @@ void GameObject::Render() const
 	}
 }
 
-void GameObject::RenderImGui() const
+void GameObject::RenderImGui()
 {
 	for (auto& component : m_components)
 	{

@@ -17,7 +17,7 @@ namespace dae
 		
 		virtual void Update();
 		virtual void Render() const;
-		virtual void RenderImGui() const;
+		virtual void RenderImGui();
 		virtual void LateUpdate();
 
 		

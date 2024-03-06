@@ -5,3 +5,4 @@
 #include "TextureCmp.h"
 #include "FrameCounter.h"
 #include "RotationCmp.h"
+#include "TrashTheCacheCmp.h"

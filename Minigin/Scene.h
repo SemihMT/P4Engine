@@ -21,7 +21,7 @@ namespace dae
 
 		void Update();
 		void Render() const;
-		void RenderImGui() const;
+		void RenderImGui();
 		void LateUpdate();
 
 		~Scene();
