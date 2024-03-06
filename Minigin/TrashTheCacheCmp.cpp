@@ -81,7 +81,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX1()
 	}
 	for (int iteration = 0; iteration < m_iterations; ++iteration) {
 		// Measure time for each step size
-		for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+		for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 
 			auto start = std::chrono::steady_clock::now();
 
@@ -99,7 +99,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX1()
 
 	int counter{ 0 };
 	// Calculate the average time for each step size
-	for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+	for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 		// Remove highest and lowest values from each set
 		std::vector<double>& setTimings = m_timings[stepsize];
 		std::ranges::sort(setTimings);
@@ -129,7 +129,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX2()
 
 	for (int iteration = 0; iteration < m_iterations; ++iteration) {
 		// Measure time for each step size
-		for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+		for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 			auto start = std::chrono::steady_clock::now();
 
 			for (int i = 0; i < m_bufferSize; i += stepsize) {
@@ -145,7 +145,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX2()
 
 	int counter{ 0 };
 	// Calculate the average time for each step size
-	for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+	for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 		// Remove highest and lowest values from each set
 		std::vector<double>& setTimings = m_goTimings[stepsize];
 		std::ranges::sort(setTimings);
@@ -167,7 +167,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX2()
 
 	for (int iteration = 0; iteration < m_iterations; ++iteration) {
 		// Measure time for each step size
-		for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+		for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 			auto start = std::chrono::steady_clock::now();
 
 			for (int i = 0; i < m_bufferSize; i += stepsize) {
@@ -183,7 +183,7 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX2()
 
 	counter = 0;
 	// Calculate the average time for each step size
-	for (int stepsize = 1; stepsize <= m_maxStepSize; stepsize *= 2) {
+	for (int stepsize = 1; stepsize <= static_cast<int>(m_maxStepSize); stepsize *= 2) {
 		// Remove highest and lowest values from each set
 		std::vector<double>& setTimings = m_goTimingsAlt[stepsize];
 		std::ranges::sort(setTimings);

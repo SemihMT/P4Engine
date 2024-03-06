@@ -23,7 +23,7 @@ namespace dae
 		class gameobject;
 		class gameobjectAlt;
 
-		size_t m_bufferSize{ 1 << 20 };
+		int m_bufferSize{ 1 << 20 };
 		int m_iterations{ 100 };
 
 		const size_t m_maxStepSize = 1024;
