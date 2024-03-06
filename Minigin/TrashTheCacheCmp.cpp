@@ -45,27 +45,27 @@ void dae::TrashTheCacheCmp::RenderImGui()
 		//AI-generated code from here ↓
 		//Couldn't find any resources regarding drawing two datasets on one graph using pure ImGui
 		//Should probably have added ImPlot...
-		ImDrawList* drawList = ImGui::GetWindowDrawList();
-		ImVec2 graph_min = ImGui::GetItemRectMin();
-		ImVec2 graph_max = ImGui::GetItemRectMax();
+		//ImDrawList* drawList = ImGui::GetWindowDrawList();
+		//ImVec2 graph_min = ImGui::GetItemRectMin();
+		//ImVec2 graph_max = ImGui::GetItemRectMax();
 
-		// Find the maximum and minimum values in m_goAltAvg
-		float max_value = *std::max_element(m_goAltAvg.begin(), m_goAltAvg.end());
-		float min_value = *std::min_element(m_goAltAvg.begin(), m_goAltAvg.end());
+		//// Find the maximum and minimum values in m_goAltAvg
+		//float max_value = *std::max_element(m_goAltAvg.begin(), m_goAltAvg.end());
+		//float min_value = *std::min_element(m_goAltAvg.begin(), m_goAltAvg.end());
 
-		
-		for (int i = 1; i < m_goAltAvg.size(); i++)
-		{
-			// Normalize the values to [0, 1]
-			float normalized_prev = (m_goAltAvg[i - 1] - min_value) / (max_value - min_value);
-			float normalized_curr = (m_goAltAvg[i] - min_value) / (max_value - min_value);
+		//
+		//for (int i = 1; i < m_goAltAvg.size(); i++)
+		//{
+		//	// Normalize the values to [0, 1]
+		//	float normalized_prev = (m_goAltAvg[i - 1] - min_value) / (max_value - min_value);
+		//	float normalized_curr = (m_goAltAvg[i] - min_value) / (max_value - min_value);
 
-			drawList->AddLine(
-				ImVec2(graph_min.x + (i - 1) / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_prev) * (graph_max.y - graph_min.y)),
-				ImVec2(graph_min.x + i / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_curr) * (graph_max.y - graph_min.y)),
-				IM_COL32(255, 0, 0, 255)  // Red color
-			);
-		}
+		//	drawList->AddLine(
+		//		ImVec2(graph_min.x + (i - 1) / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_prev) * (graph_max.y - graph_min.y)),
+		//		ImVec2(graph_min.x + i / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_curr) * (graph_max.y - graph_min.y)),
+		//		IM_COL32(255, 0, 0, 255)  // Red color
+		//	);
+		//}
 
 
 		ImGui::End();
