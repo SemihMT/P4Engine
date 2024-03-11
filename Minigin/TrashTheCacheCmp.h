@@ -23,7 +23,7 @@ namespace dae
 		class gameobject;
 		class gameobjectAlt;
 
-		int m_bufferSize{ 1 << 20 };
+		int m_bufferSize{ 1 << 26 };
 		int m_iterations{ 100 };
 
 		const size_t m_maxStepSize = 1024;
@@ -40,8 +40,12 @@ namespace dae
 		gameobject* m_goArr{};
 		gameobjectAlt* m_goArrAlt{};
 
-		void TrashTheCacheEX1();
-		void TrashTheCacheEX2();
+
+		bool m_showPlotEx1{false};
+		bool m_showPlotEx2{false};
+
+		bool TrashTheCacheEX1();
+		bool TrashTheCacheEX2();
 
 
 

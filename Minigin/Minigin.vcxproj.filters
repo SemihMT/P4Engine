@@ -108,6 +108,12 @@
     <ClInclude Include="TrashTheCacheCmp.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="implot.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="implot_internal.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -187,6 +193,12 @@
     </ClCompile>
     <ClCompile Include="TrashTheCacheCmp.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="implot.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="implot_items.cpp">
+      <Filter>Imgui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

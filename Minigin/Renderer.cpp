@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl2.h"
+#include "implot.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
 
@@ -32,12 +33,14 @@ void dae::Renderer::Init(SDL_Window* window)
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	ImPlot::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		  // Enable ImGui windows outside the main window
+	
 
 	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
 	ImGui_ImplOpenGL3_Init();
@@ -57,6 +60,10 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 
+	//ImGuiID dockspaceId = ImGui::GetID("Dockspace");
+	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+	//ImGui::DockSpace(dockspaceId, ImVec2(0, 0),0);
+	ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport(), dockspaceFlags);
 	//Render the ImGui stuff in the scene
 	SceneManager::GetInstance().RenderImGui();
 
@@ -87,6 +94,7 @@ void dae::Renderer::Destroy()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
+	ImPlot::DestroyContext();
 	ImGui::DestroyContext();
 
 	if (m_renderer != nullptr)

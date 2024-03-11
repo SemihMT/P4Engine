@@ -5,9 +5,10 @@
 #include <numeric>
 
 #include "imgui.h"
+#include "implot.h"
 
 dae::TrashTheCacheCmp::TrashTheCacheCmp(GameObject* owner) :
-BaseComponent(owner)
+	BaseComponent(owner)
 
 {
 	m_intAvg.resize(11);
@@ -15,16 +16,35 @@ BaseComponent(owner)
 	m_goAltAvg.resize(11);
 }
 
-void dae::TrashTheCacheCmp::RenderImGui() 
+void dae::TrashTheCacheCmp::RenderImGui()
 {
 	{
+		//Create ImGui Window
 		ImGui::Begin("Ex 1");
+
+		//Add a button to it
 		if (ImGui::Button("Trash the cache!"))
 		{
-			TrashTheCacheEX1();
+			//Trash the cache if button gets pressed
+			m_showPlotEx1 = TrashTheCacheEX1();
 		}
-		auto max = std::max_element(m_intAvg.begin(), m_intAvg.end());
-		ImGui::PlotLines("Timings", m_intAvg.data(), static_cast<int>(m_intAvg.size()), 0, nullptr, 0.0f, *max + 1, ImVec2(200, 200));
+		//Find the max y value we need to show on the graph
+		const auto max = std::max_element(m_intAvg.begin(), m_intAvg.end());
+		const char* labels[]{ "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024" }; //custom X axis labels
+		std::vector<double> val{ 0,1,2,3,4,5,6,7,8,9,10 }; // defining at what location the labels get shown on the x axis
+		
+		if (m_showPlotEx1 && ImPlot::BeginPlot("Exercise 1", ImVec2(-1, 0), ImPlotFlags_NoMouseText | ImPlotFlags_Crosshairs | ImPlotFlags_NoInputs))
+		{
+
+			ImPlot::SetupAxes("Stepsize", "Time in ms");
+			ImPlot::SetupAxesLimits(0, 10, 0, *max + 1);
+			ImPlot::SetupAxisTicks(ImAxis_X1, val.data(), static_cast<int>(val.size()), labels, false);
+
+			ImPlot::PlotLine("Timings", m_intAvg.data(), static_cast<int>(m_intAvg.size()));
+
+			ImPlot::EndPlot();
+
+		}
 		ImGui::End();
 	}
 
@@ -32,48 +52,55 @@ void dae::TrashTheCacheCmp::RenderImGui()
 		ImGui::Begin("Ex 2");
 		if (ImGui::Button("Trash the cache!"))
 		{
-			TrashTheCacheEX2();
+			m_showPlotEx2 = TrashTheCacheEX2();
 		}
-		auto maxGo = std::max_element(m_goAvg.begin(), m_goAvg.end());
-		auto maxGoAlt = std::max_element(m_goAltAvg.begin(), m_goAltAvg.end());
-		ImGui::PlotLines("Timings GameObject", m_goAvg.data(), static_cast<int>(m_goAvg.size()), 0, nullptr, 0.0f, *maxGo + 1, ImVec2(200, 200));
-		ImGui::PlotLines("Timings GameObjectAlt", m_goAltAvg.data(), static_cast<int>(m_goAltAvg.size()), 0, nullptr, 0.0f, *maxGoAlt + 1, ImVec2(200, 200));
+		const auto maxGo = std::ranges::max_element(m_goAvg);
+		const auto maxGoAlt = std::ranges::max_element(m_goAltAvg);
+
+		const char* labels[]{ "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024" };
+		std::vector<double> val{ 0,1,2,3,4,5,6,7,8,9,10 };
 
 
-		ImGui::PlotLines("Combined", m_goAvg.data(), static_cast<int>(m_goAvg.size()), 0, nullptr, 0.0f, *maxGo + 1, ImVec2(200, 200));
+		if (m_showPlotEx2 && ImPlot::BeginPlot("Exercise 2", ImVec2(-1, 0), ImPlotFlags_NoMouseText | ImPlotFlags_Crosshairs | ImPlotFlags_NoInputs))
+		{
 
-		//AI-generated code from here ↓
-		//Couldn't find any resources regarding drawing two datasets on one graph using pure ImGui
-		//Should probably have added ImPlot...
-		//ImDrawList* drawList = ImGui::GetWindowDrawList();
-		//ImVec2 graph_min = ImGui::GetItemRectMin();
-		//ImVec2 graph_max = ImGui::GetItemRectMax();
+			ImPlot::SetupAxes("Stepsize", "Time in ms");
+			ImPlot::SetupAxesLimits(0, 10, 0, *maxGo + 1);
+			ImPlot::SetupAxisTicks(ImAxis_X1, val.data(), static_cast<int>(val.size()), labels, false);
 
-		//// Find the maximum and minimum values in m_goAltAvg
-		//float max_value = *std::max_element(m_goAltAvg.begin(), m_goAltAvg.end());
-		//float min_value = *std::min_element(m_goAltAvg.begin(), m_goAltAvg.end());
+			ImPlot::PlotLine("Timings GameObject", m_goAvg.data(), (int)m_goAvg.size());
 
-		//
-		//for (int i = 1; i < m_goAltAvg.size(); i++)
-		//{
-		//	// Normalize the values to [0, 1]
-		//	float normalized_prev = (m_goAltAvg[i - 1] - min_value) / (max_value - min_value);
-		//	float normalized_curr = (m_goAltAvg[i] - min_value) / (max_value - min_value);
+			ImPlot::EndPlot();
+		}
+		if (m_showPlotEx2 && ImPlot::BeginPlot("Exercise 2a", ImVec2(-1, 0), ImPlotFlags_NoMouseText | ImPlotFlags_Crosshairs | ImPlotFlags_NoInputs))
+		{
+			ImPlot::SetupAxes("Stepsize", "Time in ms");
+			ImPlot::SetupAxesLimits(0, 10, 0, *maxGoAlt + 1);
+			ImPlot::SetupAxisTicks(ImAxis_X1, val.data(), static_cast<int>(val.size()), labels, false);
 
-		//	drawList->AddLine(
-		//		ImVec2(graph_min.x + (i - 1) / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_prev) * (graph_max.y - graph_min.y)),
-		//		ImVec2(graph_min.x + i / (float)(m_goAltAvg.size() - 1) * (graph_max.x - graph_min.x), graph_min.y + (1.0f - normalized_curr) * (graph_max.y - graph_min.y)),
-		//		IM_COL32(255, 0, 0, 255)  // Red color
-		//	);
-		//}
+			ImPlot::PlotLine("Timings GameObjectAlt", m_goAltAvg.data(), static_cast<int>(m_goAltAvg.size()));
 
+			ImPlot::EndPlot();
+		}
+
+		if (m_showPlotEx2 && ImPlot::BeginPlot("Combined", ImVec2(-1, 0), ImPlotFlags_NoMouseText | ImPlotFlags_Crosshairs | ImPlotFlags_NoInputs))
+		{
+			ImPlot::SetupAxes("Stepsize", "Time in ms");
+			ImPlot::SetupAxesLimits(0, 10, 0, *maxGo + 1);
+			ImPlot::SetupAxisTicks(ImAxis_X1, val.data(), static_cast<int>(val.size()), labels, false);
+
+			ImPlot::PlotLine("Timings GameObject", m_goAvg.data(), (int)m_goAvg.size());
+			ImPlot::PlotLine("Timings GameObjectAlt", m_goAltAvg.data(), static_cast<int>(m_goAltAvg.size()));
+
+			ImPlot::EndPlot();
+		}
 
 		ImGui::End();
 	}
 
 }
 
-void dae::TrashTheCacheCmp::TrashTheCacheEX1()
+bool dae::TrashTheCacheCmp::TrashTheCacheEX1()
 {
 	m_intArr = new int[m_bufferSize];
 	for (int i = 0; i < m_bufferSize; ++i) {
@@ -113,19 +140,19 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX1()
 		//std::cout << stepsize << "        " << average << "         ms" << "\n";
 	}
 	delete[] m_intArr;
+	return true;
 
-	
 
 }
 
-void dae::TrashTheCacheCmp::TrashTheCacheEX2()
+bool dae::TrashTheCacheCmp::TrashTheCacheEX2()
 {
 
 	m_goArr = new gameobject[m_bufferSize];
 	for (int i = 0; i < m_bufferSize; ++i) {
 		m_goArr[i].id = i + 1;
 	}
-	
+
 
 	for (int iteration = 0; iteration < m_iterations; ++iteration) {
 		// Measure time for each step size
@@ -199,4 +226,5 @@ void dae::TrashTheCacheCmp::TrashTheCacheEX2()
 	}
 
 	delete[] m_goArrAlt;
+	return true;
 }
