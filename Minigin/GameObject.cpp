@@ -37,6 +37,19 @@ GameObject::GameObject(GameObject* parent, float x, float y, float z)
 	SetParent(parent, true);
 }
 
+void GameObject::SetName(const std::string& name)
+{
+	if(!name.empty())
+	{
+		m_name = name;
+	}
+}
+
+std::string GameObject::GetName() const
+{
+	return m_name;
+}
+
 GameObject* GameObject::GetParent()
 {
 	return m_parent;

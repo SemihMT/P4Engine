@@ -31,6 +31,9 @@ namespace dae
 		GameObject& operator=(const GameObject& other) = delete; //disable copy assignment
 		GameObject& operator=(GameObject&& other) = delete; //disable move assignment
 
+		void SetName(const std::string& name);
+		std::string GetName() const;
+
 		//SceneGraph
 		GameObject* GetParent(); //returns the pointer -> can be nullptr
 		bool IsChild(GameObject* gObject);
@@ -78,6 +81,8 @@ namespace dae
 		void RemoveComponent();
 #pragma endregion 
 	private:
+		std::string m_name{ "GameObject" };
+
 		//General Functions
 		void Update();
 		void Render() const;

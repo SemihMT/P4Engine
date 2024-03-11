@@ -11,6 +11,45 @@ unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) {}
 
+void Scene::DisplayHierarchy()
+{
+	if (ImGui::Begin("Hierarchy"))
+	{
+		for (size_t i{}; i < m_objects.size(); ++i)
+		{
+			DisplayGameObject(m_objects[i].get(), (int)i);
+		}
+		ImGui::End();
+	}
+}
+
+void Scene::DisplayGameObject(const GameObject* obj, int i)
+{
+	ImGuiTreeNodeFlags parentFlags =
+		ImGuiTreeNodeFlags_OpenOnArrow |
+		ImGuiTreeNodeFlags_OpenOnDoubleClick |
+		ImGuiTreeNodeFlags_SpanAvailWidth;
+
+	ImGuiTreeNodeFlags childFlags =
+		ImGuiTreeNodeFlags_OpenOnArrow |
+		ImGuiTreeNodeFlags_OpenOnDoubleClick |
+		ImGuiTreeNodeFlags_SpanAvailWidth |
+		ImGuiTreeNodeFlags_Leaf;
+	bool hasChildren = !obj->m_children.empty();
+	const auto flagsToUse = hasChildren ? parentFlags: childFlags;
+	if (ImGui::TreeNodeEx(( std::to_string(i) + " " + obj->GetName()).c_str(), flagsToUse))
+	{
+		if(hasChildren)
+		{
+			for(size_t j{}; j < obj->m_children.size(); ++j)
+			{
+				DisplayGameObject(obj->m_children[j].get(), static_cast<int>(j));
+			}
+		}
+		ImGui::TreePop();
+	}
+}
+
 Scene::~Scene() = default;
 
 void Scene::Add(std::unique_ptr<GameObject> object)
@@ -64,36 +103,8 @@ void Scene::RenderImGui()
 	}
 
 	//Unity-like hierarchy of game objects ↓ (WIP)
-
-	/*ImGui::Begin("Hierarchy");
-	if (ImGui::TreeNode("GameObjects"))
-	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth;
-
-		if(ImGui::TreeNodeEx("test", flags))
-		{
-			ImGui::BulletText("Information goes here");
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNodeEx("test1", flags))
-		{
-			ImGui::BulletText("Information goes here");
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNodeEx("test2", flags))
-		{
-			ImGui::BulletText("Information goes here");
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNodeEx("test3", flags))
-		{
-			ImGui::BulletText("Information goes here");
-			ImGui::TreePop();
-		}
-		ImGui::TreePop();
-
-	}
-	ImGui::End();*/
+	DisplayHierarchy();
+	
 }
 
 void Scene::LateUpdate()
