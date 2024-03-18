@@ -40,7 +40,10 @@ namespace dae
 		static unsigned int m_idCounter;
 
 		void DisplayHierarchy();
-		void DisplayGameObject(const GameObject* obj, int i);
+		bool DisplayGameObject(const GameObject* obj);
+		void DisplayChildren(const GameObject* obj);
+		void DisplayObjectInfo(const GameObject* obj);
+		const GameObject* m_selectedObject{ nullptr };
 	};
 
 }
