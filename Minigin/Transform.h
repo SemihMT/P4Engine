@@ -18,6 +18,9 @@ namespace dae
 		void SetLocalPosition(float x, float y, float z);
 		void SetLocalPosition(const glm::vec3& position);
 
+		void Translate(float x, float y, float z);
+		void Translate(const glm::vec3& translation);
+
 		//scale
 		const glm::vec3& GetWorldScale();
 		const glm::vec3& GetLocalScale() const;

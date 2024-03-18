@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "imgui.h"
+#include "imgui_internal.h"
 
 using namespace dae;
 
@@ -36,9 +37,15 @@ void Scene::DisplayGameObject(const GameObject* obj, int i)
 		ImGuiTreeNodeFlags_SpanAvailWidth |
 		ImGuiTreeNodeFlags_Leaf;
 	bool hasChildren = !obj->m_children.empty();
-	const auto flagsToUse = hasChildren ? parentFlags: childFlags;
+	auto flagsToUse = hasChildren ? parentFlags: childFlags;
 	if (ImGui::TreeNodeEx(( std::to_string(i) + " " + obj->GetName()).c_str(), flagsToUse))
 	{
+		if(ImGui::IsItemClicked())
+		{
+			//need to modify the last item's flags...
+			flagsToUse |= ImGuiTreeNodeFlags_Selected;
+			//ImGui::PushItemFlag()
+		}
 		if(hasChildren)
 		{
 			for(size_t j{}; j < obj->m_children.size(); ++j)

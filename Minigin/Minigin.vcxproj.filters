@@ -19,6 +19,9 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{9f1d93f8-5dcc-4e49-9c94-c2ab06d4a647}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{ead7a5d5-2c88-4bbc-9c85-89ce139a4829}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -114,6 +117,18 @@
     <ClInclude Include="implot_internal.h">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="XInputController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -199,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="implot_items.cpp">
       <Filter>Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="XInputController.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

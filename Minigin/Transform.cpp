@@ -139,6 +139,23 @@ void Transform::SetLocalPosition(const glm::vec3& position)
 	m_localPosition = position;
 	m_isDirty = true;
 }
+
+void Transform::Translate(float x, float y, float z)
+{
+	m_localPosition.x += x;
+	m_localPosition.y += y;
+	m_localPosition.z += z;
+	m_isDirty = true;
+
+}
+
+void Transform::Translate(const glm::vec3& translation)
+{
+	m_localPosition += translation;
+	m_isDirty = true;
+
+}
+
 void Transform::SetLocalScale(float x, float y, float z)
 {
 	m_localScale.x = x;
