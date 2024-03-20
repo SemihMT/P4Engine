@@ -43,8 +43,8 @@ namespace dae
 		bool IsDown(Button button) const;
 		bool IsUp(Button button) const;
 		bool IsPressed(Button button) const;
-		const glm::vec2& GetLeftThumbDir() const;
-		const glm::vec2& GetRightThumbDir() const;
+		const glm::vec2 GetLeftThumbDir() const;
+		const glm::vec2 GetRightThumbDir() const;
 		int GetControllerIndex() const;
 
 	private:

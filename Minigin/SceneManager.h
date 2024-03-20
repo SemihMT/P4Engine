@@ -10,6 +10,8 @@ namespace dae
 	{
 	public:
 		Scene& CreateScene(const std::string& name);
+		void SetCurrentScene(const std::string& name);
+		Scene* GetCurrentScene() const;
 
 		void Update();
 		void Render();
@@ -20,6 +22,7 @@ namespace dae
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
 		std::vector<std::unique_ptr<Scene>> m_scenes;
+		Scene* m_currentScene{};
 	};
 }
 

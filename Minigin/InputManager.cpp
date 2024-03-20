@@ -93,7 +93,10 @@ bool dae::InputManager::ProcessControllerInput()
 				continue;
 			if (controller->IsPressed(command.first.second))
 				command.second->Execute();
-
+			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f})
+			{
+				command.second->Execute();
+			}
 			
 		}
 
@@ -150,12 +153,12 @@ bool dae::InputManager::IsPressed(Controller idx, XInputController::Button butto
 	return m_controllers[static_cast<int>(idx)]->IsPressed(button);
 }
 
-const glm::vec2& dae::InputManager::GetLeftThumbDir(Controller idx) const
+const glm::vec2 dae::InputManager::GetLeftThumbDir(Controller idx) const
 {
 	return m_controllers[static_cast<int>(idx)]->GetLeftThumbDir();
 }
 
-const glm::vec2& dae::InputManager::GetRightThumbDir(Controller idx) const
+const glm::vec2 dae::InputManager::GetRightThumbDir(Controller idx) const
 {
 	return m_controllers[static_cast<int>(idx)]->GetRightThumbDir();
 }

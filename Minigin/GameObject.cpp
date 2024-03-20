@@ -1,5 +1,6 @@
 #include "GameObject.h"
 
+#include "SceneManager.h"
 #include "Transform.h"
 using namespace dae;
 
@@ -70,12 +71,21 @@ bool GameObject::IsChild(GameObject* gObject)
 
 }
 
-void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
+bool GameObject::IsParentValid(GameObject* parent)
 {
 	//Check if new parent is valid
 	if (parent == this || m_parent == parent || IsChild(parent))
-		return;
+		return false;
+	return true;
+}
 
+void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
+{
+	if (!IsParentValid(parent)) return;
+
+	//Set the new transform
+	//If we become a root object -> the local position becomes the position we see on screen (world pos)
+	//If we become a child of another object we either keep the position on screen, or we force a recalculation our world position based on our new parent
 	if (parent == nullptr)
 	{
 		m_transform->SetLocalPosition(m_transform->GetWorldPosition());
@@ -88,7 +98,9 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 			m_transform->SetLocalPosition(m_transform->GetWorldPosition() - parent->GetTransform()->GetWorldPosition());
 		m_transform->SetDirtyFlag();
 	}
-	//Remove this GO from parent's list
+
+
+	//If this object already had a parent -> Remove this GO from parent's list
 	if (m_parent)
 	{
 		//Find this GO in its parent's m_children list
@@ -96,7 +108,7 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 			[&](const std::unique_ptr<GameObject>& ptr) {return ptr.get() == this; });
 
 		//If found
-		if (it != m_children.end()) 
+		if (it != m_parent->m_children.end())
 		{
 			//Release the unique pointer from its cleanup/management duties
 			//(to prevent the destructor from being called when we remove it from the owning vector)
@@ -106,7 +118,18 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 			m_parent->m_children.erase(it);
 		}
 	}
+	//If the parent was nullptr -> the object is owned by the scene, and we want to change it now
+	else if (m_parent == nullptr && parent != nullptr)
+	{
+		//Remove this object from the Scene's GO list
+		//Can't use the Remove function as the GO's are stored as unique pointers.
+		//Remove would destroy this object
+		//The Pop function releases a given object, erases the unique pointer from the scene's list and returns the raw pointer. Ready to transfer ownership
+		//Maybe a more descriptive name is necessary...
+		 SceneManager::GetInstance().GetCurrentScene()->Pop(this);
+		//parent->m_children.emplace_back(obj);
 
+	}
 	//We can now overwrite who our parent is
 	m_parent = parent;
 
@@ -114,6 +137,10 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 	{
 		//Using emplace_back will construct the unique pointer from the raw this pointer we pass in
 		m_parent->m_children.emplace_back(this);
+	}
+	else
+	{
+		SceneManager::GetInstance().GetCurrentScene()->Add(std::unique_ptr<GameObject>{this});
 	}
 
 }
@@ -161,15 +188,17 @@ void GameObject::Update()
 		if (!component->IsDead() && !component->IsDisabled())
 		{
 			component->Update();
-			if(!m_children.empty())
-			{
-				for (const auto& child : m_children)
-				{
-					child->Update();
-				}
-			}
+			
 		}
 	}
+	if (!m_children.empty())
+	{
+		for (const auto& child : m_children)
+		{
+			child->Update();
+		}
+	}
+
 	std::erase_if(m_components, [](const auto& component) { return component->IsDead(); });
 }
 

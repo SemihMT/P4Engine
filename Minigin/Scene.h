@@ -17,6 +17,10 @@ namespace dae
 
 		void Add(std::unique_ptr<GameObject> object);
 		void Remove(GameObject* object);
+		//Removes the gameobject from the scene, allowing something else to store it
+		//is useful when re-parenting a gameobject owned by the scene (parent = nullptr) to another gameobject
+		//THE RETURNED OBJECT HAS TO GET OWNED BY SOMETHING ELSE TO PREVENT MEMORY LEAKS
+		GameObject* Pop(GameObject* object);
 		void RemoveAll();
 
 		void Update();
@@ -40,8 +44,9 @@ namespace dae
 		static unsigned int m_idCounter;
 
 		void DisplayHierarchy();
-		bool DisplayGameObject(const GameObject* obj);
-		void DisplayChildren(const GameObject* obj);
+		bool DisplayGameObject(GameObject* obj, GameObject* draggedObj);
+		void DisplayChildren(const GameObject* obj, GameObject* draggedObj);
+		void DragGameObject(GameObject* obj);
 		void DisplayObjectInfo(const GameObject* obj);
 		const GameObject* m_selectedObject{ nullptr };
 	};

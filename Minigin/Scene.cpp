@@ -12,16 +12,53 @@ unsigned int Scene::m_idCounter = 0;
 
 Scene::Scene(const std::string& name) : m_name(name) {}
 
+
+//This needs some hardcore refactoring.... but it works :D
 void Scene::DisplayHierarchy()
 {
-    ImGui::Begin("Hierarchy");
+
+    ImGui::Begin("Hierarchy"); 
+
+    //Making the whole hierarchy window a drop target to un-parent parented objects
+    //from: https://github.com/ocornut/imgui/issues/5539
+    const ImRect innerRect = ImGui::GetCurrentWindow()->InnerRect;
+	GameObject* draggedObj{ nullptr };
+    if (ImGui::BeginDragDropTargetCustom(innerRect, ImGui::GetID("Hierarchy")))
+    {
+        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT", ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
+        {
+            if (payload && payload->Data)
+            {
+
+                if (payload->IsPreview())
+                {
+                    ImGui::GetForegroundDrawList()->AddRectFilled(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget, 0.05f));
+                    ImGui::GetForegroundDrawList()->AddRect(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget), 0.0f, 0, 2.0f);
+                }
+
+                if (payload->IsDelivery())
+                {
+                    draggedObj = *(GameObject**)payload->Data;
+                    draggedObj->SetParent(nullptr, true);
+                }
+            }
+        }
+        ImGui::EndDragDropTarget();
+    }
+
+
+
+    //Display the objects
     for (const auto& object : m_objects)
     {
-        if (DisplayGameObject(object.get())) {
+        if(!object) continue;
+        if (DisplayGameObject(object.get(),draggedObj)) {
             // If an object is selected, update the selected object
             m_selectedObject = object.get();
         }
+        //DragGameObject(object.get());
     }
+   
     ImGui::End();
 
     // Display the object information window
@@ -30,12 +67,19 @@ void Scene::DisplayHierarchy()
     }
 }
 
-bool Scene::DisplayGameObject(const GameObject* obj)
+bool Scene::DisplayGameObject(GameObject* obj, GameObject* draggedObj)
 {
     ImGuiTreeNodeFlags treeNodeFlags =
         ImGuiTreeNodeFlags_OpenOnArrow |
         ImGuiTreeNodeFlags_OpenOnDoubleClick |
         ImGuiTreeNodeFlags_SpanAvailWidth;
+
+
+    bool isDraggingThisObj = (draggedObj == obj);
+    if (isDraggingThisObj)
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+
+
 
     bool isRootObj = obj->m_children.empty();
     if (isRootObj)
@@ -45,31 +89,81 @@ bool Scene::DisplayGameObject(const GameObject* obj)
 
     if (isNodeOpen)
     {
-        DisplayChildren(obj);
+        // If the object is being dragged and dropped onto, set its parent
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
+            {
+                if (payload && payload->Data)
+                {
+                    GameObject* droppedObj = *(GameObject**)payload->Data;
+                    // Set the parent of the dragged object to this object
+                    droppedObj->SetParent(obj, true);
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+        DragGameObject(obj);
+        // Display children recursively
+        for (const auto& child : obj->m_children)
+        {
+            DisplayGameObject(child.get(), draggedObj);
+        }
         ImGui::TreePop();
     }
-
+    if (isDraggingThisObj)
+    {
+        ImGui::PopStyleColor();
+    }
     // Return true if the object is selected
     return isNodeOpen && ImGui::IsItemClicked();
 }
 
-void Scene::DisplayChildren(const GameObject* obj)
+void Scene::DisplayChildren(const GameObject* obj, GameObject* draggedObj)
 {
     for (const auto& child : obj->m_children)
     {
-        DisplayGameObject(child.get());
+        if (!child)
+            continue;
+
+        if (DisplayGameObject(child.get(), draggedObj))
+        {
+            // If an object is selected, update the selected object
+            m_selectedObject = child.get();
+        }
+
+        // Recursive call to handle children of the current child object
+        DisplayChildren(child.get(), draggedObj);
+    }
+}
+
+void Scene::DragGameObject(GameObject* obj)
+{
+    if (obj != nullptr)
+    {
+        // Start drag and drop operation
+        if (ImGui::BeginDragDropSource())
+        {
+            // Set payload with the object pointer
+            ImGui::SetDragDropPayload("GAMEOBJECT", &obj, sizeof(GameObject*));
+
+            // Display object name as drag preview
+            ImGui::Text(obj->GetName().c_str());
+
+            ImGui::EndDragDropSource();
+        }
     }
 }
 
 void Scene::DisplayObjectInfo(const GameObject* obj)
 {
     // Begin the object information window
-    ImGui::Begin("Object Info");
+    ImGui::Begin("Object Info",nullptr,ImGuiWindowFlags_NoFocusOnAppearing);
 
     // Display object information
-    ImGui::Text("Name: %s", obj->GetName().c_str());
+    ImGui::TextWrapped("Name: %s", obj->GetName().c_str());
     ImGui::Separator();
-    ImGui::Text("pos: %.1f, %.1f, %.1f", obj->GetTransform()->GetLocalPosition().x, obj->GetTransform()->GetLocalPosition().y, obj->GetTransform()->GetLocalPosition().z);
+    ImGui::TextWrapped("pos: %.1f, %.1f, %.1f", obj->GetTransform()->GetLocalPosition().x, obj->GetTransform()->GetLocalPosition().y, obj->GetTransform()->GetLocalPosition().z);
 
     // Add more information here if needed
 
@@ -101,6 +195,29 @@ void Scene::Remove(GameObject* object)
 	std::erase_if(m_objects, [&](const auto& ptr) {
 		return ptr.get() == object;
 		});
+}
+
+GameObject* Scene::Pop(GameObject* object)
+{
+    //Find the given GO in the list
+    const auto it = std::ranges::find_if(m_objects,
+        [&](const std::unique_ptr<GameObject>& ptr) {return ptr.get() == object; });
+
+    //If found
+    if (it != m_objects.end())
+    {
+        //store the found object's raw ptr
+        auto tmp = it->get();
+
+        //Release the unique pointer from its cleanup/management duties
+        //(to prevent the destructor from being called when we remove it from the owning vector)
+        it->release();
+        //Remove the released unique pointer from the vector
+        //Which would be a unique pointer to nullptr 
+       m_objects.erase(it);
+       return tmp;
+    }
+    return nullptr;
 }
 
 void Scene::RemoveAll()

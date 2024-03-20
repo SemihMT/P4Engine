@@ -65,11 +65,11 @@ public:
 	{
 		return m_CurrentState.Gamepad.wButtons & button;
 	}
-	const glm::vec2& GetLeftThumbDir() const
+	const glm::vec2 GetLeftThumbDir() const
 	{
 		return m_LeftThumbStickDir;
 	}
-	const glm::vec2& GetRightThumbDir() const
+	const glm::vec2 GetRightThumbDir() const
 	{
 		return m_RightThumbStickDir;
 	}
@@ -90,9 +90,9 @@ private:
 
 			float magnitudeL = sqrtf(LX * LX + LY * LY);
 
-			const float normalizedLX = LX / magnitudeL;
-			const float normalizedLY = LY / magnitudeL;
-
+			// Check if magnitudeL is greater than 0 before normalization
+			const float normalizedLX = (magnitudeL > 0) ? LX / magnitudeL : 0;
+			const float normalizedLY = (magnitudeL > 0) ? LY / magnitudeL : 0;
 
 			float normalizedMagnitudeL = 0;
 			if (magnitudeL > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
@@ -106,18 +106,18 @@ private:
 				magnitudeL -= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
 				//0.0 to 1.0 range
 				normalizedMagnitudeL = magnitudeL / (32767 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-
-
 			}
 			else
 			{
 				magnitudeL = 0.f;
 				normalizedMagnitudeL = 0.f;
 			}
+
 			//{LX,LY} = direction vector, normalizedMagnitudeL = magnitude.
 			m_LeftThumbStickDir.x = normalizedLX * normalizedMagnitudeL;
 			m_LeftThumbStickDir.y = normalizedLY * normalizedMagnitudeL;
 		}
+
 		//Right Thumbstick
 		{
 			const float RX = m_CurrentState.Gamepad.sThumbRX;
@@ -125,8 +125,10 @@ private:
 
 			float magnitudeR = sqrtf(RX * RX + RY * RY);
 
-			const float normalizedRX = RX / magnitudeR;
-			const float normalizedRY = RY / magnitudeR;
+
+			// Check if magnitudeL is greater than 0 before normalization
+			const float normalizedRX = (magnitudeR > 0) ? RX / magnitudeR : 0;
+			const float normalizedRY = (magnitudeR > 0) ? RY / magnitudeR : 0;
 
 			float normalizedMagnitudeR = 0;
 			if (magnitudeR > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
@@ -192,12 +194,12 @@ bool XInputController::IsPressed(Button button) const
 	return m_pImpl->IsPressed(static_cast<unsigned int>(button));
 }
 
-const glm::vec2& XInputController::GetLeftThumbDir() const
+const glm::vec2 XInputController::GetLeftThumbDir() const
 {
 	return m_pImpl->GetLeftThumbDir();
 }
 
-const glm::vec2& XInputController::GetRightThumbDir() const
+const glm::vec2 XInputController::GetRightThumbDir() const
 {
 	return m_pImpl->GetRightThumbDir();
 }

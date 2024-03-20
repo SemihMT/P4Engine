@@ -37,6 +37,7 @@ namespace dae
 		//SceneGraph
 		GameObject* GetParent(); //returns the pointer -> can be nullptr
 		bool IsChild(GameObject* gObject);
+		
 		void SetParent(GameObject* parent, bool keepWorldPos);
 		size_t GetChildCount() const;
 		GameObject* GetChildAt(int idx) const;
@@ -97,6 +98,8 @@ namespace dae
 		std::vector<ComponentPtr> m_components{};
 		bool m_isDisabled{ false };
 		bool m_isDead{ false };
+
+		bool IsParentValid(GameObject* parent);
 	};
 
 
