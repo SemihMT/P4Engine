@@ -125,6 +125,15 @@ float Transform::GetLocalRotation() const
 }
 
 
+void Transform::SetChildrenDirty() const
+{
+	const auto parent = GetOwner();
+	for(int i{}; i < static_cast<int>(parent->GetChildCount()); ++i)
+	{
+		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
+	}
+}
+
 //Local Getters -> primary data -> setting dirty flag when updated
 void Transform::SetLocalPosition(float x, float y, float z)
 {
@@ -133,21 +142,14 @@ void Transform::SetLocalPosition(float x, float y, float z)
 	m_localPosition.z = z;
 	//the data is "dirty" everytime we modify the primary data
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for(int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
+	SetChildrenDirty();
 }
 void Transform::SetLocalPosition(const glm::vec3& position)
 {
 	m_localPosition = position;
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
+	SetChildrenDirty();
+
 }
 
 void Transform::Translate(float x, float y, float z)
@@ -156,11 +158,8 @@ void Transform::Translate(float x, float y, float z)
 	m_localPosition.y += y;
 	m_localPosition.z += z;
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
+	SetChildrenDirty();
+
 
 }
 
@@ -168,12 +167,7 @@ void Transform::Translate(const glm::vec3& translation)
 {
 	m_localPosition += translation;
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
-
+	SetChildrenDirty();
 }
 
 void Transform::SetLocalScale(float x, float y, float z)
@@ -183,32 +177,20 @@ void Transform::SetLocalScale(float x, float y, float z)
 	m_localScale.z = z;
 	//the data is "dirty" everytime we modify the primary data
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
+	SetChildrenDirty();
+
 }
 void Transform::SetLocalScale(const glm::vec3& scale)
 {
 	m_localScale = scale;
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
+	SetChildrenDirty();
 }
 void Transform::SetLocalRotation(float r)
 {
 	m_localRotation = r;
 	m_isDirty = true;
-	auto parent = GetOwner();
-	for (int i{}; i < parent->GetChildCount(); ++i)
-	{
-		parent->GetChildAt(i)->GetTransform()->SetDirtyFlag();
-	}
-
+	SetChildrenDirty();
 }
 
 
