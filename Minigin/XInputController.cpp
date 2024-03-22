@@ -12,11 +12,29 @@ class XInputController::XInputControllerImpl
 public:
 	explicit XInputControllerImpl(int controllerIdx) : m_ControllerIdx(controllerIdx)
 	{
+		//Find out whether the controller is connected
+		m_IsConnected = CheckForConnection();
+
 		ZeroMemory(&m_PreviousState, sizeof(XINPUT_STATE));
 		ZeroMemory(&m_CurrentState, sizeof(XINPUT_STATE));
+
+
 	}
 
-
+	
+	bool CheckForConnection() const
+	{
+		XINPUT_STATE tmpState{};
+		const DWORD dwResult = XInputGetState(m_ControllerIdx, &tmpState); //can tmpState be nullptr to save memory?
+		if (dwResult == ERROR_DEVICE_NOT_CONNECTED)
+		{
+#ifdef _DEBUG
+			printf_s("Controller not connected!\n");
+#endif
+			return false;
+		}
+		return true;
+	}
 
 	void Update()
 	{
@@ -29,10 +47,13 @@ public:
 		const DWORD dwResult = XInputGetState(m_ControllerIdx, &m_CurrentState);
 		if (dwResult == ERROR_DEVICE_NOT_CONNECTED)
 		{
-			printf_s("Controller not connected\n");
+			printf_s("Controller not connected!\n");
+			m_IsConnected = false;
+
 		}
 		if (dwResult == ERROR_SUCCESS)
 		{
+			m_IsConnected = true;
 			//bitwise XOR (^)
 			// p  q    p+q
 			//
@@ -47,7 +68,7 @@ public:
 			m_ButtonsPressedThisFrame = buttonChanges & m_CurrentState.Gamepad.wButtons;
 			m_ButtonsReleasedThisFrame = buttonChanges & (~m_CurrentState.Gamepad.wButtons);
 
-			
+
 			CalculateThumbSticks();
 		}
 
@@ -76,6 +97,10 @@ public:
 	int GetControllerIndex() const
 	{
 		return m_ControllerIdx;
+	}
+	bool IsConnected() const
+	{
+		return m_IsConnected;
 	}
 private:
 
@@ -163,6 +188,7 @@ private:
 	glm::vec2 m_RightThumbStickDir{};
 
 	int m_ControllerIdx{};
+	bool m_IsConnected{ false };
 
 
 };
@@ -172,6 +198,16 @@ XInputController::XInputController(int controllerIdx) : m_pImpl(std::make_unique
 }
 
 XInputController::~XInputController() = default;
+
+bool XInputController::IsConnected() const
+{
+	return m_pImpl->IsConnected();
+}
+
+bool XInputController::CheckForConnection() const
+{
+	return m_pImpl->CheckForConnection();
+}
 
 
 void XInputController::Update()

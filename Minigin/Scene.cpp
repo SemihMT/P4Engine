@@ -74,13 +74,6 @@ bool Scene::DisplayGameObject(GameObject* obj, GameObject* draggedObj)
         ImGuiTreeNodeFlags_OpenOnDoubleClick |
         ImGuiTreeNodeFlags_SpanAvailWidth;
 
-
-    bool isDraggingThisObj = (draggedObj == obj);
-    if (isDraggingThisObj)
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-
-
-
     bool isRootObj = obj->m_children.empty();
     if (isRootObj)
         treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
@@ -107,14 +100,15 @@ bool Scene::DisplayGameObject(GameObject* obj, GameObject* draggedObj)
         // Display children recursively
         for (const auto& child : obj->m_children)
         {
-            DisplayGameObject(child.get(), draggedObj);
+            if (DisplayGameObject(child.get(), draggedObj))
+                //Child objects do not get selected as m_selectedObject gets overwritten by the first call to the function in DrawHierarchy
+                //Need to find a better way to do this, but its late now... ZzZzZzzzzz
+                m_selectedObject = child.get();
+
         }
         ImGui::TreePop();
     }
-    if (isDraggingThisObj)
-    {
-        ImGui::PopStyleColor();
-    }
+   
     // Return true if the object is selected
     return isNodeOpen && ImGui::IsItemClicked();
 }

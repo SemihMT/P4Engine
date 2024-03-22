@@ -13,6 +13,7 @@ namespace dae
 	public:
 		XInputController(int controllerIdx);
 		~XInputController();
+		
 
 		XInputController(const XInputController& other) = delete;
 		XInputController(XInputController&& other) = delete;
@@ -46,8 +47,10 @@ namespace dae
 		const glm::vec2 GetLeftThumbDir() const;
 		const glm::vec2 GetRightThumbDir() const;
 		int GetControllerIndex() const;
-
+		bool IsConnected() const;
+		bool CheckForConnection() const;
 	private:
+
 		//Pointer to Implementation (PIMPL idiom)
 		class XInputControllerImpl;
 		std::unique_ptr<XInputControllerImpl> m_pImpl{};

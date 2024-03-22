@@ -71,7 +71,7 @@ bool dae::InputManager::ProcessKeyboardInput()
 
 	const auto pressedKeys = SDL_GetKeyboardState(nullptr);
 	for (const auto& command : m_keyboardCommands)
-	{
+	{ 
 		if (pressedKeys[SDL_GetScancodeFromKey(command.first.first)])
 		{
 			command.second->Execute();
@@ -85,7 +85,11 @@ bool dae::InputManager::ProcessControllerInput()
 {
 	for(const auto& controller : m_controllers)
 	{
-		controller->Update();
+		if (controller->CheckForConnection())
+			controller->Update();
+		else
+			continue;
+			
 		for(const auto& command : m_consoleCommands)
 		{
 			//Check if this command was bound to this controller

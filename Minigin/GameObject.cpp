@@ -96,6 +96,8 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 	{
 		if (keepWorldPos)
 			m_transform->SetLocalPosition(m_transform->GetWorldPosition() - parent->GetTransform()->GetWorldPosition());
+		else
+			m_transform->SetLocalPosition({ 0,0,0 });
 		m_transform->SetDirtyFlag();
 	}
 
