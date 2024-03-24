@@ -72,7 +72,7 @@ bool dae::InputManager::ProcessKeyboardInput()
 	const auto pressedKeys = SDL_GetKeyboardState(nullptr);
 	for (const auto& command : m_keyboardCommands)
 	{ 
-		if (pressedKeys[SDL_GetScancodeFromKey(command.first.first)])
+		if (pressedKeys[SDL_GetScancodeFromKey(command.first.first)] && command.first.second == KeyState::Hold)
 		{
 			command.second->Execute();
 		}

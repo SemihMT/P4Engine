@@ -6,3 +6,7 @@
 #include "FrameCounter.h"
 #include "RotationCmp.h"
 #include "TrashTheCacheCmp.h"
+#include "HealthComponent.h"
+#include "HealthObserverComponent.h"
+#include "ScoreComponent.h"
+#include "ScoreObserverComponent.h"

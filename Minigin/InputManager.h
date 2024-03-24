@@ -52,7 +52,7 @@ namespace dae
 		void BindControllerCommand(ControllerKey key, std::unique_ptr<Command> command);
 		void BindControllerCommand(Controller controllerId, XInputController::Button button, std::unique_ptr<Command> command);
 		//Binding a command to keyboard input + the state during which the command should get executed
-		void BindKeyboardCommand(SDL_KeyCode keyCode, std::unique_ptr<Command> command, KeyState executionState = KeyState::ButtonDown);
+		void BindKeyboardCommand(SDL_KeyCode keyCode, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
 
 		//Keystate getters
 		bool IsDown(Controller idx, XInputController::Button button) const;

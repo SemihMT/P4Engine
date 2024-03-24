@@ -177,13 +177,17 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AddScoreCommand.h" />
     <ClInclude Include="BaseComponent.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="DamagePlayerCommand.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FrameCounter.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectCommand.h" />
+    <ClInclude Include="HealthComponent.h" />
+    <ClInclude Include="HealthObserverComponent.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_opengl3.h" />
@@ -198,13 +202,17 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="ObservableEvents.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RotationCmp.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScoreComponent.h" />
+    <ClInclude Include="ScoreObserverComponent.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Subject.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextObject.h" />
     <ClInclude Include="Texture2D.h" />
@@ -219,6 +227,8 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
+    <ClCompile Include="HealthObserverComponent.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
@@ -236,6 +246,8 @@
     <ClCompile Include="RotationCmp.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScoreComponent.cpp" />
+    <ClCompile Include="ScoreObserverComponent.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextObject.cpp" />
     <ClCompile Include="Texture2D.cpp" />

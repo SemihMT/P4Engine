@@ -132,6 +132,30 @@
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Subject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObservableEvents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="DamagePlayerCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthObserverComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreObserverComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AddScoreCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -220,6 +244,18 @@
     </ClCompile>
     <ClCompile Include="XInputController.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthObserverComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreObserverComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
