@@ -22,6 +22,8 @@ void dae::ScoreComponent::AddToScore(int scoreToAdd)
 		{
 			.data = {{"Score",m_currentScore}}
 		});
+	if (m_currentScore >= 500)
+		Notify(Event::Score_Win, {});
 }
 
 int dae::ScoreComponent::GetScore() const

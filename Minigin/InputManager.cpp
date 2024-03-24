@@ -97,7 +97,7 @@ bool dae::InputManager::ProcessControllerInput()
 				continue;
 			if (controller->IsPressed(command.first.second))
 				command.second->Execute();
-			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f})
+			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f} && command.first.second == XInputController::Button::LEFT_THUMB)
 			{
 				command.second->Execute();
 			}

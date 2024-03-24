@@ -16,6 +16,7 @@ namespace dae
 		Player_Damaged,
 
 		Score_Add,
+		Score_Win
 
 
 	};

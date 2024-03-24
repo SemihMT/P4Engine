@@ -156,6 +156,12 @@
     <ClInclude Include="AddScoreCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="StatsAndAchievements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamAchievements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -256,6 +262,12 @@
     </ClCompile>
     <ClCompile Include="ScoreObserverComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StatsAndAchievements.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SteamAchievements.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

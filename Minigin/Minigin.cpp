@@ -5,10 +5,16 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "Minigin.h"
+#pragma warning( push )
+#pragma warning( disable : 4996)
+#include <steam_api.h>
+
+#pragma warning( pop ) 
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "SteamAchievements.h"
 #include "TimeManager.h"
 
 SDL_Window* g_window{};
@@ -84,7 +90,8 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 	auto& time = TimeManager::GetInstance();
-
+	auto& achievements = SteamAchievements::GetInstance();
+	achievements.Init();
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
@@ -95,6 +102,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	bool doContinue = true;
 	while (doContinue)
 	{
+		SteamAPI_RunCallbacks();
 		time.Update();
 
 		doContinue = input.ProcessInput();
