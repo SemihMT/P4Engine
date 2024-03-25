@@ -13,8 +13,13 @@ void dae::ScoreObserverComponent::OnNotify(Event event, const EventData& data)
 	if (event == Event::Score_Add)
 	{
 		const auto scoreDisplay = GetOwner()->GetComponent<Text>();
-		const auto health = data.Get<int>("Score");
-		scoreDisplay->SetText("Score: " + std::to_string(health));
+		const auto player = data.Get<GameObject*>("Player");
+		if (player->GetName().find('1') != std::string::npos)
+			m_player1Score = data.Get<int>("Score");
+		else
+			m_player2Score = data.Get<int>("Score");
+
+		scoreDisplay->SetText("Score: " + std::to_string(m_player1Score) + "\n\nScore: " + std::to_string(m_player2Score));
 	}
 	if(event == Event::Score_Win)
 	{

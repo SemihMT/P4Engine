@@ -17,14 +17,14 @@ void dae::HealthComponent::Damage(int damage)
 		m_currentHealth = 0;
 		Notify(Event::Player_Death,
 			{
-				.data = {{"Health", m_currentHealth}}
+				.data = {{"Health", m_currentHealth}, {"Player", GetOwner()}}
 			});
 	}
 	else
 	{
 		Notify(Event::Player_Damaged,
 			{
-				.data = {{"Health", m_currentHealth}}
+				.data = {{"Health", m_currentHealth}, {"Player", GetOwner()}}
 			});
 	}
 

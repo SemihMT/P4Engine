@@ -10,7 +10,7 @@ void dae::ScoreComponent::SetScore(int score)
 		m_currentScore = score;
 	Notify(Event::Score_Add,
 		{
-			.data = {{"Score",m_currentScore}}
+			.data = {{"Score",m_currentScore},{"Player",GetOwner()}}
 		});
 }
 
@@ -20,7 +20,7 @@ void dae::ScoreComponent::AddToScore(int scoreToAdd)
 		m_currentScore += scoreToAdd;
 	Notify(Event::Score_Add,
 		{
-			.data = {{"Score",m_currentScore}}
+			.data = {{"Score",m_currentScore}, {"Player",GetOwner()}}
 		});
 	if (m_currentScore >= 500)
 		Notify(Event::Score_Win, {});
