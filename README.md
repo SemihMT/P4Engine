@@ -1,4 +1,10 @@
-# Minigin
+# Minigin - Steam Achievements branch
+This branch is created for week 5's assignment: Observer & Event Queue.
+It contains the Steamworks API and won't run without Steam being active.
+The active scene is a proof of concept that showcases the use of the observer pattern to handle Steam's achievement system. 
+When a player reaches a score of 500, the achievement "Winner - Win one game" gets awarded to the user's Steam account.
+Use the Steam console + "reset_all_stats 480" to reset the achievements for the game.
+NOTE: You need a .txt file called "steam_appid" with "480" as its contents in the executable path for this to work.
 
 Minigin is a very small project using [SDL2](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
 
