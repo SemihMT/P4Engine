@@ -19,6 +19,7 @@ namespace dae
 		void OnNotify(Event event, const EventData& data) override;
 
 	private:
-		
+		int m_player1Health{ 3 };
+		int m_player2Health{ 3 };
 	};
 }

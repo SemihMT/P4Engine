@@ -20,7 +20,8 @@ namespace dae
 		void OnNotify(Event event, const EventData& data) override;
 
 	private:
-
+		int m_player1Score{ 0 };
+		int m_player2Score{ 0 };
 
 	};
 }
