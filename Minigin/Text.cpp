@@ -8,7 +8,7 @@
 #include "Texture2D.h"
 #include "Transform.h"
 using namespace dae;
-std::string Text::s_defaultFont = "Lingua.otf";
+std::string Text::s_defaultFont = "Fonts/Lingua.otf";
 Text::Text(GameObject* owner, std::shared_ptr<Font> font, const std::string& text)
 	: BaseComponent(owner),
 	m_needsUpdate(true),
