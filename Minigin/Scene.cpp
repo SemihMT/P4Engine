@@ -103,6 +103,7 @@ bool Scene::DisplayGameObject(GameObject* obj, GameObject* draggedObj)
             if (DisplayGameObject(child.get(), draggedObj))
                 //Child objects do not get selected as m_selectedObject gets overwritten by the first call to the function in DrawHierarchy
                 //Need to find a better way to do this, but its late now... ZzZzZzzzzz
+                //TODO:
                 m_selectedObject = child.get();
 
         }
