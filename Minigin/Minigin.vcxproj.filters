@@ -63,22 +63,7 @@
     <ClInclude Include="BaseComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="FrameCounter.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureCmp.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="RotationCmp.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
@@ -108,9 +93,6 @@
     <ClInclude Include="imgui_impl_opengl3_loader.h">
       <Filter>Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="TrashTheCacheCmp.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="implot.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -123,38 +105,11 @@
     <ClInclude Include="Command.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="MoveCommand.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectCommand.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Subject.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ObservableEvents.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="DamagePlayerCommand.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthObserverComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ScoreObserverComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AddScoreCommand.h">
-      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,22 +146,10 @@
     <ClCompile Include="TimeManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureCmp.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="BaseComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameCounter.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="RotationCmp.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
@@ -230,9 +173,6 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="TrashTheCacheCmp.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="implot.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -241,18 +181,6 @@
     </ClCompile>
     <ClCompile Include="XInputController.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthObserverComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ScoreObserverComponent.cpp">
-      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
