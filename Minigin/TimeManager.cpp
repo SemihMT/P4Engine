@@ -29,7 +29,7 @@ double dae::TimeManager::FrameTime() const
 	return m_frameTime;
 }
 
-void dae::TimeManager::SetFrameTime(int preferredFPS)
+void dae::TimeManager::SetPreferredFPS(int preferredFPS)
 {
 	m_frameTime = static_cast<double>(1000) / preferredFPS;
 }

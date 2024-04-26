@@ -4,11 +4,15 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
 #include "Minigin.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "ServiceLocator.h"
+#include "SoundService.h"
 #include "TimeManager.h"
 
 SDL_Window* g_window{};
@@ -16,7 +20,7 @@ SDL_Window* g_window{};
 void PrintSDLVersion()
 {
 	SDL_version version{};
-	SDL_VERSION(&version);
+	SDL_VERSION(&version)
 	printf("We compiled against SDL version %u.%u.%u ...\n",
 		version.major, version.minor, version.patch);
 
@@ -39,16 +43,26 @@ void PrintSDLVersion()
 	version = *TTF_Linked_Version();
 	printf("We are linking against SDL_ttf version %u.%u.%u.\n",
 		version.major, version.minor, version.patch);
+
+
+	SDL_MIXER_VERSION(&version)
+		printf("We compiled against SDL_mixer version %u.%u.%u ...\n",
+			version.major, version.minor, version.patch);
+
+	version = *Mix_Linked_Version();
+	printf("We are linking against SDL_mixer version %u.%u.%u.\n",
+		version.major, version.minor, version.patch);
 }
 
 dae::Minigin::Minigin(const std::string& dataPath)
 {
 	PrintSDLVersion();
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
+	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	g_window = SDL_CreateWindow(
 		"Programming 4 assignment",
@@ -71,6 +85,7 @@ dae::Minigin::Minigin(const std::string& dataPath)
 dae::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
+	ServiceLocator::removeService("Sound");
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 	SDL_Quit();
@@ -85,11 +100,17 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 	auto& time = TimeManager::GetInstance();
 
+	ServiceLocator::registerService<LoggingSoundService>("Sound");
+	auto ss = ServiceLocator::getService<ISoundService>("Sound");
+	ss->PlaySound("Victory.wav");
+
+	ss->PlayMusic("MainTheme.mp3");
+
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
 
-	time.SetFrameTime(60);
+	time.SetPreferredFPS(60);
 	//const milliseconds frameTime(static_cast<long long>(time.FrameTime()));
 
 	bool doContinue = true;
@@ -106,7 +127,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 
 		//Make the thread sleep for some time, so we don't update unnecessarily fast
-		auto endTime = steady_clock::now();
+		auto endTime = high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<milliseconds>(endTime - time.Current());
 
 		auto sleepTime = milliseconds(static_cast<long long>(time.FrameTime())) - elapsedTime;

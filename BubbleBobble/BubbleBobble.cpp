@@ -7,7 +7,6 @@
 #endif
 #endif
 
-#include "AddScoreCommand.h"
 #include "Minigin.h"
 #include "Scene.h"
 #include "SceneManager.h"
@@ -15,11 +14,9 @@
 #include "GameObject.h"
 #include "TimeManager.h"
 #include "Components.h"
-#include "DamagePlayerCommand.h"
 #include "InputManager.h"
 #include "MoveCommand.h"
-
-#include "Minigin.h"
+#include "ToggleSoundCommand.h"
 using namespace dae;
 void load()
 {
@@ -54,6 +51,7 @@ void load()
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_DOWN, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, 1.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_m, std::make_unique<ToggleSoundCommand>(),KeyState::ButtonUp);
 
 
 	scene.Add(std::move(playerObject));

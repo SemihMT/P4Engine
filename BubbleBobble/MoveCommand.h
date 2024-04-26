@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "GameObjectCommand.h"
+#include "ServiceLocator.h"
 #include "TimeManager.h"
 
 namespace dae
@@ -32,6 +33,7 @@ namespace dae
 			}
 			else
 				t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
+
 
 
 

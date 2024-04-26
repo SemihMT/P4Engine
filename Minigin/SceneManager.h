@@ -5,10 +5,15 @@
 #include "Scene.h"
 namespace dae
 {
-	//class Scene;
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
+
+		SceneManager(const SceneManager& other) = delete;
+		SceneManager(SceneManager&& other) = delete;
+		SceneManager& operator=(const SceneManager& other) = delete;
+		SceneManager& operator=(SceneManager&& other) = delete;
+
 		Scene& CreateScene(const std::string& name);
 		void SetCurrentScene(const std::string& name);
 		Scene* GetCurrentScene() const;

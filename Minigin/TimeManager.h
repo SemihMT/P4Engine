@@ -15,7 +15,7 @@ namespace dae
 		double DeltaTime() const;
 		double TotalTime() const;
 		double FrameTime() const;
-		void SetFrameTime(int preferredFPS);
+		void SetPreferredFPS(int preferredFPS);
 
 	private:
 		friend class Singleton<TimeManager>;
