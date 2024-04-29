@@ -22,6 +22,15 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{ead7a5d5-2c88-4bbc-9c85-89ce139a4829}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ServiceLocator">
+      <UniqueIdentifier>{81b23317-231b-4fcb-a49a-60baac1bf148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServiceLocator\Services">
+      <UniqueIdentifier>{58b8eb7d-1121-4b55-aabd-7c4af85394b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServiceLocator\Services\SoundService">
+      <UniqueIdentifier>{78eb8ed8-d460-4646-bc92-176d968daff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -108,20 +117,29 @@
     <ClInclude Include="Subject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServiceLocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Service.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SoundEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Music.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>ServiceLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="ISoundService.h">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
+    </ClInclude>
+    <ClInclude Include="LoggingSoundService.h">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
+    </ClInclude>
+    <ClInclude Include="NullSoundService.h">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundService.h">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
+    </ClInclude>
+    <ClInclude Include="Service.h">
+      <Filter>ServiceLocator\Services</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,17 +209,20 @@
     <ClCompile Include="XInputController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ServiceLocator.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SoundEffect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Music.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
+      <Filter>ServiceLocator</Filter>
+    </ClCompile>
+    <ClCompile Include="LoggingSoundService.cpp">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundService.cpp">
+      <Filter>ServiceLocator\Services\SoundService</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

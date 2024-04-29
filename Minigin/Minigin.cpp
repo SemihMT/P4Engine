@@ -8,11 +8,11 @@
 
 #include "Minigin.h"
 #include "InputManager.h"
+#include "LoggingSoundService.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "ServiceLocator.h"
-#include "SoundService.h"
 #include "TimeManager.h"
 
 SDL_Window* g_window{};

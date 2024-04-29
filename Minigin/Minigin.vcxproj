@@ -217,7 +217,10 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ISoundService.h" />
+    <ClInclude Include="LoggingSoundService.h" />
     <ClInclude Include="Music.h" />
+    <ClInclude Include="NullSoundService.h" />
     <ClInclude Include="Service.h" />
     <ClInclude Include="Minigin.h" />
     <ClInclude Include="Observer.h" />
@@ -249,6 +252,7 @@
     <ClCompile Include="implot.cpp" />
     <ClCompile Include="implot_items.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="LoggingSoundService.cpp" />
     <ClCompile Include="Minigin.cpp" />
     <ClCompile Include="Music.cpp" />
     <ClCompile Include="Renderer.cpp" />
