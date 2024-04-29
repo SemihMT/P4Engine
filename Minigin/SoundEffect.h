@@ -10,6 +10,7 @@ namespace dae
 		SoundEffect();
 		explicit SoundEffect(const std::string& fullPath);
 		~SoundEffect();
+		
 
 		SoundEffect(const SoundEffect&) = delete;
 		SoundEffect(SoundEffect&&) = delete;
@@ -17,8 +18,11 @@ namespace dae
 		SoundEffect& operator= (const SoundEffect&&) = delete;
 
 		Mix_Chunk* GetSoundEffect() const;
+		//void SetChannel(int mixPlayChannel);
+		void Play();
 
 	private:
 		Mix_Chunk* m_soundEffect;
+		int m_channel{ -1 };
 	};
 }

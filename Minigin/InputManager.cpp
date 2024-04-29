@@ -92,12 +92,32 @@ bool dae::InputManager::ProcessControllerInput()
 			
 		for(const auto& command : m_consoleCommands)
 		{
+			//Stored controller enum
+			Controller ctrl{ command.first.first.first };
 			//Check if this command was bound to this controller
-			if((int)command.first.first != controller->GetControllerIndex())
+			if(static_cast<int>(ctrl) != controller->GetControllerIndex())
 				continue;
-			if (controller->IsPressed(command.first.second))
-				command.second->Execute();
-			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f} && command.first.second == XInputController::Button::LEFT_THUMB)
+
+			//The button this command was bound to
+			const XInputController::Button btn{ command.first.first.second };
+			if(command.first.second == KeyState::ButtonDown)
+			{
+				if (controller->IsDown(btn))
+					command.second->Execute();
+			}
+			if (command.first.second == KeyState::ButtonUp)
+			{
+				if (controller->IsUp(btn))
+					command.second->Execute();
+			}
+			if (command.first.second == KeyState::Hold)
+			{
+				if (controller->IsPressed(btn))
+					command.second->Execute();
+			}
+
+			
+			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f} && btn == XInputController::Button::LEFT_THUMB)
 			{
 				command.second->Execute();
 			}
@@ -123,16 +143,19 @@ unsigned dae::InputManager::AddController()
 
 }
 
-void dae::InputManager::BindControllerCommand(ControllerKey key, std::unique_ptr<Command> command)
+
+void dae::InputManager::BindControllerCommand(ControllerKey key, std::unique_ptr<Command> command, KeyState executionState)
 {
-	m_consoleCommands[key] = std::move(command);
+	const ControllerKeyAndState controllerKeyState = std::make_pair(key, executionState);
+	m_consoleCommands[controllerKeyState] = std::move(command);
 }
 
 void dae::InputManager::BindControllerCommand(Controller controllerId, XInputController::Button button,
-	std::unique_ptr<Command> command)
+	std::unique_ptr<Command> command, KeyState executionState)
 {
 	const ControllerKey controllerKey = std::make_pair(controllerId, button);
-	m_consoleCommands[controllerKey] = std::move(command);
+	const ControllerKeyAndState controllerKeyState = std::make_pair(controllerKey, executionState);
+	m_consoleCommands[controllerKeyState] = std::move(command);
 }
 
 

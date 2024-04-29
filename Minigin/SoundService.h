@@ -42,6 +42,11 @@ namespace dae
 		SoundService();
 		~SoundService() override;
 
+		SoundService(const SoundService& other) = delete;
+		SoundService(SoundService&& other) = delete;
+		SoundService& operator=(const SoundService& other) = delete;
+		SoundService& operator=(SoundService&& other) = delete;
+
 		void PlaySound(const std::string& sound) override;
 		void PlayMusic(const std::string& music) override;
 		void SetVolume(float volume) override;
@@ -56,7 +61,8 @@ namespace dae
 		std::jthread m_soundThread;
 		std::condition_variable m_cv;
 		std::mutex m_soundMtx;
-		std::atomic<bool> m_isRunning{true};
+		bool m_isRunning{ true };
+
 		std::queue<std::string> m_soundQueue;
 		std::queue<std::string> m_musicQueue;
 
@@ -66,10 +72,16 @@ namespace dae
 	};
 
 	//Decorator pattern
-	class LoggingSoundService : public ISoundService
+	class LoggingSoundService final : public ISoundService
 	{
 	public:
 		LoggingSoundService();
+		~LoggingSoundService() override = default;
+
+		LoggingSoundService(const LoggingSoundService& other) = delete;
+		LoggingSoundService(LoggingSoundService&& other) = delete;
+		LoggingSoundService& operator=(const LoggingSoundService& other) = delete;
+		LoggingSoundService& operator=(LoggingSoundService&& other) = delete;
 
 		void PlaySound(const std::string& sound) override;
 

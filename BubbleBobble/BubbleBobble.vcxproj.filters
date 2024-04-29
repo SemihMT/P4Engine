@@ -51,6 +51,12 @@
     <ClCompile Include="TrashTheCacheCmp.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="ShootBubble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleMovementComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObservableEvents.h">
@@ -100,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="ToggleSoundCommand.h">
       <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootBubble.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleMovementComponent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -62,7 +62,6 @@ dae::Minigin::Minigin(const std::string& dataPath)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
-	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048);
 
 	g_window = SDL_CreateWindow(
 		"Programming 4 assignment",
@@ -80,6 +79,8 @@ dae::Minigin::Minigin(const std::string& dataPath)
 	Renderer::GetInstance().Init(g_window);
 
 	ResourceManager::GetInstance().Init(dataPath);
+
+	ServiceLocator::registerService<LoggingSoundService>("Sound");
 }
 
 dae::Minigin::~Minigin()
@@ -100,19 +101,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 	auto& time = TimeManager::GetInstance();
 
-	ServiceLocator::registerService<LoggingSoundService>("Sound");
-	auto ss = ServiceLocator::getService<ISoundService>("Sound");
-	ss->PlaySound("Victory.wav");
-
-	ss->PlayMusic("MainTheme.mp3");
-
+	
+	
 
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
 
 	time.SetPreferredFPS(60);
-	//const milliseconds frameTime(static_cast<long long>(time.FrameTime()));
-
 	bool doContinue = true;
 	while (doContinue)
 	{

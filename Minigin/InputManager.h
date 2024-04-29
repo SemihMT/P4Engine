@@ -26,13 +26,14 @@ namespace dae
 	};
 	//<Controller IDX, button on controller>
 	using ControllerKey = std::pair<Controller, XInputController::Button>;
+	using ControllerKeyAndState = std::pair<ControllerKey, KeyState>;
 	using KeyboardKey = std::pair<SDL_KeyCode, KeyState>;
 	
 	class InputManager final : public Singleton<InputManager>
 	{
 		
 		//<key on a given controller, command to execute when that key gets pressed>
-		using ControllerCommandsMap = std::map<ControllerKey, std::unique_ptr<Command>>;
+		using ControllerCommandsMap = std::map<ControllerKeyAndState, std::unique_ptr<Command>>;
 		//<Key on the keyboard, command that gets executed when that key gets pressed>
 		using KeyboardCommandsMap = std::map<KeyboardKey, std::unique_ptr<Command>>;
 	
@@ -49,8 +50,8 @@ namespace dae
 		//Adds a new controller and stores it in m_controllers
 		unsigned int AddController();
 		//Binding a command to a controller's key
-		void BindControllerCommand(ControllerKey key, std::unique_ptr<Command> command);
-		void BindControllerCommand(Controller controllerId, XInputController::Button button, std::unique_ptr<Command> command);
+		void BindControllerCommand(ControllerKey key, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
+		void BindControllerCommand(Controller controllerId, XInputController::Button button, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
 		//Binding a command to keyboard input + the state during which the command should get executed
 		void BindKeyboardCommand(SDL_KeyCode keyCode, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
 

@@ -9,7 +9,7 @@ dae::ScoreObserverComponent::ScoreObserverComponent(GameObject* owner) : BaseCom
 
 void dae::ScoreObserverComponent::OnNotify(Event event, const EventData& data)
 {
-	if (event == Event::Score_Add)
+	if (event == Event::Bubble_PopEnemy)
 	{
 		const auto scoreDisplay = GetOwner()->GetComponent<Text>();
 		const auto player = data.Get<GameObject*>("Player");

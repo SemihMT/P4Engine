@@ -14,10 +14,14 @@ namespace dae
 		Player_Death,
 		Player_Respawn,
 		Player_Damaged,
+		Player_ShootBubble,
+		Player_Jump,
 
-		Score_Add,
+		Bubble_HitEnemy, //Bubble has touched an enemy
+		Bubble_PopEnemy, //Bubble with enemy in has been popped
+		Bubble_PopNoEnemy,
 
-
+		Item_Collected
 	};
 
 	struct EventData

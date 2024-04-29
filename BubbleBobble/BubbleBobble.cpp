@@ -7,6 +7,7 @@
 #endif
 #endif
 
+#include "BubbleMovementComponent.h"
 #include "Minigin.h"
 #include "Scene.h"
 #include "SceneManager.h"
@@ -16,6 +17,8 @@
 #include "Components.h"
 #include "InputManager.h"
 #include "MoveCommand.h"
+#include "ShootBubble.h"
+#include "ShootCommand.h"
 #include "ToggleSoundCommand.h"
 using namespace dae;
 void load()
@@ -28,34 +31,49 @@ void load()
 	const auto smallestFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 12);
 #pragma endregion
 
-	auto playerObject = std::make_unique<GameObject>(glm::vec3{ 220,240,0 });
-	playerObject->AddComponent<Texture>("Sprites/Player.png");
-	playerObject->SetName("Player");
+	auto textObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
+	textObject->AddComponent<Text>(smallFont, "Press the spacebar or the B button to shoot a bubble!");
 
 	auto bubbleObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
-	playerObject->SetName("Bubble");
-	bubbleObject->AddComponent<Texture>("Sprites/Bubble1.png");
+	bubbleObject->SetName("Bubble");
+	bubbleObject->AddComponent<Texture>("Sprites/Characters/Player/EmptyBubble.png");
+	bubbleObject->AddComponent<BubbleMovementComponent>();
 	bubbleObject->Disable();
 
 
+	auto playerObject = std::make_unique<GameObject>(glm::vec3{ 220,240,0 });
+	playerObject->AddComponent<Texture>("Sprites/Player.png");
+	//addComponent<Physics> -> This component will add a constant downward movement to the player
+	//addComponent<Collision> -> This component checks whether an AABB is colliding with other Collision components
+	//addComponent<ShootBubble> -> This component interfaces with a bubble object pool when the "ShootCommand" is executed to instantiate a bubble at the player's position
+	playerObject->AddComponent<ShootBubble>(bubbleObject.get());
+	playerObject->SetName("Player");
 
 
+
+	//Player Controls
 	const float speed = 100.0f;
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_UP, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 2));
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_DOWN, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, 1.f, 0.f }, speed * 2));
+
+	InputManager::GetInstance().AddController();
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
+	//TODO: Replace the MoveCommand with a proper JumpCommand
+	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::A, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 25),KeyState::ButtonUp);
+	//TODO: This should invoke the ShootCommand 
+	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::B, std::make_unique<ShootCommand>(playerObject.get()),KeyState::ButtonUp);
 
-
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 2));
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_DOWN, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, 1.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 25), KeyState::ButtonUp);
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(playerObject.get()),KeyState::ButtonUp);
+
+	//Sound Controls
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_m, std::make_unique<ToggleSoundCommand>(),KeyState::ButtonUp);
 
 
 	scene.Add(std::move(playerObject));
 	scene.Add(std::move(bubbleObject));
+	scene.Add(std::move(textObject));
 
 }
 

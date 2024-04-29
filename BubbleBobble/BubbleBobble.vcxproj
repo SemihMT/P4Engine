@@ -160,19 +160,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp" />
+    <ClCompile Include="BubbleMovementComponent.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
     <ClCompile Include="RotationCmp.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreObserverComponent.cpp" />
+    <ClCompile Include="ShootBubble.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextureCmp.cpp" />
     <ClCompile Include="TrashTheCacheCmp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddScoreCommand.h" />
+    <ClInclude Include="BubbleMovementComponent.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="ShootBubble.h" />
+    <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="ToggleSoundCommand.h" />
     <ClInclude Include="DamagePlayerCommand.h" />
     <ClInclude Include="FrameCounter.h" />

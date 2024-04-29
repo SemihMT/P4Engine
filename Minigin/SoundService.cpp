@@ -19,6 +19,12 @@ SoundService::~SoundService()
 	m_cv.notify_all(); //notify the thread to stop waiting
 	if (m_soundThread.joinable())
 		m_soundThread.join();
+
+	m_sounds.clear();
+	m_music.clear();
+
+	Mix_CloseAudio();
+	Mix_Quit();
 }
 
 void SoundService::PlaySound(const std::string& sound)
@@ -39,11 +45,8 @@ void SoundService::SetVolume(float volume)
 	if (volume < 0.0f)
 		return;
 
-
-
 	float newVol{ MIX_MAX_VOLUME };
 	newVol *= volume;
-
 
 
 	if (static_cast<int>(newVol) == 0)
@@ -81,6 +84,7 @@ void SoundService::InitializeSoundLib()
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) < 0) {
 		printf("SDL Mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
+	Mix_AllocateChannels(16);
 	Mix_Volume(-1, MIX_MAX_VOLUME);
 }
 
@@ -97,24 +101,17 @@ void SoundService::SoundThreadFunction()
 
 		if (!m_soundQueue.empty())
 		{
+
 			auto sound = m_soundQueue.front();
 			m_soundQueue.pop();
 
 			//Play the sound if it's cached
-			if (m_sounds.contains(sound))
+			if (!m_sounds.contains(sound))
 			{
-				Mix_PlayChannel(-1, m_sounds[sound].GetSoundEffect(), 0);
+				const SoundEffect soundEffect{ sound };
+				m_sounds[sound] = soundEffect;
 			}
-			//Cache it & play if not
-			else
-			{
-
-				SoundEffect s{ sound };
-
-				m_sounds[sound] = s;
-				Mix_PlayChannel(-1, s.GetSoundEffect(), 0);
-
-			}
+ 			m_sounds[sound].Play();
 		}
 
 		if (!m_musicQueue.empty())
@@ -123,12 +120,7 @@ void SoundService::SoundThreadFunction()
 			m_musicQueue.pop();
 
 			//Play the music if it's cached
-			if (m_music.contains(music))
-			{
-				Mix_PlayMusic(m_music[music], -1);
-			}
-			//Cache it & play if not
-			else
+			if (!m_music.contains(music))
 			{
 				Mix_Music* m{ Mix_LoadMUS(music.c_str()) };
 				if (m == nullptr)
@@ -136,11 +128,9 @@ void SoundService::SoundThreadFunction()
 					printf("Failed to load music. SDL_Mixer error: %s\n", Mix_GetError());
 				}
 				else
-				{
 					m_music[music] = m;
-					Mix_PlayMusic(m, -1);
-				}
 			}
+			Mix_PlayMusic(m_music[music], -1);
 		}
 	}
 }
