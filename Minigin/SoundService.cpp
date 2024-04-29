@@ -1,16 +1,25 @@
 #include "SoundService.h"
-
 #include <iostream>
-
 #include "ResourceManager.h"
 
-
 using namespace dae;
+void SoundService::InitializeSoundLib()
+{
+
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) < 0) {
+		printf("SDL Mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+	}
+	//Mix_AllocateChannels(16);
+	Mix_Volume(-1, MIX_MAX_VOLUME / 2);
+
+	printf("Mixer has been initialized!\n");
+}
+
 SoundService::SoundService()
 {
 	InitializeSoundLib();
-
 	m_soundThread = std::jthread{ &SoundService::SoundThreadFunction,this };
+	printf("Normal SoundService Initialized!\n");
 }
 
 SoundService::~SoundService()
@@ -79,14 +88,6 @@ void SoundService::ToggleSound()
 
 }
 
-void SoundService::InitializeSoundLib()
-{
-	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096) < 0) {
-		printf("SDL Mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-	}
-	Mix_AllocateChannels(16);
-	Mix_Volume(-1, MIX_MAX_VOLUME);
-}
 
 void SoundService::SoundThreadFunction()
 {
@@ -101,17 +102,15 @@ void SoundService::SoundThreadFunction()
 
 		if (!m_soundQueue.empty())
 		{
-
 			auto sound = m_soundQueue.front();
 			m_soundQueue.pop();
 
 			//Play the sound if it's cached
 			if (!m_sounds.contains(sound))
 			{
-				const SoundEffect soundEffect{ sound };
-				m_sounds[sound] = soundEffect;
+				m_sounds.insert(std::make_pair(sound, std::make_unique<SoundEffect>(sound)));
 			}
- 			m_sounds[sound].Play();
+ 			m_sounds[sound]->Play();
 		}
 
 		if (!m_musicQueue.empty())
@@ -122,15 +121,9 @@ void SoundService::SoundThreadFunction()
 			//Play the music if it's cached
 			if (!m_music.contains(music))
 			{
-				Mix_Music* m{ Mix_LoadMUS(music.c_str()) };
-				if (m == nullptr)
-				{
-					printf("Failed to load music. SDL_Mixer error: %s\n", Mix_GetError());
-				}
-				else
-					m_music[music] = m;
+				m_music.insert(std::make_pair(music, std::make_unique<Music>(music)));
 			}
-			Mix_PlayMusic(m_music[music], -1);
+			m_music[music]->Play();
 		}
 	}
 }
@@ -138,7 +131,9 @@ void SoundService::SoundThreadFunction()
 
 
 LoggingSoundService::LoggingSoundService() : m_realSoundService{ std::make_unique<SoundService>() }
-{}
+{
+	printf("Logging SoundService Initialized!\n");
+}
 
 void LoggingSoundService::PlaySound(const std::string& sound)
 {

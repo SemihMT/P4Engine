@@ -6,7 +6,7 @@ dae::SoundEffect::SoundEffect() : m_soundEffect{nullptr}
 {
 }
 
-dae::SoundEffect::SoundEffect(const std::string& fullPath): m_soundEffect{nullptr}
+dae::SoundEffect::SoundEffect(const std::string& fullPath): m_soundEffect{nullptr}, m_path{fullPath}
 {
 	m_soundEffect = Mix_LoadWAV(fullPath.c_str());
 	if (m_soundEffect == nullptr)
@@ -23,8 +23,10 @@ dae::SoundEffect::~SoundEffect()
 
 	/*if (Mix_Playing(m_channel) > 0)
 		Mix_HaltChannel(m_channel);*/
+	
 	Mix_FreeChunk(m_soundEffect);
 	m_soundEffect = nullptr;
+	printf("Destroyed SoundEffect [%s]", m_path.c_str());
 }
 
 Mix_Chunk* dae::SoundEffect::GetSoundEffect() const

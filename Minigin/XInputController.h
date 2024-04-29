@@ -4,16 +4,11 @@
 
 namespace dae
 {
-
-
 	class XInputController final
 	{
-		
-
 	public:
 		XInputController(int controllerIdx);
 		~XInputController();
-		
 
 		XInputController(const XInputController& other) = delete;
 		XInputController(XInputController&& other) = delete;

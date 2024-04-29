@@ -80,13 +80,14 @@ dae::Minigin::Minigin(const std::string& dataPath)
 
 	ResourceManager::GetInstance().Init(dataPath);
 
-	ServiceLocator::registerService<LoggingSoundService>("Sound");
+	//The Service Locator is handled by the engine
+	ServiceLocator::GetInstance().RegisterService<LoggingSoundService>("Sound");
 }
 
 dae::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
-	ServiceLocator::removeService("Sound");
+	ServiceLocator::GetInstance().RemoveService("Sound");
 	SDL_DestroyWindow(g_window);
 	g_window = nullptr;
 	SDL_Quit();

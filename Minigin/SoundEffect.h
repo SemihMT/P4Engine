@@ -23,6 +23,7 @@ namespace dae
 
 	private:
 		Mix_Chunk* m_soundEffect;
+		std::string m_path{}; //For debug purposes, remove when done
 		int m_channel{ -1 };
 	};
 }

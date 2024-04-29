@@ -1,13 +1,13 @@
 #pragma once
 #include <condition_variable>
 #include <queue>
-#include <SDL_mixer.h>
 #include <string>
 #include <thread>
 #include <unordered_map>
 
 #include "Service.h"
 #include "SoundEffect.h"
+#include "Music.h"
 
 namespace dae
 {
@@ -58,16 +58,16 @@ namespace dae
 
 		void InitializeSoundLib();
 		void SoundThreadFunction();
-		std::jthread m_soundThread;
-		std::condition_variable m_cv;
-		std::mutex m_soundMtx;
+		std::jthread m_soundThread{};
+		std::condition_variable m_cv{};
+		std::mutex m_soundMtx{};
 		bool m_isRunning{ true };
 
-		std::queue<std::string> m_soundQueue;
-		std::queue<std::string> m_musicQueue;
+		std::queue<std::string> m_soundQueue{};
+		std::queue<std::string> m_musicQueue{};
 
-		std::unordered_map<std::string,SoundEffect> m_sounds;
-		std::unordered_map<std::string, Mix_Music*> m_music;
+		std::unordered_map<std::string,std::unique_ptr<SoundEffect>> m_sounds{};
+		std::unordered_map<std::string, std::unique_ptr<Music>> m_music{};
 
 	};
 

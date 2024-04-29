@@ -13,7 +13,7 @@ namespace dae
 		void Execute() override
 		{
 			GetGameObject()->GetComponent<ShootBubble>()->Shoot();
-			ServiceLocator::getService<ISoundService>("Sound")->PlaySound("ShootBullet.wav");
+			ServiceLocator::GetInstance().GetService<ISoundService>("Sound")->PlaySound("ShootBullet.wav");
 		}
 
 	};

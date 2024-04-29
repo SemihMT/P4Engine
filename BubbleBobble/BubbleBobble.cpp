@@ -54,7 +54,7 @@ void load()
 	//Player Controls
 	const float speed = 100.0f;
 
-	InputManager::GetInstance().AddController();
+	//InputManager::GetInstance().AddController();
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
 	//TODO: Replace the MoveCommand with a proper JumpCommand

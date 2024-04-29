@@ -1,12 +1,14 @@
 #pragma once
 #include "Command.h"
 #include "ServiceLocator.h"
-
-class ToggleSoundCommand : public Command
+namespace dae
 {
-public:
-	void Execute() override
+	class ToggleSoundCommand : public Command
 	{
-		ServiceLocator::getService<dae::ISoundService>("Sound")->ToggleSound();
-	}
-};
+	public:
+		void Execute() override
+		{
+			ServiceLocator::GetInstance().GetService<ISoundService>("Sound")->ToggleSound();
+		}
+	};
+}
