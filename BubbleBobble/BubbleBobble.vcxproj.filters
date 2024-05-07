@@ -45,17 +45,26 @@
     <ClCompile Include="Text.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="TextureCmp.cpp">
+    <ClCompile Include="TextureComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="TrashTheCacheCmp.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="ShootBubble.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BubbleMovementComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootBubble.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,7 +92,7 @@
     <ClInclude Include="ScoreObserverComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="TextureCmp.h">
+    <ClInclude Include="TextureComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
@@ -107,14 +116,23 @@
     <ClInclude Include="ToggleSoundCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="ShootBubble.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ShootCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="BubbleMovementComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootBubble.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

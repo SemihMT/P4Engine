@@ -2,7 +2,7 @@
 #include "BaseComponent.h"
 #include "Transform.h"
 #include "Text.h"
-#include "TextureCmp.h"
+#include "TextureComponent.h"
 #include "FrameCounter.h"
 #include "RotationCmp.h"
 #include "TrashTheCacheCmp.h"

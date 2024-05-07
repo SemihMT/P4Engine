@@ -98,11 +98,14 @@ private:
 	{
 		while (m_isRunning)
 		{
+			/* Feedback about this lock from Alex:
+			 * "You keep the lock while loading/playing the sound, making it basically useless to have it on another thread"
+			 * TODO: understand the feedback and fix this concurrency issue!
+			 */
 			std::unique_lock<std::mutex> lock(m_soundMtx);
 
 			m_cv.wait(lock, [this] {return !m_soundQueue.empty() || !m_musicQueue.empty() || !m_isRunning; });
 			if (!m_isRunning) break;
-
 
 			if (!m_soundQueue.empty())
 			{

@@ -110,7 +110,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.x = static_cast<int>(x);
 	dst.y = static_cast<int>(y);
 	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst,0.0,nullptr,texture.GetSDLFlipState());
 }
 
 void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
@@ -120,7 +120,45 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	dst.y = static_cast<int>(y);
 	dst.w = static_cast<int>(width);
 	dst.h = static_cast<int>(height);
-	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0.0, nullptr, texture.GetSDLFlipState());
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, Rectangle src, Rectangle dst) const
+{
+
+	SDL_Rect source{};
+	source.x = static_cast<int>(src.topLeft.x);
+	source.y = static_cast<int>(src.topLeft.y);
+	source.w = static_cast<int>(src.width);
+	source.h = static_cast<int>(src.height);
+
+	SDL_Rect destination{};
+	destination.x = static_cast<int>(dst.topLeft.x);
+	destination.y = static_cast<int>(dst.topLeft.y);
+	destination.w = static_cast<int>(dst.width);
+	destination.h = static_cast<int>(dst.height);
+
+
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &source, &destination, 0.0, nullptr, texture.GetSDLFlipState());
+}
+
+void dae::Renderer::RenderTexture(const Texture2D& texture, Rectangle src, const float x, const float y) const
+{
+
+	SDL_Rect source{};
+	source.x = static_cast<int>(src.topLeft.x);
+	source.y = static_cast<int>(src.topLeft.y);
+	source.w = static_cast<int>(src.width);
+	source.h = static_cast<int>(src.height);
+
+	SDL_Rect destination{};
+	destination.x = static_cast<int>(x);
+	destination.y = static_cast<int>(y);
+	destination.w = static_cast<int>(src.width);
+	destination.h = static_cast<int>(src.height);
+
+
+	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &source, &destination, 0.0, nullptr, texture.GetSDLFlipState());
 }
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

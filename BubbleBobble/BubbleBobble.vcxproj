@@ -159,25 +159,49 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="BubbleBobble.cpp" />
     <ClCompile Include="BubbleMovementComponent.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RotationCmp.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreObserverComponent.cpp" />
     <ClCompile Include="ShootBubble.cpp" />
+    <ClCompile Include="SpriteComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Text.cpp" />
-    <ClCompile Include="TextureCmp.cpp" />
+    <ClCompile Include="TextureComponent.cpp" />
     <ClCompile Include="TrashTheCacheCmp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddScoreCommand.h" />
+    <ClInclude Include="AnimationComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="BubbleMovementComponent.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="PhysicsComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ShootBubble.h" />
     <ClInclude Include="ShootCommand.h" />
+    <ClInclude Include="SpriteComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ToggleSoundCommand.h" />
     <ClInclude Include="DamagePlayerCommand.h" />
     <ClInclude Include="FrameCounter.h" />
@@ -190,7 +214,7 @@
     <ClInclude Include="ScoreComponent.h" />
     <ClInclude Include="ScoreObserverComponent.h" />
     <ClInclude Include="Text.h" />
-    <ClInclude Include="TextureCmp.h" />
+    <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TrashTheCacheCmp.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/vec2.hpp>
-
+#include <SDL_render.h>
 struct SDL_Texture;
 namespace dae
 {
@@ -10,17 +10,29 @@ namespace dae
 	class Texture2D final
 	{
 	public:
-		SDL_Texture* GetSDLTexture() const;
 		explicit Texture2D(SDL_Texture* texture);
 		~Texture2D();
 
-		glm::ivec2 GetSize() const;
+		Texture2D(const Texture2D&) = delete;
+		Texture2D(Texture2D&&) = delete;
+		Texture2D& operator= (const Texture2D&) = delete;
+		Texture2D& operator= (const Texture2D&&) = delete;
 
-		Texture2D(const Texture2D &) = delete;
-		Texture2D(Texture2D &&) = delete;
-		Texture2D & operator= (const Texture2D &) = delete;
-		Texture2D & operator= (const Texture2D &&) = delete;
+
+		void FlipHorizontal();
+		void FlipVertical();
+		void Rotate(float angle, bool degrees = true);
+
+
+		SDL_Texture* GetSDLTexture() const;
+		glm::ivec2 GetSize() const;
+		SDL_RendererFlip GetSDLFlipState() const;
+		float GetAngle(bool degrees = true) const;
+
+
 	private:
 		SDL_Texture* m_texture;
+		SDL_RendererFlip m_flipState{ SDL_FLIP_NONE };
+		float m_angle{ 0.0f }; //In degrees - See SDL_RenderCopyEx
 	};
 }
