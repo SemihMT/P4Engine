@@ -6,7 +6,8 @@ namespace dae
 	struct Rectangle
 	{
 		glm::vec2 topLeft;
-		float width, height;
+		float width;
+		float height;
 	};
 
 }

@@ -35,8 +35,14 @@ namespace dae
 
 		void SetLocalRotation(float r);
 
+		//Direction
+		const glm::vec3& GetForwardDirection() const;
+		void SetForwardDirection(const glm::vec3& direction);
+
+
 		//Dirty Flag
 		void SetDirtyFlag() { m_isDirty = true; }
+		bool GetDirtyFlag() const { return m_isDirty; }
 
 	private:
 
@@ -44,11 +50,12 @@ namespace dae
 		void UpdateWorldPosition();
 		void UpdateWorldScale();
 		void UpdateWorldRotation();
+
 		//primary
 		glm::vec3 m_worldPosition{};
 		glm::vec3 m_worldScale{};
 		float m_worldRotation{};
-
+		glm::vec3 m_forward{1,0,0};
 		//local
 		glm::vec3 m_localPosition{};
 		glm::vec3 m_localScale{};

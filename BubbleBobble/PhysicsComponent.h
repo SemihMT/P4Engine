@@ -1,6 +1,8 @@
 #pragma once
 #include <BaseComponent.h>
 
+#include "ColliderComponent.h"
+
 namespace dae
 {
 	class Transform;
@@ -25,8 +27,11 @@ namespace dae
 		bool IsGravityEnabled() const;
 	private:
 		Transform* m_transform;
+		ColliderComponent* m_collider;
+
 		float m_fallSpeed{ 9.81f };
 		float m_currentFallSpeed{ 0.0f };
 		bool m_shouldFall{ true };
+		float m_maxSpeed{ 100 };
 	};
 }

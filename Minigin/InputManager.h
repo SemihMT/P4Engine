@@ -59,6 +59,9 @@ namespace dae
 		bool IsDown(Controller idx, XInputController::Button button) const;
 		bool IsUp(Controller idx, XInputController::Button button) const;
 		bool IsPressed(Controller idx, XInputController::Button button) const;
+		bool IsDown(SDL_KeyCode key) const;
+		bool IsUp(SDL_KeyCode key) const;
+		bool IsPressed(SDL_KeyCode key) const;
 		const glm::vec2 GetLeftThumbDir(Controller idx) const;
 		const glm::vec2 GetRightThumbDir(Controller idx) const;
 
@@ -71,6 +74,7 @@ namespace dae
 		ControllerCommandsMap m_consoleCommands{};
 		KeyboardCommandsMap m_keyboardCommands{};
 
+		Uint8 m_previousKeyState[SDL_NUM_SCANCODES];
 	};
 
 }

@@ -193,4 +193,14 @@ void Transform::SetLocalRotation(float r)
 	SetChildrenDirty();
 }
 
+const glm::vec3& Transform::GetForwardDirection() const
+{
+	return m_forward;
+}
+
+void Transform::SetForwardDirection(const glm::vec3& direction)
+{
+	m_forward = glm::normalize(direction);
+}
+
 

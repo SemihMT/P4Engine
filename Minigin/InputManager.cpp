@@ -180,6 +180,28 @@ bool dae::InputManager::IsPressed(Controller idx, XInputController::Button butto
 	return m_controllers[static_cast<int>(idx)]->IsPressed(button);
 }
 
+bool dae::InputManager::IsDown(SDL_KeyCode key) const
+{
+	const Uint8* currentKeyState = SDL_GetKeyboardState(nullptr);
+	return currentKeyState[SDL_GetScancodeFromKey(key)] != 0;
+}
+
+bool dae::InputManager::IsUp(SDL_KeyCode key) const
+{
+	const Uint8* currentKeyState = SDL_GetKeyboardState(nullptr);
+	const Uint8 scancode = static_cast<Uint8>(SDL_GetScancodeFromKey(key));
+	return !currentKeyState[scancode] && m_previousKeyState[scancode];
+}
+
+bool dae::InputManager::IsPressed(SDL_KeyCode key) const
+{
+	const Uint8* currentKeyState = SDL_GetKeyboardState(nullptr);
+	const Uint8 scancode = static_cast<Uint8>(SDL_GetScancodeFromKey(key));
+	return currentKeyState[scancode] && !m_previousKeyState[scancode];
+}
+
+
+
 const glm::vec2 dae::InputManager::GetLeftThumbDir(Controller idx) const
 {
 	return m_controllers[static_cast<int>(idx)]->GetLeftThumbDir();

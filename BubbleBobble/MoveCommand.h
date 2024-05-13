@@ -33,6 +33,7 @@ namespace dae
 			}
 			else
 			{
+				t->SetForwardDirection(m_direction);
 				t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
 				FlipTexture(m_direction);
 			}

@@ -1,5 +1,6 @@
 #pragma once
 #include <BaseComponent.h>
+#include <glm/vec3.hpp>
 
 
 namespace dae
@@ -17,10 +18,11 @@ namespace dae
 		BubbleMovementComponent& operator=(BubbleMovementComponent&& other) = delete;
 
 		void Update() override;
+		void SetMovementDirection(const glm::vec3& dir);
 	private:
-		Transform* m_pTransform{ nullptr };
+		Transform* m_transform{ nullptr };
 		float m_movementSpeed{ 5.f };
-		
+		glm::vec3 m_direction{ 1,0,0 };
 	};
 
 }

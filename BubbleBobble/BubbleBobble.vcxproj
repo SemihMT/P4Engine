@@ -165,9 +165,16 @@
     </ClCompile>
     <ClCompile Include="BubbleBobble.cpp" />
     <ClCompile Include="BubbleMovementComponent.cpp" />
+    <ClCompile Include="ColliderComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
+    <ClCompile Include="IdleState.cpp" />
+    <ClCompile Include="JumpState.cpp" />
+    <ClCompile Include="MoveState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp">
       <SubType>
       </SubType>
@@ -177,6 +184,10 @@
     <ClCompile Include="ScoreObserverComponent.cpp" />
     <ClCompile Include="ShootBubble.cpp" />
     <ClCompile Include="SpriteComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="StateComponent.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -191,7 +202,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="BubbleMovementComponent.h" />
+    <ClInclude Include="ColliderComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Components.h" />
+    <ClInclude Include="IdleState.h" />
+    <ClInclude Include="JumpState.h" />
+    <ClInclude Include="MoveState.h" />
     <ClInclude Include="PhysicsComponent.h">
       <SubType>
       </SubType>
@@ -199,6 +217,10 @@
     <ClInclude Include="ShootBubble.h" />
     <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="SpriteComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="StateComponent.h">
       <SubType>
       </SubType>
     </ClInclude>

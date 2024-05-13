@@ -61,7 +61,9 @@ namespace dae
 		std::unordered_map<std::string, AnimationData> m_animations{};
 		std::pair<std::string, AnimationData> m_currentAnimation{};
 
+		Rectangle m_sourceSprite{};
 		glm::vec2 m_destinationSize{};
+		glm::vec2 m_srcSpriteOffset{};
 
 		double m_frameTimer{};
 

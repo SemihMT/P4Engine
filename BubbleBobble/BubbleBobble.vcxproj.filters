@@ -19,6 +19,9 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{2305a745-78d9-4f87-b80f-36cdb9111193}</UniqueIdentifier>
     </Filter>
+    <Filter Include="States">
+      <UniqueIdentifier>{882acf1b-38db-4948-aa70-458af19ada4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp">
@@ -65,6 +68,21 @@
     </ClCompile>
     <ClCompile Include="SpriteComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="StateComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="IdleState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="JumpState.cpp">
+      <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +151,21 @@
     </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StateComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IdleState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpState.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

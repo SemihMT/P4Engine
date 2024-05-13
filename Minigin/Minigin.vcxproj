@@ -232,6 +232,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="SoundService.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TimeManager.h" />
@@ -263,6 +264,7 @@
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="SoundService.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="Transform.cpp" />
