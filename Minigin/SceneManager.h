@@ -15,8 +15,9 @@ namespace dae
 		SceneManager& operator=(SceneManager&& other) = delete;
 
 		Scene& CreateScene(const std::string& name);
-		void SetCurrentScene(const std::string& name);
+
 		Scene* GetCurrentScene() const;
+		void SetCurrentScene(const std::string& name);
 
 		void Update();
 		void Render();
@@ -26,6 +27,7 @@ namespace dae
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+
 		std::vector<std::unique_ptr<Scene>> m_scenes;
 		Scene* m_currentScene{};
 	};

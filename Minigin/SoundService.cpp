@@ -31,8 +31,8 @@ public:
 		if (m_soundThread.joinable())
 			m_soundThread.join();
 
-		m_sounds.clear();
-		m_music.clear();
+		m_soundsMap.clear();
+		m_musicMap.clear();
 
 		Mix_CloseAudio();
 		Mix_Quit();
@@ -45,12 +45,14 @@ public:
 
 	void PlaySound(const std::string& sound)
 	{
+		std::lock_guard<std::mutex> lock(m_soundMtx);
 		//add the requested sound to the queue
 		m_soundQueue.push(dae::ResourceManager::GetInstance().GetDataPath() + "Sounds/FX/" + sound);
 		m_cv.notify_one();
 	}
 	void PlayMusic(const std::string& music)
 	{
+		std::lock_guard<std::mutex> lock(m_soundMtx);
 		m_musicQueue.push(dae::ResourceManager::GetInstance().GetDataPath() + "Sounds/" + music);
 		m_cv.notify_one();
 	}
@@ -98,39 +100,45 @@ private:
 	{
 		while (m_isRunning)
 		{
-			/* Feedback about this lock from Alex:
-			 * "You keep the lock while loading/playing the sound, making it basically useless to have it on another thread"
-			 * TODO: understand the feedback and fix this concurrency issue!
-			 */
 			std::unique_lock<std::mutex> lock(m_soundMtx);
-
 			m_cv.wait(lock, [this] {return !m_soundQueue.empty() || !m_musicQueue.empty() || !m_isRunning; });
 			if (!m_isRunning) break;
 
+
+			std::string sound;
+			std::string music;
+
 			if (!m_soundQueue.empty())
 			{
-				auto sound = m_soundQueue.front();
+				sound = m_soundQueue.front();
 				m_soundQueue.pop();
-
-				//Play the sound if it's cached
-				if (!m_sounds.contains(sound))
-				{
-					m_sounds.insert(std::make_pair(sound, std::make_unique<SoundEffect>(sound)));
-				}
-				m_sounds[sound]->Play();
 			}
-
 			if (!m_musicQueue.empty())
 			{
-				auto music = m_musicQueue.front();
+				music = m_musicQueue.front();
 				m_musicQueue.pop();
+			}
+			lock.unlock(); // release the lock
 
-				//Play the music if it's cached
-				if (!m_music.contains(music))
+			//m_soundQueue = std::queue<std::string>
+			if (!sound.empty())
+			{
+				//Play the sound if it's cached
+				if (!m_soundsMap.contains(sound))
 				{
-					m_music.insert(std::make_pair(music, std::make_unique<Music>(music)));
+					m_soundsMap.insert(std::make_pair(sound, std::make_unique<SoundEffect>(sound)));
 				}
-				m_music[music]->Play();
+				m_soundsMap[sound]->Play();
+			}
+			//m_musicQueue = std::queue<std::string>
+			if (!music.empty())
+			{
+				//Play the music if it's cached
+				if (!m_musicMap.contains(music))
+				{
+					m_musicMap.insert(std::make_pair(music, std::make_unique<Music>(music)));
+				}
+				m_musicMap[music]->Play();
 			}
 		}
 	}
@@ -142,12 +150,12 @@ private:
 	std::queue<std::string> m_soundQueue{};
 	std::queue<std::string> m_musicQueue{};
 
-	std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_sounds{};
-	std::unordered_map<std::string, std::unique_ptr<Music>> m_music{};
+	std::unordered_map<std::string, std::unique_ptr<SoundEffect>> m_soundsMap{};
+	std::unordered_map<std::string, std::unique_ptr<Music>> m_musicMap{};
 };
 
 
-SoundService::SoundService() : m_pImpl{std::make_unique<SoundServiceImpl>()}
+SoundService::SoundService() : m_pImpl{ std::make_unique<SoundServiceImpl>() }
 {
 }
 
