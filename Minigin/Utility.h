@@ -3,11 +3,11 @@
 
 namespace dae
 {
-	struct Rectangle
+	/*struct Rectangle
 	{
 		glm::vec2 topLeft;
 		float width;
 		float height;
-	};
+	};*/
 
 }

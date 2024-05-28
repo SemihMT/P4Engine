@@ -1,5 +1,6 @@
 #pragma once
 #include <BaseComponent.h>
+#include <SDL_rect.h>
 #include <vector>
 
 #include "Transform.h"
@@ -33,12 +34,12 @@ namespace dae
 		//void LateUpdate() override;
 		//void RenderImgui() override;
 	private:
-		bool Intersects(const Rectangle& other) const;
+		bool Intersects(const SDL_Rect& other) const;
 		CollisionSide GetCollisionSide(const ColliderComponent* other) const;
 
 
 		Transform* m_ownerTransform{};
-		Rectangle m_collider;
+		SDL_Rect m_collider;
 		bool m_isDirty{ false };
 		static std::vector<ColliderComponent*> m_colliderComponents;
 

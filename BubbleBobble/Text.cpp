@@ -60,7 +60,7 @@ void Text::Render() const
 	if (m_textTexture != nullptr)
 	{
 		const auto& pos = GetOwner()->GetComponent<Transform>()->GetWorldPosition();
-		Renderer::GetInstance().RenderTexture(*m_textTexture, pos.x, pos.y);
+		Renderer::GetInstance().RenderTexture(*m_textTexture, glm::vec2{pos});
 	}
 }
 

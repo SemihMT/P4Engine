@@ -19,11 +19,9 @@ namespace dae
 		Text& operator=(const Text& other) = delete;
 		Text& operator=(Text&& other) = delete;
 
-	public:
 		void Update() override;
 		void Render() const override;
 
-	public:
 		static std::string s_defaultFont;
 		void SetText(const std::string& text);
 

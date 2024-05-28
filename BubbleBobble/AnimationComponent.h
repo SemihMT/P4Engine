@@ -1,43 +1,41 @@
 #pragma once
 #include <BaseComponent.h>
-#include <SDL_render.h>
-#include "Texture2D.h"
 #include <string>
 #include <unordered_map>
-
 #include "TextureComponent.h"
-#include "Utility.h"
 
 namespace dae
 {
-	class AnimationComponent final : public BaseComponent
-	{
-		
-		
+
+	/* For animations: We assume that each animation is stored in its own row 
+		 * This way we can define an animation as a row number and a total number of animation frames in the animation
+		 * The size 
+		 */
 		struct AnimationData
 		{
 			AnimationData() = default;
-			AnimationData(Rectangle source, int rows, int cols, int totalFrames, float frameTime = 0.2f) :
-			sourceSprite{source}, animationRows(rows), animationCols(cols), totalFrames(totalFrames), frameTime(frameTime)
-			{}
-			AnimationData(const glm::vec2& initialPosition, const glm::vec2&  srcSize, int rows, int cols, int totalFrames, float frameTime = 0.2f) :
-				sourceSprite{ {initialPosition.x, initialPosition.y}, srcSize.x, srcSize.y}, animationRows{ rows }, animationCols{ cols }, totalFrames{ totalFrames }, frameTime{ frameTime }
+			AnimationData(SDL_Rect source, int numFrames, float frameTime = (1.0f/60.0f) * 8.0f) :
+			sourceSprite{source}, animationFrames(numFrames), frameTime(frameTime)
 			{}
 
+			AnimationData(int rowIdx, int numFrames,int srcSize = 16, float frameTime = (1.0f/60.0f) * 8.0f) :
+				sourceSprite{SDL_Rect{0,rowIdx * srcSize,srcSize,srcSize}}, currentSprite{sourceSprite},animationFrames(numFrames), frameTime(frameTime)
+			{}
 			//Initialize animation at the correct position and size on the spritesheet
-			Rectangle sourceSprite{};
+			SDL_Rect sourceSprite{};
+			SDL_Rect currentSprite{};
+			//Number of frames in this animation
+			int animationFrames{};
+			//Time before we skip to the next frame in the animation
+			float frameTime{ (1.0f/60.0f) * 8.0f };
 
-			//How many rows and columns of SpriteFrames does the animation take up
-			int animationRows{};
-			int animationCols{};
-
-			int totalFrames{};
 			int currentFrame{ 0 };
-			float frameTime{ 0.2f };
 		};
 
+	class AnimationComponent final : public BaseComponent
+	{
 	public:
-		AnimationComponent(GameObject* owner);
+		AnimationComponent(GameObject* owner, const std::string& textureFilePath );
 		virtual ~AnimationComponent() override = default;
 
 		AnimationComponent(const AnimationComponent& other) = delete;
@@ -57,15 +55,18 @@ namespace dae
 		//void LateUpdate() override;
 		void RenderImGui() override;
 	private:
-		TextureComponent* m_texture;
+		Transform* m_ownerTransform;
+		std::shared_ptr<Texture2D> m_texture;
 		std::unordered_map<std::string, AnimationData> m_animations{};
 		std::pair<std::string, AnimationData> m_currentAnimation{};
 
-		Rectangle m_sourceSprite{};
+		SDL_Rect m_sourceSprite{};
 		glm::vec2 m_destinationSize{};
 		glm::vec2 m_srcSpriteOffset{};
 
 		double m_frameTimer{};
+
+		void SetTextureOrientation();
 
 	};
 

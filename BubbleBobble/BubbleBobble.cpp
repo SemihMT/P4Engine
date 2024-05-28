@@ -43,19 +43,29 @@ void load()
 
 	auto bubbleObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
 	bubbleObject->SetName("Bubble");
-	bubbleObject->AddComponent<TextureComponent>("Sprites/Characters/Player/BubSpriteSheet.png");
-	bubbleObject->AddComponent<SpriteComponent>(glm::vec2{ 16 }, 3, 3, glm::vec2{ 16 });
+	bubbleObject->AddComponent<SpriteComponent>("Sprites/Characters/Player/BubSpriteSheet.png",glm::ivec2{ 16 }, 3, 3, glm::ivec2{ 16 });
 	bubbleObject->AddComponent<BubbleMovementComponent>();
 	bubbleObject->Disable();
 
 
 	auto playerObject = std::make_unique<GameObject>(glm::vec3{ 220,240,0 });
-	playerObject->AddComponent<TextureComponent>("Sprites/Characters/Player/BubSpriteSheet.png");
-
-	playerObject->AddComponent<AnimationComponent>()->AddAnimation("Walk", { glm::vec2{0,0},{16,16},1,4,4 ,1 / 24.0f });
-	playerObject->GetComponent<AnimationComponent>()->AddAnimation("Idle", { glm::vec2{0,0},{16,16} ,1,2,2 });
-	playerObject->GetComponent<AnimationComponent>()->AddAnimation("Jump", { glm::vec2{0,16},{16,16} ,1,4,4 });
+	playerObject->AddComponent<AnimationComponent>("Sprites/Characters/Player/BubSpriteSheet.png");
 	playerObject->GetComponent<AnimationComponent>()->SetDestinationSize({ 32,32 });
+
+	int row = 0;
+	int numFrames = 4;
+	const AnimationData walkAnimation{row,numFrames};
+	playerObject->GetComponent<AnimationComponent>()->AddAnimation("Walk", walkAnimation);
+
+	row = 0;
+	numFrames = 2;
+	const AnimationData idleAnimation{row,numFrames};
+	playerObject->GetComponent<AnimationComponent>()->AddAnimation("Idle", idleAnimation);
+
+	row = 1;
+	numFrames = 4;
+	const AnimationData jumpAnimation{row,numFrames};
+	playerObject->GetComponent<AnimationComponent>()->AddAnimation("Jump", jumpAnimation);
 
 	playerObject->AddComponent<StateComponent>()->SetState(std::make_unique<IdleState>(playerObject.get()));
 
@@ -72,8 +82,7 @@ void load()
 	{
 		auto tileObject = std::make_unique<GameObject>(glm::vec3{ 220 + i * 32,280,0 });
 		tileObject->SetName("Tile");
-		tileObject->AddComponent<TextureComponent>("Sprites/Levels/Tiles/TileMap.png");
-		tileObject->AddComponent<SpriteComponent>(glm::vec2{ 8 }, 5, 0, glm::vec2{ 32 });
+		tileObject->AddComponent<SpriteComponent>("Sprites/Levels/Tiles/TileMap.png",glm::ivec2{ 8 }, 5, 0, glm::ivec2{ 32 });
 		tileObject->AddComponent<ColliderComponent>(32);
 		scene.Add(std::move(tileObject));
 	}
@@ -82,8 +91,7 @@ void load()
 	{
 		auto tileObject = std::make_unique<GameObject>(glm::vec3{ 220 + i * 32,360,0 });
 		tileObject->SetName("Tile");
-		tileObject->AddComponent<TextureComponent>("Sprites/Levels/Tiles/TileMap.png");
-		tileObject->AddComponent<SpriteComponent>(glm::vec2{ 8 }, 5, 0, glm::vec2{ 32 });
+		tileObject->AddComponent<SpriteComponent>("Sprites/Levels/Tiles/TileMap.png",glm::ivec2{ 8 }, 5, 0, glm::ivec2{ 32 });
 		tileObject->AddComponent<ColliderComponent>(32);
 		scene.Add(std::move(tileObject));
 	}

@@ -40,7 +40,7 @@ void dae::Renderer::Init(SDL_Window* window)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		  // Enable ImGui windows outside the main window
-	
+
 
 	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
 	ImGui_ImplOpenGL3_Init();
@@ -104,61 +104,21 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void dae::Renderer::RenderTexture(const Texture2D& texture, const glm::vec2& position, const std::optional<glm::vec2>& size, const std::optional<SDL_Rect>& srcRect) const
 {
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	SDL_QueryTexture(texture.GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst,0.0,nullptr,texture.GetSDLFlipState());
+	// value_or: returns whatever is in the optional or the parameter if the optional is empty
+	// In this case: use the custom srcRect if there is one, otherwise use the whole texture size
+	const SDL_Rect src = srcRect.value_or(SDL_Rect{0, 0, texture.GetSize().x, texture.GetSize().y});
+
+	const SDL_Rect dst = {
+        static_cast<int>(position.x),
+        static_cast<int>(position.y),
+        size ? static_cast<int>(size->x) : src.w,	// if the size parameter has a value, use it
+        size ? static_cast<int>(size->y) : src.h	// idem
+    };
+
+    SDL_RenderCopyEx(m_renderer, texture.GetSDLTexture(), &src, &dst, texture.GetAngle(), nullptr, texture.GetSDLFlipState());
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
-{
-	SDL_Rect dst{};
-	dst.x = static_cast<int>(x);
-	dst.y = static_cast<int>(y);
-	dst.w = static_cast<int>(width);
-	dst.h = static_cast<int>(height);
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, 0.0, nullptr, texture.GetSDLFlipState());
-}
-
-void dae::Renderer::RenderTexture(const Texture2D& texture, Rectangle src, Rectangle dst) const
-{
-
-	SDL_Rect source{};
-	source.x = static_cast<int>(src.topLeft.x);
-	source.y = static_cast<int>(src.topLeft.y);
-	source.w = static_cast<int>(src.width);
-	source.h = static_cast<int>(src.height);
-
-	SDL_Rect destination{};
-	destination.x = static_cast<int>(dst.topLeft.x);
-	destination.y = static_cast<int>(dst.topLeft.y);
-	destination.w = static_cast<int>(dst.width);
-	destination.h = static_cast<int>(dst.height);
-
-
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &source, &destination, 0.0, nullptr, texture.GetSDLFlipState());
-}
-
-void dae::Renderer::RenderTexture(const Texture2D& texture, Rectangle src, const float x, const float y) const
-{
-
-	SDL_Rect source{};
-	source.x = static_cast<int>(src.topLeft.x);
-	source.y = static_cast<int>(src.topLeft.y);
-	source.w = static_cast<int>(src.width);
-	source.h = static_cast<int>(src.height);
-
-	SDL_Rect destination{};
-	destination.x = static_cast<int>(x);
-	destination.y = static_cast<int>(y);
-	destination.w = static_cast<int>(src.width);
-	destination.h = static_cast<int>(src.height);
-
-
-	SDL_RenderCopyEx(GetSDLRenderer(), texture.GetSDLTexture(), &source, &destination, 0.0, nullptr, texture.GetSDLFlipState());
-}
 
 SDL_Renderer* dae::Renderer::GetSDLRenderer() const { return m_renderer; }

@@ -34,5 +34,7 @@ namespace dae
 		SDL_Texture* m_texture;
 		SDL_RendererFlip m_flipState{ SDL_FLIP_NONE };
 		float m_angle{ 0.0f }; //In degrees - See SDL_RenderCopyEx
+		int m_width{ 0 };
+		int m_height{ 0 };
 	};
 }

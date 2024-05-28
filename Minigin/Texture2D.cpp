@@ -1,9 +1,10 @@
 #include "Texture2D.h"
 #include <glm/trigonometric.hpp>
 
-
 dae::Texture2D::Texture2D(SDL_Texture* texture) : m_texture{ texture }
 {
+	//Store the width and height of the texture
+	SDL_QueryTexture(texture,nullptr,nullptr,&m_width,&m_height);
 }
 
 dae::Texture2D::~Texture2D()
@@ -13,9 +14,7 @@ dae::Texture2D::~Texture2D()
 
 glm::ivec2 dae::Texture2D::GetSize() const
 {
-	SDL_Rect dst;
-	SDL_QueryTexture(GetSDLTexture(), nullptr, nullptr, &dst.w, &dst.h);
-	return { dst.w,dst.h };
+	return { m_width,m_height};
 }
 
 float dae::Texture2D::GetAngle(bool degrees) const

@@ -35,7 +35,6 @@ namespace dae
 			{
 				t->SetForwardDirection(m_direction);
 				t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
-				FlipTexture(m_direction);
 			}
 			
 		}
@@ -43,18 +42,5 @@ namespace dae
 		glm::vec3 m_direction{};
 		float m_speed{};
 		bool m_useJoysticks{ false };
-
-		void FlipTexture(const glm::vec3& direction) const
-		{
-			if(const auto textureComponent = GetGameObject()->GetComponent<TextureComponent>())
-			{
-				//We have to do some floating-point comparison using the epsilon because glm::sign returns a float -_-
-				constexpr float epsilon = 0.0001f;
-				if (std::abs(glm::sign(direction.x) - (textureComponent->IsFlippedHorizontal() ? 1.0f : -1.0f)) < epsilon)
-					textureComponent->FlipHorizontal();
-			}
-			
-		}
-
 	};
 }

@@ -6,10 +6,11 @@
 #include "ResourceManager.h"
 #include "TimeManager.h"
 
-dae::AnimationComponent::AnimationComponent(GameObject* owner) :
+dae::AnimationComponent::AnimationComponent(GameObject* owner, const std::string& textureFilePath) :
 	BaseComponent(owner),
-	m_texture{ GetOwner()->GetComponent<TextureComponent>() }
+	m_ownerTransform(owner->GetTransform())
 {
+	m_texture = ResourceManager::GetInstance().LoadTexture(textureFilePath);
 	assert(m_texture != nullptr);
 }
 
@@ -30,9 +31,6 @@ void dae::AnimationComponent::RemoveAnimation(const std::string& name)
 void dae::AnimationComponent::SetCurrentAnimation(const std::string& name)
 {
 	m_currentAnimation = std::make_pair(name, m_animations.at(name));
-	m_sourceSprite = m_currentAnimation.second.sourceSprite;
-	m_srcSpriteOffset.x = m_currentAnimation.second.sourceSprite.topLeft.x;
-	m_srcSpriteOffset.y = m_currentAnimation.second.sourceSprite.topLeft.y;
 }
 
 void dae::AnimationComponent::SetDestinationSize(const glm::vec2& size)
@@ -45,11 +43,13 @@ void dae::AnimationComponent::Update()
 {
 	m_frameTimer += TimeManager::GetInstance().DeltaTime();
 
-	if (m_frameTimer >= m_currentAnimation.second.frameTime)
+	SetTextureOrientation();
+	auto& [name, animData] = m_currentAnimation;
+	if (m_frameTimer >= animData.frameTime)
 	{
-		m_currentAnimation.second.currentFrame = (m_currentAnimation.second.currentFrame + 1) % m_currentAnimation.second.totalFrames;
-		m_sourceSprite.topLeft.x = m_srcSpriteOffset.x + (m_currentAnimation.second.currentFrame % m_currentAnimation.second.animationCols) * m_currentAnimation.second.sourceSprite.width;
-		m_sourceSprite.topLeft.y = m_srcSpriteOffset.y + (m_currentAnimation.second.currentFrame / m_currentAnimation.second.animationCols) * m_currentAnimation.second.sourceSprite.height;
+		animData.currentFrame = (animData.currentFrame + 1) % animData.animationFrames;
+		animData.currentSprite.x = animData.sourceSprite.x + animData.currentFrame * animData.sourceSprite.w;
+		animData.currentSprite.y = animData.sourceSprite.y;
 		m_frameTimer = 0.0;
 	}
 
@@ -57,18 +57,31 @@ void dae::AnimationComponent::Update()
 
 void dae::AnimationComponent::Render() const
 {
-	const auto owner = GetOwner();
-	const auto transform = owner->GetTransform();
-	const auto pos = transform->GetWorldPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture->GetTexture2D(), m_sourceSprite, { {pos.x,pos.y},m_destinationSize.x,m_destinationSize.y });
+	const auto pos = m_ownerTransform->GetWorldPosition();
+	auto [name, animData] = m_currentAnimation;
+
+	Renderer::GetInstance().RenderTexture(*m_texture, glm::vec2{ pos }, m_destinationSize, animData.currentSprite);
 }
 
 void dae::AnimationComponent::RenderImGui()
 {
+	auto [name, animData] = m_currentAnimation;
 	ImGui::Begin("AnimationComponent");
 
-	ImGui::Text("Current animation: %s\nFrame: %d / %d", m_currentAnimation.first.c_str(), m_currentAnimation.second.currentFrame, m_currentAnimation.second.totalFrames);
+	ImGui::Text("Current animation: %s\nFrame: %d / %d", name.c_str(), animData.currentFrame, animData.animationFrames);
 
 
 	ImGui::End();
+}
+
+void dae::AnimationComponent::SetTextureOrientation()
+{
+
+	float forwardX = m_ownerTransform->GetForwardDirection().x;
+	bool isFlipped = (m_texture->GetSDLFlipState() == SDL_FLIP_HORIZONTAL);
+	bool shouldFlip = ((forwardX > 0) && isFlipped) || ((forwardX < 0) && !isFlipped);
+
+	if (shouldFlip) {
+		m_texture->FlipHorizontal();
+	}
 }
