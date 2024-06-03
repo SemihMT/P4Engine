@@ -84,6 +84,15 @@
     <ClCompile Include="JumpState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="LevelParser.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TileComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObservableEvents.h">
@@ -166,6 +175,15 @@
     </ClInclude>
     <ClInclude Include="JumpState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

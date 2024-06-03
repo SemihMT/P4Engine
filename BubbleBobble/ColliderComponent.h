@@ -29,8 +29,10 @@ namespace dae
 
 		void Update() override;
 		void Render() const override;
+
 		std::vector<CollisionResult> IsColliding() const;
 		bool IsCollidingWith(const ColliderComponent* otherCollider) const;
+
 		//void LateUpdate() override;
 		//void RenderImgui() override;
 	private:

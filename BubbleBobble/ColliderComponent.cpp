@@ -74,11 +74,11 @@ dae::ColliderComponent::CollisionSide dae::ColliderComponent::GetCollisionSide(c
 	// Determine which side of the collider is colliding with the other collider
 	const SDL_Rect otherColliderRect = other->m_collider;
 
-	const float thisCenterX = m_collider.x + m_collider.w / 2.0f;
-	const float thisCenterY = m_collider.y + m_collider.h / 2.0f;
+	const float thisCenterX = static_cast<float>(m_collider.x) + static_cast<float>(m_collider.w) / 2.0f;
+	const float thisCenterY = static_cast<float>(m_collider.y) + static_cast<float>(m_collider.h) / 2.0f;
 
-	const float otherCenterX = otherColliderRect.x + otherColliderRect.w / 2.0f;
-	const float otherCenterY = otherColliderRect.y + otherColliderRect.h / 2.0f;
+	const float otherCenterX = static_cast<float>(otherColliderRect.x) + static_cast<float>(otherColliderRect.w) / 2.0f;
+	const float otherCenterY = static_cast<float>(otherColliderRect.y) + static_cast<float>(otherColliderRect.h) / 2.0f;
 
 	if (m_collider.x <= otherColliderRect.x + otherColliderRect.w &&
 		m_collider.x + m_collider.w >= otherColliderRect.x &&
