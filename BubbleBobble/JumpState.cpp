@@ -9,12 +9,10 @@
 
 dae::JumpState::JumpState(GameObject* owner) : State(owner)
 {
-	OnEnter();
 }
 
 dae::JumpState::~JumpState()
 {
-	OnExit();
 }
 
 void dae::JumpState::OnEnter()
@@ -31,9 +29,11 @@ void dae::JumpState::OnExit()
 
 void dae::JumpState::Update()
 {
-	if (!GetOwner()->GetComponent<ColliderComponent>()->IsColliding().empty())
+	if (GetOwner()->GetComponent<ColliderComponent>()->IsCollidingBottom())
 	{
+		OnExit();
 		std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner());
+		idleState->OnEnter();
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
 	}
 	else

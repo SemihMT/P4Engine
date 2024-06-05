@@ -7,7 +7,7 @@
 
 bool dae::InputManager::ProcessInput()
 {
-	if(ProcessKeyboardInput() == false)
+	if (ProcessKeyboardInput() == false)
 		return false;
 	if (m_controllers.empty() == false)
 		ProcessControllerInput();
@@ -16,8 +16,13 @@ bool dae::InputManager::ProcessInput()
 
 bool dae::InputManager::ProcessKeyboardInput()
 {
+		// Get the current state of the keyboard
+	const Uint8* currentKeyState = SDL_GetKeyboardState(nullptr);
+	// Copy the current state to m_previousKeyState
+	std::copy(currentKeyState, currentKeyState + SDL_NUM_SCANCODES, m_previousKeyState);
 	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
+	while (SDL_PollEvent(&e))
+	{
 		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch (e.type)
 		{
@@ -71,36 +76,39 @@ bool dae::InputManager::ProcessKeyboardInput()
 
 	const auto pressedKeys = SDL_GetKeyboardState(nullptr);
 	for (const auto& command : m_keyboardCommands)
-	{ 
+	{
 		if (pressedKeys[SDL_GetScancodeFromKey(command.first.first)] && command.first.second == KeyState::Hold)
 		{
 			command.second->Execute();
 		}
 
 	}
+
+
+
 	return true;
 }
 
 bool dae::InputManager::ProcessControllerInput()
 {
-	for(const auto& controller : m_controllers)
+	for (const auto& controller : m_controllers)
 	{
 		if (controller->CheckForConnection())
 			controller->Update();
 		else
 			continue;
-			
-		for(const auto& command : m_consoleCommands)
+
+		for (const auto& command : m_consoleCommands)
 		{
 			//Stored controller enum
 			Controller ctrl{ command.first.first.first };
 			//Check if this command was bound to this controller
-			if(static_cast<int>(ctrl) != controller->GetControllerIndex())
+			if (static_cast<int>(ctrl) != controller->GetControllerIndex())
 				continue;
 
 			//The button this command was bound to
 			const XInputController::Button btn{ command.first.first.second };
-			if(command.first.second == KeyState::ButtonDown)
+			if (command.first.second == KeyState::ButtonDown)
 			{
 				if (controller->IsDown(btn))
 					command.second->Execute();
@@ -116,12 +124,12 @@ bool dae::InputManager::ProcessControllerInput()
 					command.second->Execute();
 			}
 
-			
-			if(controller->GetLeftThumbDir() != glm::vec2{0.0f,0.0f} && btn == XInputController::Button::LEFT_THUMB)
+
+			if (controller->GetLeftThumbDir() != glm::vec2{ 0.0f,0.0f } && btn == XInputController::Button::LEFT_THUMB)
 			{
 				command.second->Execute();
 			}
-			
+
 		}
 
 	}

@@ -19,9 +19,10 @@
 #include "Components.h"
 #include "IdleState.h"
 #include "InputManager.h"
+#include "JumpCommand.h"
 #include "LevelParser.h"
 #include "MoveCommand.h"
-#include "PhysicsComponent.h"
+#include "RigidBodyComponent.h"
 #include "ShootBubble.h"
 #include "ShootCommand.h"
 #include "SpriteComponent.h"
@@ -98,8 +99,8 @@ void load()
 
 	playerObject->AddComponent<StateComponent>()->SetState(std::make_unique<IdleState>(playerObject.get()));
 
-	playerObject->AddComponent<ColliderComponent>(16);
-	playerObject->AddComponent<PhysicsComponent>();
+	playerObject->AddComponent<ColliderComponent>(16, false);
+	playerObject->AddComponent<RigidBodyComponent>();
 
 	playerObject->AddComponent<ShootBubble>(bubbleObject.get());
 	playerObject->SetName("Player");
@@ -132,12 +133,12 @@ void load()
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
 	//TODO: Replace the MoveCommand with a proper JumpCommand
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::A, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 25), KeyState::ButtonUp);
+	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::A, std::make_unique<JumpCommand>(playerObject.get()), KeyState::ButtonUp);
 	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::B, std::make_unique<ShootCommand>(playerObject.get()), KeyState::ButtonUp);
 
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ -1.f, 0.f, 0.f }, speed * 2));
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 1.f, 0.f, 0.f }, speed * 2));
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<MoveCommand>(playerObject.get(), glm::vec3{ 0.f, -1.f, 0.f }, speed * 25), KeyState::ButtonUp);
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<JumpCommand>(playerObject.get(),150.0f), KeyState::ButtonUp);
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(playerObject.get()), KeyState::ButtonUp);
 
 	//Sound Controls

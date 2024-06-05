@@ -14,7 +14,7 @@ namespace dae
 			m_speed(speed)
 		{
 		}
-		MoveCommand(GameObject* gameObject,float speed = 1.0f)
+		MoveCommand(GameObject* gameObject, float speed = 1.0f)
 			: GameObjectCommand(gameObject),
 			m_direction(glm::vec3{}),
 			m_speed(speed),
@@ -34,9 +34,19 @@ namespace dae
 			else
 			{
 				t->SetForwardDirection(m_direction);
-				t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
+
+				bool goingLeftWhileTouchingLeft = GetGameObject()->GetComponent<ColliderComponent>()->IsCollidingLeft() && m_direction == glm::vec3{ -1,0,0 };
+				bool goingRightWhileTouchingRight = GetGameObject()->GetComponent<ColliderComponent>()->IsCollidingRight() && m_direction == glm::vec3{ 1,0,0 };
+				//bool currently
+				// ing = GetGameObject()->GetComponent<RigidBodyComponent>()->GetIsJumping();
+					if (!(goingLeftWhileTouchingLeft && goingRightWhileTouchingRight))
+					{
+						t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
+					}
+
+
 			}
-			
+
 		}
 	private:
 		glm::vec3 m_direction{};

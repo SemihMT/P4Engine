@@ -13,14 +13,15 @@ namespace dae
 	public:
 		enum class CollisionSide { None, Top, Bottom, Left, Right };
 
-		struct CollisionResult {
+		struct CollisionResult
+		{
 			ColliderComponent* otherCollider;
 			CollisionSide collisionSide;
 		};
 
 	public:
-		ColliderComponent(GameObject* owner, int size);
-		virtual ~ColliderComponent() override = default;
+		ColliderComponent(GameObject* owner, int size, bool isStatic);
+		virtual ~ColliderComponent() override;
 
 		ColliderComponent(const ColliderComponent& other) = delete;
 		ColliderComponent(ColliderComponent&& other) = delete;
@@ -30,21 +31,36 @@ namespace dae
 		void Update() override;
 		void Render() const override;
 
-		std::vector<CollisionResult> IsColliding() const;
-		bool IsCollidingWith(const ColliderComponent* otherCollider) const;
+		bool IsColliding(const Collider& other) const;
+		void ResolveCollision(const Collider& other);
 
-		//void LateUpdate() override;
-		//void RenderImgui() override;
+		bool IsCollidingBottom()const;
+		bool IsCollidingTop()const;
+		bool IsCollidingLeft()const;
+		bool IsCollidingRight()const;
+		void SetIsJumping(bool isJumping);
+		bool CheckBottomCollision();
+
 	private:
-		bool Intersects(const SDL_Rect& other) const;
-		CollisionSide GetCollisionSide(const ColliderComponent* other) const;
-
 
 		Transform* m_ownerTransform{};
-		SDL_Rect m_collider;
-		bool m_isDirty{ false };
+		bool m_isJumping{};
+		Collider m_collider;
 		static std::vector<ColliderComponent*> m_colliderComponents;
+		bool m_staticCollider{};
 
+		bool m_isCollidingBottom{ false };
+		bool m_isCollidingTop{ false };
+		bool m_isCollidingLeft{ false };
+		bool m_isCollidingRight{ false };
+
+		//Debug vars
+		bool m_mouseInRect{ false };
+		bool m_rectInRect{ false };
+
+		Ray m_ray{};
+		HitResult m_hitResult{};
+		bool m_rayInRect{ false };
 	};
-	
+
 }

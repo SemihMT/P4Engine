@@ -5,16 +5,14 @@
 #include "IdleState.h"
 #include "InputManager.h"
 #include "JumpState.h"
-#include "PhysicsComponent.h"
+#include "RigidBodyComponent.h"
 
 dae::MoveState::MoveState(GameObject* owner):State{ owner }
 {
-	OnEnter();
 }
 
 dae::MoveState::~MoveState()
 {
-	OnExit();
 }
 
 void dae::MoveState::OnEnter()
@@ -34,14 +32,18 @@ void dae::MoveState::Update()
 {
 	if (!(InputManager::GetInstance().IsDown(SDLK_LEFT) || InputManager::GetInstance().IsDown(SDLK_RIGHT)))
 	{
+		OnExit();
 		std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner());
+		idleState->OnEnter();
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
 		return;
 	}
 
-	if(GetOwner()->GetComponent<ColliderComponent>()->IsColliding().empty())
+	if(!GetOwner()->GetComponent<ColliderComponent>()->IsCollidingBottom())
 	{
+		OnExit();
 		std::unique_ptr<State> jumpState = std::make_unique<JumpState>(GetOwner());
+		jumpState->OnEnter();
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(jumpState));
 		
 	}

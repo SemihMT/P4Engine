@@ -11,5 +11,6 @@ void dae::StateComponent::SetState(std::unique_ptr<State> newState)
 
 void dae::StateComponent::Update()
 {
-	m_currentState->Update();
+	if (m_currentState)
+		m_currentState->Update();
 }

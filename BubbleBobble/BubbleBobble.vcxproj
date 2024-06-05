@@ -176,7 +176,11 @@
     <ClCompile Include="JumpState.cpp" />
     <ClCompile Include="LevelParser.cpp" />
     <ClCompile Include="MoveState.cpp" />
-    <ClCompile Include="PhysicsComponent.cpp">
+    <ClCompile Include="PlayerComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="RigidBodyComponent.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -217,10 +221,15 @@
     </ClInclude>
     <ClInclude Include="Components.h" />
     <ClInclude Include="IdleState.h" />
+    <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
     <ClInclude Include="LevelParser.h" />
     <ClInclude Include="MoveState.h" />
-    <ClInclude Include="PhysicsComponent.h">
+    <ClInclude Include="PlayerComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="RigidBodyComponent.h">
       <SubType>
       </SubType>
     </ClInclude>

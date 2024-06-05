@@ -60,7 +60,7 @@
     <ClCompile Include="ShootBubble.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
+    <ClCompile Include="RigidBodyComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="AnimationComponent.cpp">
@@ -91,6 +91,9 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="ZenChanComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,7 +155,7 @@
     <ClInclude Include="ShootBubble.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
+    <ClInclude Include="RigidBodyComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="AnimationComponent.h">
@@ -183,6 +186,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="ZenChanComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

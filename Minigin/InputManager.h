@@ -74,7 +74,7 @@ namespace dae
 		ControllerCommandsMap m_consoleCommands{};
 		KeyboardCommandsMap m_keyboardCommands{};
 
-		Uint8 m_previousKeyState[SDL_NUM_SCANCODES];
+		Uint8 m_previousKeyState[SDL_NUM_SCANCODES]{};
 	};
 
 }
