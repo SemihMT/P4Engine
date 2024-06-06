@@ -169,6 +169,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="FallState.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
@@ -180,6 +181,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="PlayerEventHandlerComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="RigidBodyComponent.cpp">
       <SubType>
       </SubType>
@@ -188,6 +193,7 @@
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreObserverComponent.cpp" />
     <ClCompile Include="ShootBubble.cpp" />
+    <ClCompile Include="SpawnState.cpp" />
     <ClCompile Include="SpriteComponent.cpp">
       <SubType>
       </SubType>
@@ -220,6 +226,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Components.h" />
+    <ClInclude Include="FallState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
@@ -229,12 +236,17 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="PlayerEventHandlerComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="RigidBodyComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="ShootBubble.h" />
     <ClInclude Include="ShootCommand.h" />
+    <ClInclude Include="SpawnState.h" />
     <ClInclude Include="SpriteComponent.h">
       <SubType>
       </SubType>

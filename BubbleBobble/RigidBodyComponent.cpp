@@ -16,41 +16,50 @@ RigidBodyComponent::RigidBodyComponent(GameObject* owner) : BaseComponent(owner)
 
 void RigidBodyComponent::Update()
 {
-	m_shouldFall = !m_collider->IsCollidingBottom();
-
 	const float dt{ static_cast<float>(TimeManager::GetInstance().DeltaTime()) };
 
-	if (m_shouldFall)
+	if (m_collider->IsCollidingBottom())
 	{
-		// Apply gravity
-		m_verticalVelocity += 98.1f * dt; // Gravity pulling downwards
+		m_shouldFall = false;
+		if (!m_isJumping)
+		{
+			m_verticalVelocity = 0.0f; // Reset vertical velocity when grounded
+		}
 	}
 	else
 	{
-		if (!m_isJumping)
-			m_verticalVelocity = 0.0f; // Reset vertical velocity when grounded
+		m_shouldFall = true;
+
+		// Apply gravity
+		m_verticalVelocity += m_gravity * dt;
+
+		// Apply additional force when moving left or right in the air
+		if (InputManager::GetInstance().IsDown(SDLK_LEFT) || InputManager::GetInstance().IsDown(SDLK_RIGHT))
+		{
+			m_verticalVelocity += m_horizontalAirControlForce * dt;
+		}
+		else
+		{
+			// Apply a bigger force if there is no input while in the air
+			m_verticalVelocity += m_idleAirForce * dt;
+		}
 	}
 
-	// Apply vertical velocity
-	m_transform->Translate(0, m_verticalVelocity * dt, 0);
+	// Apply vertical velocity to the transform
+	m_transform->Translate(0.0f, m_verticalVelocity * dt, 0.0f);
+
+	// Update jumping state based on vertical velocity
+	if (m_collider->IsCollidingBottom() && m_verticalVelocity >= 0.0f)
+	{
+		m_isJumping = false;
+	}
 }
 
-void RigidBodyComponent::ToggleGravity()
+void RigidBodyComponent::Jump()
 {
-	m_shouldFall = !m_shouldFall;
-}
-
-bool RigidBodyComponent::IsGravityEnabled() const
-{
-	return m_shouldFall;
-}
-
-void RigidBodyComponent::SetVerticalVelocity(float verticalVelocity)
-{
-	m_verticalVelocity = verticalVelocity;
-}
-
-void RigidBodyComponent::SetIsJumping(bool jump)
-{
-	m_isJumping = jump;
+	if (m_collider->IsCollidingBottom())
+	{
+		m_verticalVelocity = m_jumpVelocity;
+		m_isJumping = true;
+	}
 }

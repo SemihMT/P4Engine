@@ -21,22 +21,18 @@ namespace dae
 		//void Render() override;
 		//void LateUpdate() override;
 		//void RenderImgui() override;
-
-
-		void ToggleGravity();
-		bool IsGravityEnabled() const;
-		void SetVerticalVelocity(float verticalVelocity);
-		void SetIsJumping(bool jump);
-		bool GetIsJumping() const { return m_isJumping; }
+		void Jump();
+		float GetVerticalVelocity() const { return m_verticalVelocity; }
 	private:
 		Transform* m_transform;
 		ColliderComponent* m_collider;
+		bool m_shouldFall{ false };
+		bool m_isJumping{ false };
+		float m_verticalVelocity{ 0.0f };
 
-		float m_verticalVelocity{};
-		bool m_isJumping{};
-		float m_fallSpeed{ 9.81f };
-		float m_currentFallSpeed{ 0.0f };
-		bool m_shouldFall{ true };
-		float m_maxSpeed{ 100 };
+		float m_gravity{ 98.1f };
+		float m_horizontalAirControlForce{ 50.0f };
+		float m_idleAirForce{ 100.0f };
+		float m_jumpVelocity{ -50.0f };
 	};
 }

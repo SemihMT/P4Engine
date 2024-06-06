@@ -17,7 +17,7 @@ namespace dae
 		StateComponent& operator=(StateComponent&& other) = delete;
 
 		void SetState(std::unique_ptr<State> newState);
-
+		State* GetCurrentState() const { return m_currentState.get(); }
 
 		void Update() override;
 		//void Render() override;

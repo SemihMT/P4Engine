@@ -56,16 +56,22 @@ void dae::ColliderComponent::Update()
 
 		if (IsColliding(component->m_collider))
 		{
-			if(component->GetOwner()->GetName() == "ZenChan")
+			if (GetOwner()->GetName() == "Player" && component->GetOwner()->GetName() == "ZenChan")
 			{
 				std::cout << "Colliding with enemy!\n";
 
 			}
+			else if (component->GetOwner()->GetName() == "Tile")
+			{
+				std::cout << "Colliding with Tile!\n";
+			}
+
 			ResolveCollision(component->m_collider);
 		}
 
 
 		HitResult r;
+
 		if (RayVsRect(bottom, component->m_collider, r) && r.hitDistance < 1.0f)
 		{
 			wasCollidingBottom = true;
@@ -89,9 +95,6 @@ void dae::ColliderComponent::Update()
 	m_isCollidingTop = wasCollidingTop;
 	m_isCollidingLeft = wasCollidingLeft;
 	m_isCollidingRight = wasCollidingRight;
-
-
-
 }
 
 void dae::ColliderComponent::Render() const
@@ -120,38 +123,43 @@ bool dae::ColliderComponent::IsColliding(const Collider& other) const
 
 void dae::ColliderComponent::ResolveCollision(const Collider& other)
 {
-	// Calculate the distances to each side of the other collider
-	float distanceToLeft = (other.pos.x + other.size.x) - m_collider.pos.x;
-	float distanceToRight = (m_collider.pos.x + m_collider.size.x) - other.pos.x;
-	float distanceToTop = (other.pos.y + other.size.y) - m_collider.pos.y;
-	float distanceToBottom = (m_collider.pos.y + m_collider.size.y) - other.pos.y;
+	// Calculate the overlap on each side
+	float overlapLeft = m_collider.pos.x + m_collider.size.x - other.pos.x;
+	float overlapRight = other.pos.x + other.size.x - m_collider.pos.x;
+	float overlapTop = m_collider.pos.y + m_collider.size.y - other.pos.y;
+	float overlapBottom = other.pos.y + other.size.y - m_collider.pos.y;
 
-	// Find the closest side
-	float minDistance = std::min({ distanceToLeft, distanceToRight, distanceToTop, distanceToBottom });
+	// Check if the colliders are actually overlapping
+	if (overlapLeft > 0 && overlapRight > 0 && overlapTop > 0 && overlapBottom > 0)
+	{
+		// Find the smallest overlap
+		float minOverlap = std::min({ overlapLeft, overlapRight, overlapTop, overlapBottom });
 
-	// Adjust the position based on the closest side
-	if (minDistance == distanceToLeft)
-	{
-		// Move the collider to the left side
-		m_collider.pos.x = other.pos.x + other.size.x;
-	}
-	else if (minDistance == distanceToRight)
-	{
-		// Move the collider to the right side
-		m_collider.pos.x = other.pos.x - m_collider.size.x;
-	}
-	else if (minDistance == distanceToTop)
-	{
-		// Move the collider to the top side
-		m_collider.pos.y = other.pos.y + other.size.y;
-	}
-	else if (minDistance == distanceToBottom)
-	{
-		// Move the collider to the bottom side
-		m_collider.pos.y = other.pos.y - m_collider.size.y;
-	}
+		// Adjust the position based on the smallest overlap
+		if (minOverlap == overlapLeft)
+		{
+			// Move the collider to the left
+			m_collider.pos.x = other.pos.x - m_collider.size.x;
+		}
+		else if (minOverlap == overlapRight)
+		{
+			// Move the collider to the right
+			m_collider.pos.x = other.pos.x + other.size.x;
+		}
+		else if (minOverlap == overlapTop)
+		{
+			// Move the collider to the top
+			m_collider.pos.y = other.pos.y - m_collider.size.y;
+		}
+		else if (minOverlap == overlapBottom)
+		{
+			// Move the collider to the bottom
+			m_collider.pos.y = other.pos.y + other.size.y;
+		}
 
-	m_ownerTransform->SetLocalPosition(glm::vec3{ m_collider.pos,0 });
+		// Update the position of the owner transform
+		m_ownerTransform->SetLocalPosition(glm::vec3{ m_collider.pos, 0 });
+	}
 }
 
 bool dae::ColliderComponent::IsCollidingBottom() const
@@ -173,9 +181,3 @@ bool dae::ColliderComponent::IsCollidingRight() const
 {
 	return m_isCollidingRight;
 }
-
-void dae::ColliderComponent::SetIsJumping(bool isJumping)
-{
-	m_isJumping = isJumping;
-}
-

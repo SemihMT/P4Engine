@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "GameObjectCommand.h"
+#include "MoveState.h"
 #include "ServiceLocator.h"
 #include "TimeManager.h"
 
@@ -14,43 +15,22 @@ namespace dae
 			m_speed(speed)
 		{
 		}
-		MoveCommand(GameObject* gameObject, float speed = 1.0f)
-			: GameObjectCommand(gameObject),
-			m_direction(glm::vec3{}),
-			m_speed(speed),
-			m_useJoysticks(true)
-		{
-		}
-
 		void Execute() override
 		{
-			const auto t = GetGameObject()->GetTransform();
-			if (m_useJoysticks)
+			auto stateComp = GetGameObject()->GetComponent<StateComponent>();
+			State* currentState = stateComp->GetCurrentState();
+
+			// Check if the current state is not a MoveState or if the direction needs to be updated
+			MoveState* currentMoveState = dynamic_cast<MoveState*>(currentState);
+			if (currentMoveState == nullptr || currentMoveState->GetDirection() != m_direction || currentMoveState->GetSpeed() != m_speed)
 			{
-				auto leftThumbStick = InputManager::GetInstance().GetLeftThumbDir(Controller::One);
-				leftThumbStick.y *= -1;
-				t->Translate(glm::vec3{ leftThumbStick,0 });
+				// Create a new MoveState and set it as the current state
+				auto moveState = std::make_unique<MoveState>(GetGameObject(), m_direction, m_speed);
+				stateComp->SetState(std::move(moveState));
 			}
-			else
-			{
-				t->SetForwardDirection(m_direction);
-
-				bool goingLeftWhileTouchingLeft = GetGameObject()->GetComponent<ColliderComponent>()->IsCollidingLeft() && m_direction == glm::vec3{ -1,0,0 };
-				bool goingRightWhileTouchingRight = GetGameObject()->GetComponent<ColliderComponent>()->IsCollidingRight() && m_direction == glm::vec3{ 1,0,0 };
-				//bool currently
-				// ing = GetGameObject()->GetComponent<RigidBodyComponent>()->GetIsJumping();
-					if (!(goingLeftWhileTouchingLeft && goingRightWhileTouchingRight))
-					{
-						t->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
-					}
-
-
-			}
-
 		}
 	private:
 		glm::vec3 m_direction{};
 		float m_speed{};
-		bool m_useJoysticks{ false };
 	};
 }

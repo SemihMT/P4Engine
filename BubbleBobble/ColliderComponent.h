@@ -38,15 +38,13 @@ namespace dae
 		bool IsCollidingTop()const;
 		bool IsCollidingLeft()const;
 		bool IsCollidingRight()const;
-		void SetIsJumping(bool isJumping);
-		bool CheckBottomCollision();
-
+		
 	private:
 
 		Transform* m_ownerTransform{};
-		bool m_isJumping{};
 		Collider m_collider;
 		static std::vector<ColliderComponent*> m_colliderComponents;
+
 		bool m_staticCollider{};
 
 		bool m_isCollidingBottom{ false };
@@ -54,13 +52,6 @@ namespace dae
 		bool m_isCollidingLeft{ false };
 		bool m_isCollidingRight{ false };
 
-		//Debug vars
-		bool m_mouseInRect{ false };
-		bool m_rectInRect{ false };
-
-		Ray m_ray{};
-		HitResult m_hitResult{};
-		bool m_rayInRect{ false };
 	};
 
 }

@@ -1,19 +1,15 @@
 #pragma once
-
 #include "State.h"
-#include "StateComponent.h"
 #include "Subject.h"
-
 
 namespace dae
 {
-	
-	class IdleState final : public State, public Subject
+	class FallState final : public State, public Subject
 	{
 	public:
-		explicit IdleState(GameObject* owner);
+		explicit FallState(GameObject* owner);
 
-		~IdleState() override;
+		~FallState() override;
 
 		void OnEnter() override;
 
@@ -22,3 +18,5 @@ namespace dae
 		void Update() override;
 	};
 }
+
+

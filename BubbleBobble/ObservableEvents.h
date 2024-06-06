@@ -11,6 +11,7 @@ namespace dae
 	enum class Event
 	{
 		Player_Spawn,
+		Player_Idle,
 		Player_Death,
 		Player_Respawn,
 		Player_Damaged,
