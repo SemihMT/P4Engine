@@ -46,38 +46,40 @@ void load()
 	LevelParser parser{ &scene };
 
 	//Registering the color {255,0,0} to create a game object with a TileComponent
-	parser.RegisterColor({ 255,0,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
-		{
-			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
-			int tileIdx{ 2 };
-			tileObject->AddComponent<TileComponent>(tileIdx);
-			return tileObject;
-		});
-	parser.RegisterColor({ 255,128,192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+	parser.RegisterColor({ 255, 128, 192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
 		{
 			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			int tileIdx{ 0 };
-			tileObject->AddComponent<TileComponent>(tileIdx);
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Wall);
+			return tileObject;
+		});
+	parser.RegisterColor({ 255, 128, 255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+		{
+			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			int tileIdx{ 0 };
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Platform);
 			return tileObject;
 		});
 	parser.RegisterColor({ 0,128,255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 			auto zenChanObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
-			zenChanObject->AddComponent<ZenChanComponent>(std::get<glm::vec3>(metadata.value().metadataMap.at("direction")));
+			auto direction = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
+			zenChanObject->AddComponent<ZenChanComponent>(direction, ColliderType::Trigger);
 			return zenChanObject;
 		});
 	parser.RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
-			
+
 			auto player = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			auto startingDirection = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
 			auto playerNumber = 1;
-			player->AddComponent<PlayerComponent>(playerNumber, startingDirection,nullptr);
+			player->AddComponent<PlayerComponent>(playerNumber, startingDirection, nullptr);
+			player->GetTransform()->SetLocalPosition(32,400,0);
 			return player;
 		});
 
 
-	parser.Parse("Levels/level1.ppm");
+	parser.Parse("Levels/level1Platforms.ppm");
 
 	auto textObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
 	textObject->AddComponent<Text>(smallFont, "Here cometh the UI, God willing");

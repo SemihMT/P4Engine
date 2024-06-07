@@ -1,6 +1,7 @@
 #include "MoveState.h"
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
+#include "FallState.h"
 #include "IdleState.h"
 #include "InputManager.h"
 #include "JumpState.h"
@@ -8,14 +9,12 @@
 #include "RigidBodyComponent.h"
 #include "TimeManager.h"
 
-dae::MoveState::MoveState(GameObject* owner, const glm::vec3& direction, float speed) :
+dae::MoveState::MoveState(GameObject* owner) :
 	State{ owner },
 	m_transform(GetOwner()->GetTransform()),
 	m_animationComponent(GetOwner()->GetComponent<AnimationComponent>()),
 	m_rb(GetOwner()->GetComponent<RigidBodyComponent>()),
-	m_collider(GetOwner()->GetComponent<ColliderComponent>()),
-	m_direction(direction),
-	m_speed(speed)
+	m_collider(GetOwner()->GetComponent<ColliderComponent>())
 {
 }
 
@@ -48,14 +47,9 @@ void dae::MoveState::Update()
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
 		return;
 	}
-
-	m_transform->SetForwardDirection(m_direction);
-	bool goingLeftWhileTouchingLeft = m_collider->IsCollidingLeft() && m_direction == glm::vec3{ -1,0,0 };
-	bool goingRightWhileTouchingRight = m_collider->IsCollidingRight() && m_direction == glm::vec3{ 1,0,0 };
-
-	if (!(goingLeftWhileTouchingLeft && goingRightWhileTouchingRight))
+	if(m_rb->GetVerticalVelocity() > 0)
 	{
-		m_transform->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
+		std::unique_ptr<State> fallState = std::make_unique<FallState>(GetOwner());
+		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(fallState));
 	}
-
 }

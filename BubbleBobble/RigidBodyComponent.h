@@ -30,9 +30,9 @@ namespace dae
 		bool m_isJumping{ false };
 		float m_verticalVelocity{ 0.0f };
 
-		float m_gravity{ 98.1f };
+		float m_gravity{ 200.f };
 		float m_horizontalAirControlForce{ 50.0f };
 		float m_idleAirForce{ 100.0f };
-		float m_jumpVelocity{ -50.0f };
+		float m_jumpVelocity{ -200.0f };
 	};
 }

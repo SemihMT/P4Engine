@@ -11,25 +11,26 @@ namespace dae
 	public:
 		MoveCommand(GameObject* gameObject, const glm::vec3& normalizedDirection, float speed = 1.0f)
 			: GameObjectCommand(gameObject),
+			m_transform(gameObject->GetTransform()),
+			m_collider(gameObject->GetComponent<ColliderComponent>()),
 			m_direction(normalizedDirection),
 			m_speed(speed)
 		{
 		}
 		void Execute() override
 		{
-			auto stateComp = GetGameObject()->GetComponent<StateComponent>();
-			State* currentState = stateComp->GetCurrentState();
+			m_transform->SetForwardDirection(m_direction);
+			bool goingLeftWhileTouchingLeft = m_collider->IsCollidingLeft() && m_direction == glm::vec3{ -1,0,0 };
+			bool goingRightWhileTouchingRight = m_collider->IsCollidingRight() && m_direction == glm::vec3{ 1,0,0 };
 
-			// Check if the current state is not a MoveState or if the direction needs to be updated
-			MoveState* currentMoveState = dynamic_cast<MoveState*>(currentState);
-			if (currentMoveState == nullptr || currentMoveState->GetDirection() != m_direction || currentMoveState->GetSpeed() != m_speed)
+			if (!(goingLeftWhileTouchingLeft && goingRightWhileTouchingRight))
 			{
-				// Create a new MoveState and set it as the current state
-				auto moveState = std::make_unique<MoveState>(GetGameObject(), m_direction, m_speed);
-				stateComp->SetState(std::move(moveState));
+				m_transform->Translate(m_direction * static_cast<float>(TimeManager::GetInstance().DeltaTime()) * m_speed);
 			}
 		}
 	private:
+		Transform* m_transform{};
+		ColliderComponent* m_collider{};
 		glm::vec3 m_direction{};
 		float m_speed{};
 	};

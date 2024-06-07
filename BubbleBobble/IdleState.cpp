@@ -43,4 +43,14 @@ void dae::IdleState::OnExit()
 
 void dae::IdleState::Update()
 {
+	const auto playerIsMoving =
+		InputManager::GetInstance().IsDown(SDLK_LEFT) ||
+		InputManager::GetInstance().IsDown(SDLK_RIGHT);
+
+	if (playerIsMoving)
+	{
+		std::unique_ptr<State> moveState = std::make_unique<MoveState>(GetOwner());
+		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(moveState));
+		return;
+	}
 }

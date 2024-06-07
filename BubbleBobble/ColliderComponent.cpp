@@ -11,14 +11,14 @@
 
 std::vector<dae::ColliderComponent*> dae::ColliderComponent::m_colliderComponents{};
 
-dae::ColliderComponent::ColliderComponent(GameObject* owner, int size, bool isStatic) :
+dae::ColliderComponent::ColliderComponent(GameObject* owner, int size, ColliderType type) :
 	BaseComponent(owner),
 	m_ownerTransform{ owner->GetTransform() },
 	m_collider{
 		m_ownerTransform->GetWorldPosition(),
 		{size,size}
 	},
-	m_staticCollider{ isStatic }
+	m_type{ type }
 {
 	m_colliderComponents.emplace_back(this);
 }
@@ -34,25 +34,39 @@ dae::ColliderComponent::~ColliderComponent()
 
 void dae::ColliderComponent::Update()
 {
-	if (m_staticCollider)
+	// No need to do collision checks for non-dynamic colliders
+	if (m_type == ColliderType::Wall || m_type == ColliderType::Platform)
 		return;
 
 	m_collider.pos = m_ownerTransform->GetWorldPosition();
 
-	Ray bottom{ {m_collider.pos.x + m_collider.size.x / 2.0f,m_collider.pos.y + m_collider.size.y},{0,1} };
-	Ray top{ {m_collider.pos.x + m_collider.size.x / 2.0f,m_collider.pos.y},{0,-1} };
-	Ray left{ {m_collider.pos.x,m_collider.pos.y + m_collider.size.y / 2},{-1,0} };
-	Ray right{ {m_collider.pos.x + m_collider.size.x,m_collider.pos.y + m_collider.size.y / 2},{1,0} };
+	// Define an offset to place rays closer together
+    float offset = 2.0f;  // Adjust this value as needed
 
-	bool wasCollidingBottom = false;
-	bool wasCollidingTop = false;
-	bool wasCollidingLeft = false;
-	bool wasCollidingRight = false;
+    // Define rays for each side, closer to the center
+    m_bottomLeft = { {m_collider.pos.x + offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
+    m_bottomRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
+    m_topLeft = { {m_collider.pos.x + offset, m_collider.pos.y}, {0, -1} };
+    m_topRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y}, {0, -1} };
+    m_leftBottom = { {m_collider.pos.x, m_collider.pos.y + m_collider.size.y - offset}, {-1, 0} };
+    m_leftTop = { {m_collider.pos.x, m_collider.pos.y + offset}, {-1, 0} };
+    m_rightBottom = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + m_collider.size.y - offset}, {1, 0} };
+    m_rightTop = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + offset}, {1, 0} };
+
+	bool wasCollidingBottomLeft = false;
+	bool wasCollidingBottomRight = false;
+	bool wasCollidingTopLeft = false;
+	bool wasCollidingTopRight = false;
+	bool wasCollidingLeftBottom = false;
+	bool wasCollidingLeftTop = false;
+	bool wasCollidingRightBottom = false;
+	bool wasCollidingRightTop = false;
 
 	for (auto component : m_colliderComponents)
 	{
 		if (component == this)
 			continue;
+		
 
 		if (IsColliding(component->m_collider))
 		{
@@ -66,35 +80,60 @@ void dae::ColliderComponent::Update()
 				std::cout << "Colliding with Tile!\n";
 			}
 
-			ResolveCollision(component->m_collider);
+			ResolveCollision(component);
 		}
 
 
+		if(component->m_type == ColliderType::Trigger)
+			continue;
 		HitResult r;
 
-		if (RayVsRect(bottom, component->m_collider, r) && r.hitDistance < 1.0f)
+		// Check collisions for each ray
+		if (RayVsRect(m_bottomLeft, component->m_collider, r) && r.hitDistance < 1.0f)
 		{
-			wasCollidingBottom = true;
+			wasCollidingBottomLeft = true;
 		}
-		if (RayVsRect(top, component->m_collider, r) && r.hitDistance < 1.0f)
+		if (RayVsRect(m_bottomRight, component->m_collider, r) && r.hitDistance < 1.0f)
 		{
-			wasCollidingTop = true;
+			wasCollidingBottomRight = true;
 		}
-		if (RayVsRect(left, component->m_collider, r) && r.hitDistance < 1.0f)
+		if (RayVsRect(m_topLeft, component->m_collider, r) && r.hitDistance < 1.0f)
 		{
-			wasCollidingLeft = true;
+			wasCollidingTopLeft = true;
 		}
-		if (RayVsRect(right, component->m_collider, r) && r.hitDistance < 1.0f)
+		if (RayVsRect(m_topRight, component->m_collider, r) && r.hitDistance < 1.0f)
 		{
-			wasCollidingRight = true;
+			wasCollidingTopRight = true;
+		}
+		if (RayVsRect(m_leftBottom, component->m_collider, r) && r.hitDistance < 1.0f)
+		{
+			wasCollidingLeftBottom = true;
+		}
+		if (RayVsRect(m_leftTop, component->m_collider, r) && r.hitDistance < 1.0f)
+		{
+			wasCollidingLeftTop = true;
+		}
+		if (RayVsRect(m_rightBottom, component->m_collider, r) && r.hitDistance < 1.0f)
+		{
+			wasCollidingRightBottom = true;
+		}
+		if (RayVsRect(m_rightTop, component->m_collider, r) && r.hitDistance < 1.0f)
+		{
+			wasCollidingRightTop = true;
 		}
 	}
 
 	// Update the collision flags based on whether any collision was detected
-	m_isCollidingBottom = wasCollidingBottom;
-	m_isCollidingTop = wasCollidingTop;
-	m_isCollidingLeft = wasCollidingLeft;
-	m_isCollidingRight = wasCollidingRight;
+	m_isCollidingBottom = wasCollidingBottomLeft || wasCollidingBottomRight;
+	m_isCollidingTop = wasCollidingTopLeft || wasCollidingTopRight;
+	m_isCollidingLeft = wasCollidingLeftBottom || wasCollidingLeftTop;
+	m_isCollidingRight = wasCollidingRightBottom || wasCollidingRightTop;
+
+	// Update the both collision flags
+	m_isCollidingAllBottom = wasCollidingBottomLeft && wasCollidingBottomRight;
+	m_isCollidingAllTop = wasCollidingTopLeft && wasCollidingTopRight;
+	m_isCollidingAllLeft = wasCollidingLeftBottom && wasCollidingLeftTop;
+	m_isCollidingAllRight = wasCollidingRightBottom && wasCollidingRightTop;
 }
 
 void dae::ColliderComponent::Render() const
@@ -105,13 +144,42 @@ void dae::ColliderComponent::Render() const
 	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
 	SDL_RenderDrawRectF(Renderer::GetInstance().GetSDLRenderer(), &colliderRect);
 
-	if (!m_staticCollider)
+	//Render the raycast rays we're using for the collision checks
+	if (!(m_type == ColliderType::Wall || m_type == ColliderType::Platform))
 	{
 		SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(), m_collider.pos.x + m_collider.size.x / 2.0f, m_collider.pos.y + m_collider.size.y, m_collider.pos.x + m_collider.size.x / 2.0f, m_collider.pos.y + m_collider.size.y + 1 * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(), m_collider.pos.x + m_collider.size.x / 2.0f, m_collider.pos.y, m_collider.pos.x + m_collider.size.x / 2.0f, m_collider.pos.y + -1 * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(), m_collider.pos.x, m_collider.pos.y + m_collider.size.y / 2, m_collider.pos.x + -1 * 10, m_collider.pos.y + m_collider.size.y / 2);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(), m_collider.pos.x + m_collider.size.x, (m_collider.pos.y + m_collider.size.y / 2), m_collider.pos.x + m_collider.size.x + 1 * 10, m_collider.pos.y + m_collider.size.y / 2);
+
+		// Draw bottom rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_bottomLeft.origin.x, m_bottomLeft.origin.y,
+			m_bottomLeft.origin.x + m_bottomLeft.direction.x * 10, m_bottomLeft.origin.y + m_bottomLeft.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_bottomRight.origin.x, m_bottomRight.origin.y,
+			m_bottomRight.origin.x + m_bottomRight.direction.x * 10, m_bottomRight.origin.y + m_bottomRight.direction.y * 10);
+
+		// Draw top rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_topLeft.origin.x, m_topLeft.origin.y,
+			m_topLeft.origin.x + m_topLeft.direction.x * 10, m_topLeft.origin.y + m_topLeft.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_topRight.origin.x, m_topRight.origin.y,
+			m_topRight.origin.x + m_topRight.direction.x * 10, m_topRight.origin.y + m_topRight.direction.y * 10);
+
+		// Draw left rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_leftBottom.origin.x, m_leftBottom.origin.y,
+			m_leftBottom.origin.x + m_leftBottom.direction.x * 10, m_leftBottom.origin.y + m_leftBottom.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_leftTop.origin.x, m_leftTop.origin.y,
+			m_leftTop.origin.x + m_leftTop.direction.x * 10, m_leftTop.origin.y + m_leftTop.direction.y * 10);
+
+		// Draw right rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_rightBottom.origin.x, m_rightBottom.origin.y,
+			m_rightBottom.origin.x + m_rightBottom.direction.x * 10, m_rightBottom.origin.y + m_rightBottom.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_rightTop.origin.x, m_rightTop.origin.y,
+			m_rightTop.origin.x + m_rightTop.direction.x * 10, m_rightTop.origin.y + m_rightTop.direction.y * 10);
 	}
 #endif
 }
@@ -121,17 +189,29 @@ bool dae::ColliderComponent::IsColliding(const Collider& other) const
 	return (m_collider.pos.x < other.pos.x + other.size.x && m_collider.pos.x + m_collider.size.x > other.pos.x && m_collider.pos.y < other.pos.y + other.size.y && m_collider.pos.y + m_collider.size.y > other.pos.y);
 }
 
-void dae::ColliderComponent::ResolveCollision(const Collider& other)
+void dae::ColliderComponent::ResolveCollision(ColliderComponent* other)
 {
+ 	auto otherCollider = other->m_collider;
 	// Calculate the overlap on each side
-	float overlapLeft = m_collider.pos.x + m_collider.size.x - other.pos.x;
-	float overlapRight = other.pos.x + other.size.x - m_collider.pos.x;
-	float overlapTop = m_collider.pos.y + m_collider.size.y - other.pos.y;
-	float overlapBottom = other.pos.y + other.size.y - m_collider.pos.y;
+	float overlapLeft = m_collider.pos.x + m_collider.size.x - otherCollider.pos.x;
+	float overlapRight = otherCollider.pos.x + otherCollider.size.x - m_collider.pos.x;
+	float overlapTop = m_collider.pos.y + m_collider.size.y - otherCollider.pos.y;
+	float overlapBottom = otherCollider.pos.y + otherCollider.size.y - m_collider.pos.y;
 
 	// Check if the colliders are actually overlapping
 	if (overlapLeft > 0 && overlapRight > 0 && overlapTop > 0 && overlapBottom > 0)
 	{
+		// Check if we're in the air and the collision is with a platform tile
+		if (m_isInAir && other->m_type == ColliderType::Platform)
+		{
+			// Ignore the collision
+			return;
+		}
+		if (other->m_type == ColliderType::Trigger)
+		{
+			return;
+		}
+
 		// Find the smallest overlap
 		float minOverlap = std::min({ overlapLeft, overlapRight, overlapTop, overlapBottom });
 
@@ -139,22 +219,22 @@ void dae::ColliderComponent::ResolveCollision(const Collider& other)
 		if (minOverlap == overlapLeft)
 		{
 			// Move the collider to the left
-			m_collider.pos.x = other.pos.x - m_collider.size.x;
+			m_collider.pos.x = otherCollider.pos.x - m_collider.size.x - 1;
 		}
 		else if (minOverlap == overlapRight)
 		{
 			// Move the collider to the right
-			m_collider.pos.x = other.pos.x + other.size.x;
+			m_collider.pos.x = otherCollider.pos.x + otherCollider.size.x + 1;
 		}
 		else if (minOverlap == overlapTop)
 		{
 			// Move the collider to the top
-			m_collider.pos.y = other.pos.y - m_collider.size.y;
+			m_collider.pos.y = otherCollider.pos.y - m_collider.size.y - 1;
 		}
 		else if (minOverlap == overlapBottom)
 		{
 			// Move the collider to the bottom
-			m_collider.pos.y = other.pos.y + other.size.y;
+			m_collider.pos.y = otherCollider.pos.y + otherCollider.size.y + 1;
 		}
 
 		// Update the position of the owner transform
@@ -180,4 +260,24 @@ bool dae::ColliderComponent::IsCollidingLeft() const
 bool dae::ColliderComponent::IsCollidingRight() const
 {
 	return m_isCollidingRight;
+}
+
+bool dae::ColliderComponent::IsCollidingAllBottom() const
+{
+	return m_isCollidingAllBottom;
+}
+
+bool dae::ColliderComponent::IsCollidingAllTop() const
+{
+	return m_isCollidingAllTop;
+}
+
+bool dae::ColliderComponent::IsCollidingAllLeft() const
+{
+	return m_isCollidingAllLeft;
+}
+
+bool dae::ColliderComponent::IsCollidingAllRight() const
+{
+	return m_isCollidingAllRight;
 }

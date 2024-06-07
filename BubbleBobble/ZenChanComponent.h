@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "ColliderComponent.h"
 #include "Transform.h"
 
 namespace dae
@@ -10,7 +11,7 @@ namespace dae
 	class ZenChanComponent final : public BaseComponent
 	{
 	public:
-		ZenChanComponent(GameObject* owner, const glm::vec3& direction);
+		ZenChanComponent(GameObject* owner, const glm::vec3& direction, ColliderType type);
 		virtual ~ZenChanComponent() override = default;
 
 		ZenChanComponent(const ZenChanComponent& other) = delete;
@@ -25,7 +26,7 @@ namespace dae
 	private:
 		Transform* m_transform;
 		int m_srcSize{16};
-		int m_dstSize{16};
+		int m_dstSize{32};
 		int m_tileRow{};
 		int m_tileCol{0};
 		std::string m_spriteSheetPath{"Sprites/Characters/Enemy/ZenChanSpriteSheet.png"};

@@ -24,7 +24,7 @@ void dae::FallState::OnEnter()
 	}
 	std::cout << "Entered Fall state\n";
 	//GetOwner()->GetComponent<RigidBodyComponent>()->SetShouldFall(true);
-	//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(true);
+	GetOwner()->GetComponent<ColliderComponent>()->Land();
 
 }
 

@@ -20,8 +20,8 @@ namespace dae
 		//void RenderImgui() override;
 	private:
 		Transform* m_transform{ nullptr };
-		int m_srcSize{};
-		int m_dstSize{ 16 };
+		int m_srcSize{16};
+		int m_dstSize{ 32 };
 		float m_speed{ 64 };
 		float m_jumpForce{ 200 };
 	};

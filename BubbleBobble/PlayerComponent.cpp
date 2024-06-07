@@ -18,10 +18,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	BaseComponent(owner),
 	m_transform{ owner->GetTransform() }
 {
-	auto pos = m_transform->GetLocalPosition() * glm::vec3{ (float)m_dstSize };
-
 	
-
 
 	std::string spriteSheet{};
 	if (playerNumber == 1)
@@ -52,7 +49,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 
 
 
-	owner->AddComponent<ColliderComponent>(m_dstSize, false);
+	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger);
 	owner->AddComponent<RigidBodyComponent>();
 
 	owner->AddComponent<ShootBubble>(bubble);
@@ -70,7 +67,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
 
-
+	auto pos = m_transform->GetLocalPosition() * glm::vec3{ (float)m_srcSize };
 	owner->AddComponent<PlayerEventHandlerComponent>();
 	owner->AddComponent<StateComponent>();
 	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner,pos,direction));

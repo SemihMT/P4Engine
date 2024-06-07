@@ -159,6 +159,8 @@ void Scene::DisplayObjectInfo(const GameObject* obj)
     ImGui::TextWrapped("Name: %s", obj->GetName().c_str());
     ImGui::Separator();
     ImGui::TextWrapped("pos: %.1f, %.1f, %.1f", obj->GetTransform()->GetLocalPosition().x, obj->GetTransform()->GetLocalPosition().y, obj->GetTransform()->GetLocalPosition().z);
+    ImGui::Separator();
+	ImGui::TextWrapped("Forward: %.1f", obj->GetTransform()->GetForwardDirection().x);
 
     // Add more information here if needed
 

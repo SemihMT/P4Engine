@@ -11,16 +11,7 @@ namespace dae
 	class ColliderComponent final : public BaseComponent
 	{
 	public:
-		enum class CollisionSide { None, Top, Bottom, Left, Right };
-
-		struct CollisionResult
-		{
-			ColliderComponent* otherCollider;
-			CollisionSide collisionSide;
-		};
-
-	public:
-		ColliderComponent(GameObject* owner, int size, bool isStatic);
+		explicit ColliderComponent(GameObject* owner, int size, ColliderType type);
 		virtual ~ColliderComponent() override;
 
 		ColliderComponent(const ColliderComponent& other) = delete;
@@ -32,25 +23,47 @@ namespace dae
 		void Render() const override;
 
 		bool IsColliding(const Collider& other) const;
-		void ResolveCollision(const Collider& other);
+		void ResolveCollision(ColliderComponent* other);
 
 		bool IsCollidingBottom()const;
 		bool IsCollidingTop()const;
 		bool IsCollidingLeft()const;
 		bool IsCollidingRight()const;
-		
-	private:
 
+		bool IsCollidingAllBottom()const;
+		bool IsCollidingAllTop()const;
+		bool IsCollidingAllLeft()const;
+		bool IsCollidingAllRight()const;
+
+
+		void StartJumping() { m_isInAir = true; }
+		void Land() { m_isInAir = false; }
+	private:
 		Transform* m_ownerTransform{};
 		Collider m_collider;
 		static std::vector<ColliderComponent*> m_colliderComponents;
 
-		bool m_staticCollider{};
+		ColliderType m_type{};
+		bool m_isInAir{ false };
 
 		bool m_isCollidingBottom{ false };
 		bool m_isCollidingTop{ false };
 		bool m_isCollidingLeft{ false };
 		bool m_isCollidingRight{ false };
+
+		bool m_isCollidingAllBottom{ false };
+		bool m_isCollidingAllTop{ false };
+		bool m_isCollidingAllLeft{ false };
+		bool m_isCollidingAllRight{ false };
+
+		Ray m_bottomLeft{};
+		Ray m_bottomRight{};
+		Ray m_topLeft{};
+		Ray m_topRight{};
+		Ray m_leftBottom{};
+		Ray m_leftTop{};
+		Ray m_rightBottom{};
+		Ray m_rightTop{};
 
 	};
 

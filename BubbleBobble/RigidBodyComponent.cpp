@@ -20,7 +20,7 @@ void RigidBodyComponent::Update()
 
 	if (m_collider->IsCollidingBottom())
 	{
-		m_shouldFall = false;
+		//m_shouldFall = false;
 		if (!m_isJumping)
 		{
 			m_verticalVelocity = 0.0f; // Reset vertical velocity when grounded
@@ -28,23 +28,14 @@ void RigidBodyComponent::Update()
 	}
 	else
 	{
-		m_shouldFall = true;
+		//m_shouldFall = true;
 
 		// Apply gravity
 		m_verticalVelocity += m_gravity * dt;
 
-		// Apply additional force when moving left or right in the air
-		if (InputManager::GetInstance().IsDown(SDLK_LEFT) || InputManager::GetInstance().IsDown(SDLK_RIGHT))
-		{
-			m_verticalVelocity += m_horizontalAirControlForce * dt;
-		}
-		else
-		{
-			// Apply a bigger force if there is no input while in the air
-			m_verticalVelocity += m_idleAirForce * dt;
-		}
 	}
 
+	m_verticalVelocity = std::clamp(m_verticalVelocity,-200.0f,200.0f);
 	// Apply vertical velocity to the transform
 	m_transform->Translate(0.0f, m_verticalVelocity * dt, 0.0f);
 

@@ -46,11 +46,13 @@ void dae::JumpState::Update()
 	if (GetOwner()->GetComponent<RigidBodyComponent>()->GetVerticalVelocity() < 0)
 	{
 		std::cout << "jumping upwards\n";
+		GetOwner()->GetComponent<ColliderComponent>()->StartJumping();
 		//Disable collision when jumping up
 		//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(false);
 	}
 	else
 	{
+		GetOwner()->GetComponent<ColliderComponent>()->Land();
 		std::unique_ptr<State> fallState = std::make_unique<FallState>(GetOwner());
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(fallState));
 		return;
