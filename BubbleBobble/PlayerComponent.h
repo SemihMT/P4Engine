@@ -7,7 +7,7 @@ namespace dae
 	class PlayerComponent final : public BaseComponent
 	{
 	public:
-		PlayerComponent(GameObject* owner, int playerNumber,const glm::vec3& direction, GameObject* bubble);
+		PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction, GameObject* bubble);
 		virtual ~PlayerComponent() override = default;
 
 		PlayerComponent(const PlayerComponent& other) = delete;
@@ -18,9 +18,12 @@ namespace dae
 		//void Render() override;
 		//void LateUpdate() override;
 		//void RenderImgui() override;
+
+		void SetMoveSpeed(float speed) { m_speed = speed; }
+
 	private:
 		Transform* m_transform{ nullptr };
-		int m_srcSize{16};
+		int m_srcSize{ 16 };
 		int m_dstSize{ 32 };
 		float m_speed{ 64 };
 		float m_jumpForce{ 200 };

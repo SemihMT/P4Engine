@@ -23,7 +23,9 @@ void dae::FallState::OnEnter()
 		animCmp->SetCurrentAnimation("FallDown");
 	}
 	std::cout << "Entered Fall state\n";
-	//GetOwner()->GetComponent<RigidBodyComponent>()->SetShouldFall(true);
+	Notify(Event::Player_Fall,{});
+
+
 	GetOwner()->GetComponent<ColliderComponent>()->Land();
 
 }

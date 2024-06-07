@@ -33,6 +33,6 @@ namespace dae
 		float m_gravity{ 200.f };
 		float m_horizontalAirControlForce{ 50.0f };
 		float m_idleAirForce{ 100.0f };
-		float m_jumpVelocity{ -200.0f };
+		float m_jumpVelocity{ -170.0 };
 	};
 }

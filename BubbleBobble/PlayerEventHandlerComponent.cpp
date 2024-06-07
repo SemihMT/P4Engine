@@ -1,6 +1,11 @@
 #include "PlayerEventHandlerComponent.h"
 #include <iostream>
 
+#include "GameObject.h"
+#include "InputManager.h"
+#include "MoveCommand.h"
+#include "PlayerComponent.h"
+
 dae::PlayerEventHandlerComponent::PlayerEventHandlerComponent(GameObject* owner) : BaseComponent(owner)
 {
 }
@@ -19,10 +24,6 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		std::cout << "Player notified from the Idle state\n";
 		break;
 	case Event::Player_Death:
-		/*if(m_health >= 0)
-			PlayerRespawn();
-		else*/
-
 		break;
 	case Event::Player_Respawn:
 		break;
@@ -35,6 +36,14 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 	case Event::Player_Jump:
 
 		break;
+	case Event::Player_Fall:
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(GetOwner(), glm::vec3{ -1.f, 0.f, 0.f }, 25.0f));
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(GetOwner(), glm::vec3{ 1.f, 0.f, 0.f }, 25.0f));
+		break;
+	case Event::Player_Move:
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(GetOwner(), glm::vec3{ -1.f, 0.f, 0.f }, 64.0f));
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(GetOwner(), glm::vec3{ 1.f, 0.f, 0.f }, 64.0f));
+		break;
 
 	case Event::Bubble_HitEnemy:
 		break;
@@ -44,5 +53,6 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		break;
 	case Event::Item_Collected:
 		break;
+
 	}
 }

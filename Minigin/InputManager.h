@@ -7,7 +7,7 @@
 
 #include "Command.h"
 #include "XInputController.h"
-
+#include "SDL_keycode.h"
 namespace dae
 {
 	enum class Controller : unsigned int
@@ -54,6 +54,9 @@ namespace dae
 		void BindControllerCommand(Controller controllerId, XInputController::Button button, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
 		//Binding a command to keyboard input + the state during which the command should get executed
 		void BindKeyboardCommand(SDL_KeyCode keyCode, std::unique_ptr<Command> command, KeyState executionState = KeyState::Hold);
+
+		
+
 
 		//Keystate getters
 		bool IsDown(Controller idx, XInputController::Button button) const;

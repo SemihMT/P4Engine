@@ -18,7 +18,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	BaseComponent(owner),
 	m_transform{ owner->GetTransform() }
 {
-	
+
 
 	std::string spriteSheet{};
 	if (playerNumber == 1)
@@ -47,8 +47,6 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	const AnimationData fallDownAnimation{ row,numFrames,16,0.25f };
 	owner->GetComponent<AnimationComponent>()->AddAnimation("FallDown", fallDownAnimation);
 
-
-
 	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger);
 	owner->AddComponent<RigidBodyComponent>();
 
@@ -67,10 +65,11 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
 
-	auto pos = m_transform->GetLocalPosition() * glm::vec3{ (float)m_srcSize };
+
+	auto pos = m_transform->GetLocalPosition() * glm::vec3{ static_cast<float>(m_srcSize) };
 	owner->AddComponent<PlayerEventHandlerComponent>();
 	owner->AddComponent<StateComponent>();
-	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner,pos,direction));
+	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, pos, direction));
 
 }
 

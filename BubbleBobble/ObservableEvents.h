@@ -17,6 +17,8 @@ namespace dae
 		Player_Damaged,
 		Player_ShootBubble,
 		Player_Jump,
+		Player_Fall,
+		Player_Move,
 
 		Bubble_HitEnemy, //Bubble has touched an enemy
 		Bubble_PopEnemy, //Bubble with enemy in has been popped

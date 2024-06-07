@@ -74,12 +74,11 @@ void load()
 			auto startingDirection = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
 			auto playerNumber = 1;
 			player->AddComponent<PlayerComponent>(playerNumber, startingDirection, nullptr);
-			player->GetTransform()->SetLocalPosition(32,400,0);
 			return player;
 		});
 
 
-	parser.Parse("Levels/level1Platforms.ppm");
+	parser.Parse("Levels/level1Platforms2.ppm");
 
 	auto textObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
 	textObject->AddComponent<Text>(smallFont, "Here cometh the UI, God willing");

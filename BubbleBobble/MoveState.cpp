@@ -29,6 +29,7 @@ void dae::MoveState::OnEnter()
 
 	m_animationComponent->SetCurrentAnimation("Walk");
 	std::cout << "Entered Move state\n";
+	Notify(Event::Player_Move,{});
 	//GetOwner()->GetComponent<RigidBodyComponent>()->SetShouldFall(false);
 	//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(true);
 }
