@@ -6,7 +6,7 @@ namespace dae
 	class ShootBubble final:  public BaseComponent
 	{
 	public:
-		ShootBubble(GameObject* owner, GameObject* bubble); //TODO: Replace bubble with an object pool of bubbles, so we can reuse them
+		ShootBubble(GameObject* owner);
 		virtual ~ShootBubble() override = default;
 
 		ShootBubble(const ShootBubble& other) = delete;
@@ -16,9 +16,8 @@ namespace dae
 
 		//Called from the ShootCommand
 		void Shoot() const;
-
 	private:
-		GameObject* m_pBubble{ nullptr };
+		std::unique_ptr<GameObject> m_bubble{};
 
 	};
 }

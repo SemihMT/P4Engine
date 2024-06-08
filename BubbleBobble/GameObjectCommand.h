@@ -8,7 +8,8 @@ namespace dae
 	{
 	public:
 		GameObjectCommand(GameObject* gameObject) : m_pGameObject(gameObject) {}
-		virtual ~GameObjectCommand() override {};
+		virtual ~GameObjectCommand() override {}
+		void Execute() override{}
 	protected:
 		GameObject* GetGameObject() const { return m_pGameObject; }
 	private:

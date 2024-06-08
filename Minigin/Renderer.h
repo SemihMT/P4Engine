@@ -49,6 +49,12 @@ namespace dae
 
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+		glm::ivec2 GetWindowSize()
+		{
+			glm::ivec2 size{};
+			SDL_GetWindowSize(m_window, &size.x, &size.y);
+			return size;
+		}
 	};
 }
 

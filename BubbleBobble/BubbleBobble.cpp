@@ -73,7 +73,7 @@ void load()
 			auto player = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			auto startingDirection = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
 			auto playerNumber = 1;
-			player->AddComponent<PlayerComponent>(playerNumber, startingDirection, nullptr);
+			player->AddComponent<PlayerComponent>(playerNumber, startingDirection);
 			return player;
 		});
 

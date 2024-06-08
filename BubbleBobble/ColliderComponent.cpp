@@ -4,6 +4,7 @@
 
 #include "AddScoreCommand.h"
 #include "GameObject.h"
+#include "PlayerEventHandlerComponent.h"
 #include "Renderer.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
@@ -21,16 +22,18 @@ dae::ColliderComponent::ColliderComponent(GameObject* owner, int size, ColliderT
 	m_type{ type }
 {
 	m_colliderComponents.emplace_back(this);
+
 }
 
 dae::ColliderComponent::~ColliderComponent()
 {
-	auto it = std::find(m_colliderComponents.begin(), m_colliderComponents.end(), this);
+	const auto it = std::ranges::find(m_colliderComponents, this);
 	if (it != m_colliderComponents.end())
 	{
 		m_colliderComponents.erase(it);
 	}
 }
+
 
 void dae::ColliderComponent::Update()
 {
@@ -41,18 +44,78 @@ void dae::ColliderComponent::Update()
 	m_collider.pos = m_ownerTransform->GetWorldPosition();
 
 	// Define an offset to place rays closer together
-    float offset = 2.0f;  // Adjust this value as needed
+	constexpr float offset = 2.0f;
+	DefineColliderRays(offset);
 
-    // Define rays for each side, closer to the center
-    m_bottomLeft = { {m_collider.pos.x + offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
-    m_bottomRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
-    m_topLeft = { {m_collider.pos.x + offset, m_collider.pos.y}, {0, -1} };
-    m_topRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y}, {0, -1} };
-    m_leftBottom = { {m_collider.pos.x, m_collider.pos.y + m_collider.size.y - offset}, {-1, 0} };
-    m_leftTop = { {m_collider.pos.x, m_collider.pos.y + offset}, {-1, 0} };
-    m_rightBottom = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + m_collider.size.y - offset}, {1, 0} };
-    m_rightTop = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + offset}, {1, 0} };
+	//Check if this collider collides with any other in the scene
+	PerformCollisionTests();
+}
 
+void dae::ColliderComponent::Render() const
+{
+#ifdef NDEBUG
+#else
+	SDL_FRect colliderRect{ m_collider.pos.x,m_collider.pos.y,m_collider.size.x,m_collider.size.y };
+	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
+	SDL_RenderDrawRectF(Renderer::GetInstance().GetSDLRenderer(), &colliderRect);
+
+	//Render the raycast rays we're using for the collision checks
+	if (!(m_type == ColliderType::Wall || m_type == ColliderType::Platform))
+	{
+		SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
+
+		// Draw bottom rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_bottomLeft.origin.x, m_bottomLeft.origin.y,
+			m_bottomLeft.origin.x + m_bottomLeft.direction.x * 10, m_bottomLeft.origin.y + m_bottomLeft.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_bottomRight.origin.x, m_bottomRight.origin.y,
+			m_bottomRight.origin.x + m_bottomRight.direction.x * 10, m_bottomRight.origin.y + m_bottomRight.direction.y * 10);
+
+		// Draw top rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_topLeft.origin.x, m_topLeft.origin.y,
+			m_topLeft.origin.x + m_topLeft.direction.x * 10, m_topLeft.origin.y + m_topLeft.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_topRight.origin.x, m_topRight.origin.y,
+			m_topRight.origin.x + m_topRight.direction.x * 10, m_topRight.origin.y + m_topRight.direction.y * 10);
+
+		// Draw left rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_leftBottom.origin.x, m_leftBottom.origin.y,
+			m_leftBottom.origin.x + m_leftBottom.direction.x * 10, m_leftBottom.origin.y + m_leftBottom.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_leftTop.origin.x, m_leftTop.origin.y,
+			m_leftTop.origin.x + m_leftTop.direction.x * 10, m_leftTop.origin.y + m_leftTop.direction.y * 10);
+
+		// Draw right rays
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_rightBottom.origin.x, m_rightBottom.origin.y,
+			m_rightBottom.origin.x + m_rightBottom.direction.x * 10, m_rightBottom.origin.y + m_rightBottom.direction.y * 10);
+		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
+			m_rightTop.origin.x, m_rightTop.origin.y,
+			m_rightTop.origin.x + m_rightTop.direction.x * 10, m_rightTop.origin.y + m_rightTop.direction.y * 10);
+	}
+#endif
+}
+
+
+
+void dae::ColliderComponent::DefineColliderRays(float offset)
+{
+	// Define rays for each side, closer to the center
+	m_bottomLeft = { {m_collider.pos.x + offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
+	m_bottomRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y + m_collider.size.y}, {0, 1} };
+	m_topLeft = { {m_collider.pos.x + offset, m_collider.pos.y}, {0, -1} };
+	m_topRight = { {m_collider.pos.x + m_collider.size.x - offset, m_collider.pos.y}, {0, -1} };
+	m_leftBottom = { {m_collider.pos.x, m_collider.pos.y + m_collider.size.y - offset}, {-1, 0} };
+	m_leftTop = { {m_collider.pos.x, m_collider.pos.y + offset}, {-1, 0} };
+	m_rightBottom = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + m_collider.size.y - offset}, {1, 0} };
+	m_rightTop = { {m_collider.pos.x + m_collider.size.x, m_collider.pos.y + offset}, {1, 0} };
+}
+
+void dae::ColliderComponent::PerformCollisionTests()
+{
 	bool wasCollidingBottomLeft = false;
 	bool wasCollidingBottomRight = false;
 	bool wasCollidingTopLeft = false;
@@ -62,29 +125,22 @@ void dae::ColliderComponent::Update()
 	bool wasCollidingRightBottom = false;
 	bool wasCollidingRightTop = false;
 
-	for (auto component : m_colliderComponents)
+	for (const auto component : m_colliderComponents)
 	{
 		if (component == this)
 			continue;
-		
+
 
 		if (IsColliding(component->m_collider))
 		{
-			if (GetOwner()->GetName() == "Player" && component->GetOwner()->GetName() == "ZenChan")
-			{
-				std::cout << "Colliding with enemy!\n";
 
-			}
-			else if (component->GetOwner()->GetName() == "Tile")
-			{
-				std::cout << "Colliding with Tile!\n";
-			}
+			DispatchCollisionEvents(component);
 
 			ResolveCollision(component);
 		}
 
 
-		if(component->m_type == ColliderType::Trigger)
+		if (component->m_type == ColliderType::Trigger)
 			continue;
 		HitResult r;
 
@@ -136,53 +192,6 @@ void dae::ColliderComponent::Update()
 	m_isCollidingAllRight = wasCollidingRightBottom && wasCollidingRightTop;
 }
 
-void dae::ColliderComponent::Render() const
-{
-#ifdef NDEBUG
-#else
-	SDL_FRect colliderRect{ m_collider.pos.x,m_collider.pos.y,m_collider.size.x,m_collider.size.y };
-	SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 255, 0, 0, 255);
-	SDL_RenderDrawRectF(Renderer::GetInstance().GetSDLRenderer(), &colliderRect);
-
-	//Render the raycast rays we're using for the collision checks
-	if (!(m_type == ColliderType::Wall || m_type == ColliderType::Platform))
-	{
-		SDL_SetRenderDrawColor(Renderer::GetInstance().GetSDLRenderer(), 0, 0, 255, 255);
-
-		// Draw bottom rays
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_bottomLeft.origin.x, m_bottomLeft.origin.y,
-			m_bottomLeft.origin.x + m_bottomLeft.direction.x * 10, m_bottomLeft.origin.y + m_bottomLeft.direction.y * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_bottomRight.origin.x, m_bottomRight.origin.y,
-			m_bottomRight.origin.x + m_bottomRight.direction.x * 10, m_bottomRight.origin.y + m_bottomRight.direction.y * 10);
-
-		// Draw top rays
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_topLeft.origin.x, m_topLeft.origin.y,
-			m_topLeft.origin.x + m_topLeft.direction.x * 10, m_topLeft.origin.y + m_topLeft.direction.y * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_topRight.origin.x, m_topRight.origin.y,
-			m_topRight.origin.x + m_topRight.direction.x * 10, m_topRight.origin.y + m_topRight.direction.y * 10);
-
-		// Draw left rays
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_leftBottom.origin.x, m_leftBottom.origin.y,
-			m_leftBottom.origin.x + m_leftBottom.direction.x * 10, m_leftBottom.origin.y + m_leftBottom.direction.y * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_leftTop.origin.x, m_leftTop.origin.y,
-			m_leftTop.origin.x + m_leftTop.direction.x * 10, m_leftTop.origin.y + m_leftTop.direction.y * 10);
-
-		// Draw right rays
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_rightBottom.origin.x, m_rightBottom.origin.y,
-			m_rightBottom.origin.x + m_rightBottom.direction.x * 10, m_rightBottom.origin.y + m_rightBottom.direction.y * 10);
-		SDL_RenderDrawLineF(Renderer::GetInstance().GetSDLRenderer(),
-			m_rightTop.origin.x, m_rightTop.origin.y,
-			m_rightTop.origin.x + m_rightTop.direction.x * 10, m_rightTop.origin.y + m_rightTop.direction.y * 10);
-	}
-#endif
-}
 
 bool dae::ColliderComponent::IsColliding(const Collider& other) const
 {
@@ -191,7 +200,7 @@ bool dae::ColliderComponent::IsColliding(const Collider& other) const
 
 void dae::ColliderComponent::ResolveCollision(ColliderComponent* other)
 {
- 	auto otherCollider = other->m_collider;
+	auto otherCollider = other->m_collider;
 	// Calculate the overlap on each side
 	float overlapLeft = m_collider.pos.x + m_collider.size.x - otherCollider.pos.x;
 	float overlapRight = otherCollider.pos.x + otherCollider.size.x - m_collider.pos.x;
@@ -242,6 +251,52 @@ void dae::ColliderComponent::ResolveCollision(ColliderComponent* other)
 	}
 }
 
+void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
+{
+	const auto otherName = other->GetOwner()->GetName();
+
+	// Touches free enemy / their projectiles
+	if (otherName == "ZenChan"
+		|| otherName == "Maita"
+		|| otherName == "MaitaBoulder")
+		Notify(Event::Player_Damaged, {});
+
+	if (otherName == "ZenChanBubble"
+		|| otherName == "MaitaBubble")
+	{
+		//Store the enemy we've hit, so we can modify its state
+		EventData data{};
+		data.data["PoppedEnemy"] = other->GetOwner();
+		Notify(Event::Bubble_PopEnemy, { data });
+	}
+
+	// Bubble touches free enemy 
+	if (otherName == "ZenChan"
+		|| otherName == "Maita")
+	{
+		//Store the enemy we've hit, so we can modify its state
+		EventData data{};
+		data.data["HitEnemy"] = other->GetOwner();
+		Notify(Event::Bubble_HitEnemy, data);
+
+	}
+
+	if (otherName == "Player")
+	{
+		// Assume that if we're colliding with the player && something is touching the top side of the collider
+		// It's the player
+		if (IsCollidingTop())
+		{
+			//Notify(Event::Player_BubbleJump,{});
+		}
+		else
+		{
+			Notify(Event::Bubble_PopNoEnemy, {});
+		}
+	}
+
+}
+
 bool dae::ColliderComponent::IsCollidingBottom() const
 {
 	return m_isCollidingBottom;
@@ -280,4 +335,8 @@ bool dae::ColliderComponent::IsCollidingAllLeft() const
 bool dae::ColliderComponent::IsCollidingAllRight() const
 {
 	return m_isCollidingAllRight;
+}
+
+void dae::ColliderComponent::Init()
+{
 }

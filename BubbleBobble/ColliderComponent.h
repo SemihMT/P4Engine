@@ -3,16 +3,20 @@
 #include <SDL_rect.h>
 #include <vector>
 
+#include "GameObject.h"
+#include "Subject.h"
 #include "Transform.h"
 #include "Utility.h"
 
 namespace dae
 {
-	class ColliderComponent final : public BaseComponent
+	class ColliderComponent final : public BaseComponent, public Subject
 	{
 	public:
 		explicit ColliderComponent(GameObject* owner, int size, ColliderType type);
 		virtual ~ColliderComponent() override;
+		void DefineColliderRays(float offset);
+		void PerformCollisionTests();
 
 		ColliderComponent(const ColliderComponent& other) = delete;
 		ColliderComponent(ColliderComponent&& other) = delete;
@@ -23,7 +27,6 @@ namespace dae
 		void Render() const override;
 
 		bool IsColliding(const Collider& other) const;
-		void ResolveCollision(ColliderComponent* other);
 
 		bool IsCollidingBottom()const;
 		bool IsCollidingTop()const;
@@ -39,6 +42,11 @@ namespace dae
 		void StartJumping() { m_isInAir = true; }
 		void Land() { m_isInAir = false; }
 	private:
+
+		void Init();
+		void ResolveCollision(ColliderComponent* other);
+		void DispatchCollisionEvents(ColliderComponent* other);
+
 		Transform* m_ownerTransform{};
 		Collider m_collider;
 		static std::vector<ColliderComponent*> m_colliderComponents;

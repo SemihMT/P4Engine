@@ -105,6 +105,12 @@
     <ClCompile Include="FallState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="HitState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObservableEvents.h">
@@ -210,6 +216,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="FallState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="HitState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootState.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

@@ -85,17 +85,17 @@ void dae::LevelParser::ParseMetadata(const std::string& line)
 		// Store metadata in the map
 		Metadata data{};
 		const auto it = m_metadataHandlers.find(metadataType);
-		if(it != m_metadataHandlers.end())
+		if (it != m_metadataHandlers.end())
 		{
-			it->second(metadataValues,data);
-			m_pixelToMetadataMap[std::pair<int,int>{xCoord, yCoord}] = data;
+			it->second(metadataValues, data);
+			m_pixelToMetadataMap[std::pair<int, int>{xCoord, yCoord}] = data;
 		}
 		else
 		{
-			 std::cout << "Unknown or unsupported metadata type: [" << metadataType << "]\n";
+			std::cout << "Unknown or unsupported metadata type: [" << metadataType << "]\n";
 		}
 
-		
+
 	}
 }
 
@@ -121,9 +121,9 @@ void dae::LevelParser::ParsePPM(const std::string& filename)
 	// Read magic number - See PPM file details: https://netpbm.sourceforge.net/doc/ppm.html
 	std::string line;
 	std::getline(file, line);
-	if (line == "P3" )
+	if (line == "P3")
 		ParseP3(file);
-	else if(line == "P6")
+	else if (line == "P6")
 		ParseP6(file);
 	else
 	{
@@ -131,7 +131,7 @@ void dae::LevelParser::ParsePPM(const std::string& filename)
 		return;
 	}
 
-	
+
 }
 
 void dae::LevelParser::ParseP3(std::ifstream& file)
@@ -201,29 +201,31 @@ void dae::LevelParser::ParseP6(std::ifstream& file)
 			break;
 		}
 	}
-	
+
 	//Store the file information
 	std::istringstream ss(line);
 	ss >> m_ppmInfo.width >> m_ppmInfo.height;
 	file >> m_ppmInfo.maxColorValue;
 
-	for (int y{ 2 }; y < m_ppmInfo.height + 2; ++y)
+
+	for (int y{}; y < m_ppmInfo.height; ++y)
 	{
 		for (int x{}; x < m_ppmInfo.width; ++x)
 		{
-			//Read the color value at x,y
+			// Read the color value at x,y
 			int r;
 			int g;
 			int b;
 
 			file >> r >> g >> b;
-			IColor color{ r,g,b };
+			IColor color{ r, g, b };
 
 			// Find metadata for the current pixel
-			auto it = m_pixelToMetadataMap.find({ x, y - 2 });
+			auto it = m_pixelToMetadataMap.find({ x, y });
 			std::optional<Metadata> data = (it != m_pixelToMetadataMap.end()) ? std::make_optional(it->second) : std::nullopt;
 
-			ParsePixel(x, y, color, data);
+			// Parse the pixel with an adjusted y-coordinate
+			ParsePixel(x, y + 2, color, data);
 		}
 	}
 }

@@ -14,12 +14,13 @@
 #include "SpawnState.h"
 #include "StateComponent.h"
 
-dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction, GameObject* bubble) :
+dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction) :
 	BaseComponent(owner),
-	m_transform{ owner->GetTransform() }
+	m_transform{ owner->GetTransform() },
+	m_spawnDirection{direction}
 {
 
-
+	owner->SetName("Player");
 	std::string spriteSheet{};
 	if (playerNumber == 1)
 		spriteSheet = "Sprites/Characters/Player/BubSpriteSheet.png";
@@ -47,11 +48,26 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	const AnimationData fallDownAnimation{ row,numFrames,16,0.25f };
 	owner->GetComponent<AnimationComponent>()->AddAnimation("FallDown", fallDownAnimation);
 
-	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger);
+	row = 3;
+	numFrames = 1;
+	const AnimationData shootAnimation{ row,numFrames,16,0.25f };
+	owner->GetComponent<AnimationComponent>()->AddAnimation("Shoot", shootAnimation);
+
+	row = 5;
+	numFrames = 6;
+	const AnimationData deathAnimation{ row,numFrames,16,0.25f };
+	owner->GetComponent<AnimationComponent>()->AddAnimation("Death", deathAnimation);
+	
+	m_spawnPosition = m_transform->GetLocalPosition() * glm::vec3{ static_cast<float>(m_srcSize) };
+
+	auto observer = owner->AddComponent<PlayerEventHandlerComponent>();
+	owner->AddComponent<StateComponent>();
+	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, m_spawnPosition, m_spawnDirection));
+	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger)->AddObserver(observer);
 	owner->AddComponent<RigidBodyComponent>();
 
-	owner->AddComponent<ShootBubble>(bubble);
-	owner->SetName("Player");
+	owner->AddComponent<ShootBubble>();
+	
 
 	if (playerNumber == 2)
 		InputManager::GetInstance().AddController();
@@ -66,10 +82,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
 
 
-	auto pos = m_transform->GetLocalPosition() * glm::vec3{ static_cast<float>(m_srcSize) };
-	owner->AddComponent<PlayerEventHandlerComponent>();
-	owner->AddComponent<StateComponent>();
-	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, pos, direction));
+	
 
 }
 

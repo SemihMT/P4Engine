@@ -19,16 +19,13 @@ dae::SpawnState::~SpawnState()
 
 void dae::SpawnState::OnEnter()
 {
-	if (std::is_base_of_v<Observer, PlayerEventHandlerComponent>)
-		AddObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
-	Notify(Event::Player_Spawn, {});
-
 	GetOwner()->GetTransform()->SetLocalPosition(m_spawnPos);
 	GetOwner()->GetTransform()->SetForwardDirection(m_spawnDir);
 
-
-	//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(true);
-	//GetOwner()->GetComponent<RigidBodyComponent>()->SetShouldFall(true);
+	if(const auto collider = GetOwner()->GetComponent<ColliderComponent>())
+		collider->Enable();
+	if(const auto rigidBody = GetOwner()->GetComponent<RigidBodyComponent>())
+		rigidBody->Enable();
 
 	std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner());
 	GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
@@ -36,7 +33,6 @@ void dae::SpawnState::OnEnter()
 
 void dae::SpawnState::OnExit()
 {
-	RemoveObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 }
 
 void dae::SpawnState::Update()

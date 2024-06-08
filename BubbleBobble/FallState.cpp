@@ -4,7 +4,7 @@
 #include "PlayerEventHandlerComponent.h"
 #include "ColliderComponent.h"
 #include "IdleState.h"
-#include "RigidBodyComponent.h"
+
 
 dae::FallState::FallState(GameObject* owner) : State(owner)
 {
@@ -23,7 +23,7 @@ void dae::FallState::OnEnter()
 		animCmp->SetCurrentAnimation("FallDown");
 	}
 	std::cout << "Entered Fall state\n";
-	Notify(Event::Player_Fall,{});
+	Notify(Event::Player_Fall, {});
 
 
 	GetOwner()->GetComponent<ColliderComponent>()->Land();
@@ -43,5 +43,11 @@ void dae::FallState::Update()
 		std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner());
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
 		return;
+	}
+
+	if (GetOwner()->GetTransform()->GetLocalPosition().y > Renderer::GetInstance().GetWindowSize().y)
+	{
+		auto pos = GetOwner()->GetTransform()->GetLocalPosition();
+		GetOwner()->GetTransform()->SetLocalPosition(pos.x, 0, pos.z);
 	}
 }

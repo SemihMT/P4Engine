@@ -173,6 +173,7 @@
     <ClCompile Include="FrameCounter.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
+    <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="JumpState.cpp" />
     <ClCompile Include="LevelParser.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreObserverComponent.cpp" />
     <ClCompile Include="ShootBubble.cpp" />
+    <ClCompile Include="ShootState.cpp" />
     <ClCompile Include="SpawnState.cpp" />
     <ClCompile Include="SpriteComponent.cpp">
       <SubType>
@@ -227,6 +229,7 @@
     </ClInclude>
     <ClInclude Include="Components.h" />
     <ClInclude Include="FallState.h" />
+    <ClInclude Include="HitState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
@@ -246,6 +249,7 @@
     </ClInclude>
     <ClInclude Include="ShootBubble.h" />
     <ClInclude Include="ShootCommand.h" />
+    <ClInclude Include="ShootState.h" />
     <ClInclude Include="SpawnState.h" />
     <ClInclude Include="SpriteComponent.h">
       <SubType>

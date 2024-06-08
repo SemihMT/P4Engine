@@ -2,8 +2,7 @@
 #include "GameObject.h"
 #include "GameObjectCommand.h"
 #include "JumpState.h"
-#include "TimeManager.h"
-#include "RigidBodyComponent.h"
+#include "StateComponent.h"
 namespace dae
 {
 	class JumpCommand final : public GameObjectCommand
