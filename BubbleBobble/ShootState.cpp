@@ -7,7 +7,7 @@
 #include "StateComponent.h"
 #include "TimeManager.h"
 
-dae::ShootState::ShootState(GameObject* owner) : State(owner)
+dae::ShootState::ShootState(GameObject* owner, int playerNumber) : State(owner), m_playerNumber(playerNumber)
 {
 }
 
@@ -34,7 +34,7 @@ void dae::ShootState::Update()
 	m_timer += static_cast<float>(TimeManager::GetInstance().DeltaTime());
 	if (m_timer >= m_hitDuration)
 	{
-		std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner());
+		std::unique_ptr<State> idleState = std::make_unique<IdleState>(GetOwner(), m_playerNumber);
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(idleState));
 	}
 }

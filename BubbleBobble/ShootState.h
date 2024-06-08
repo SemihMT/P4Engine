@@ -8,7 +8,7 @@ namespace dae
 	class ShootState final : public State, public Subject
 	{
 	public:
-		explicit ShootState(GameObject* owner);
+		explicit ShootState(GameObject* owner, int playerNumber);
 
 		~ShootState() override;
 
@@ -18,6 +18,7 @@ namespace dae
 
 		void Update() override;
 	private:
+		int m_playerNumber{};
 		float m_timer{};
 		float m_hitDuration{ 1.0f };
 	};

@@ -9,7 +9,7 @@
 #include "PlayerEventHandlerComponent.h"
 #include "RigidBodyComponent.h"
 
-dae::IdleState::IdleState(GameObject* owner) :State{ owner }
+dae::IdleState::IdleState(GameObject* owner, int playerNumber) :State{ owner }, m_playerNumber(playerNumber)
 {
 
 }
@@ -23,34 +23,51 @@ void dae::IdleState::OnEnter()
 	if (std::is_base_of_v<Observer, PlayerEventHandlerComponent>)
 		AddObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 
-	Notify(Event::Player_Idle,{});
-	std::cout << "Entered Idle state\n";
+	Notify(Event::Player_Idle, {});
 
 	if (const auto animCmp = GetOwner()->GetComponent<AnimationComponent>())
 	{
 		animCmp->SetCurrentAnimation("Idle");
 	}
 
-	//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(true);
-	//GetOwner()->GetComponent<RigidBodyComponent>()->SetShouldFall(false);
 }
 
 void dae::IdleState::OnExit()
 {
-	std::cout << "Exit Idle state\n";
 	RemoveObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 }
 
 void dae::IdleState::Update()
 {
-	const auto playerIsMoving =
-		InputManager::GetInstance().IsDown(SDLK_LEFT) ||
-		InputManager::GetInstance().IsDown(SDLK_RIGHT);
 
-	if (playerIsMoving)
+	auto& inputManager = InputManager::GetInstance();
+
+	if (m_playerNumber == 1)
 	{
-		std::unique_ptr<State> moveState = std::make_unique<MoveState>(GetOwner());
-		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(moveState));
-		return;
+		bool playerIsMoving =
+			inputManager.IsDown(SDLK_LEFT) ||
+			inputManager.IsDown(SDLK_RIGHT) ||
+			inputManager.IsPressed(Controller::One, XInputController::Button::DPAD_LEFT) ||
+			inputManager.IsPressed(Controller::One, XInputController::Button::DPAD_RIGHT);
+		if (playerIsMoving)
+		{
+			std::unique_ptr<State> moveState = std::make_unique<MoveState>(GetOwner(), m_playerNumber);
+			GetOwner()->GetComponent<StateComponent>()->SetState(std::move(moveState));
+			return;
+		}
 	}
+	if (m_playerNumber == 2)
+	{
+		bool playerIsMoving =
+			inputManager.IsPressed(Controller::Two, XInputController::Button::DPAD_LEFT) ||
+			inputManager.IsPressed(Controller::Two, XInputController::Button::DPAD_RIGHT);
+		if (playerIsMoving)
+		{
+			std::unique_ptr<State> moveState = std::make_unique<MoveState>(GetOwner(), m_playerNumber);
+			GetOwner()->GetComponent<StateComponent>()->SetState(std::move(moveState));
+			return;
+		}
+	}
+
+
 }

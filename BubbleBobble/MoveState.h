@@ -10,7 +10,7 @@ namespace dae
 	class MoveState final : public State, public Subject
 	{
 	public:
-		explicit MoveState(GameObject* owner);
+		explicit MoveState(GameObject* owner, int playerNumber);
 
 		~MoveState() override;
 
@@ -20,6 +20,7 @@ namespace dae
 
 		void Update() override;
 	private:
+		int m_playerNumber{};
 		Transform* m_transform{};
 		AnimationComponent* m_animationComponent{};
 		RigidBodyComponent* m_rb{};

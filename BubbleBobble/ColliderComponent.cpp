@@ -4,6 +4,7 @@
 
 #include "AddScoreCommand.h"
 #include "GameObject.h"
+#include "PlayerComponent.h"
 #include "PlayerEventHandlerComponent.h"
 #include "Renderer.h"
 #include "SpriteComponent.h"
@@ -262,7 +263,11 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 		if (otherName == "ZenChan"
 			|| otherName == "Maita"
 			|| otherName == "MaitaBoulder")
-			Notify(Event::Player_Damaged, {});
+		{
+			EventData d{};
+			d.data["PlayerNumber"] = GetOwner()->GetComponent<PlayerComponent>()->GetPlayerNumber();
+			Notify(Event::Player_Damaged, d);
+		}
 
 
 		if (otherName == "ZenChanBubble"

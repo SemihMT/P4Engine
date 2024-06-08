@@ -22,6 +22,9 @@ namespace dae
 		glm::vec3 m_initialPlayerPos{};
 		glm::vec3 m_playerForward{};
 		BubbleComponent* m_bubbleComponent{};
+		float m_bubbleLifetimeTimer{};
+		float m_maxBubbleLifetime{7.0f};
+
 	};
 }
 

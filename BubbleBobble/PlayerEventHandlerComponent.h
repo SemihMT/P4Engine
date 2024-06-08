@@ -23,7 +23,7 @@ namespace dae
 		//void LateUpdate() override;
 		//void RenderImgui() override;
 	private:
-		void UnbindAllControls();
-		void BindAllControls();
+		void UnbindAllControls(int playerNumber);
+		void BindAllControls(int playerNumber);
 	};
 }

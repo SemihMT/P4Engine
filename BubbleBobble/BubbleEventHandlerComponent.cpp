@@ -19,9 +19,17 @@ void dae::BubbleEventHandlerComponent::OnNotify(Event event, const EventData& da
 	case Event::Bubble_PopEnemy:
 		break;
 	case Event::Bubble_PopNoEnemy:
+		std::cout << "Bubble should pop!\n";
 		break;
 	case Event::Bubble_Spawn:
 		std::cout << "Bubble Spawned!\n";
+		break;
+	case Event::Bubble_Shot:
+		break;
+	case Event::Bubble_PlayerJump:
+		std::cout << "Player jumped on bubble!\n";
+		break;
+	case Event::Item_Collected:
 		break;
 	}
 }

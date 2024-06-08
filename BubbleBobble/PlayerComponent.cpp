@@ -18,14 +18,15 @@
 dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction) :
 	BaseComponent(owner),
 	m_transform{ owner->GetTransform() },
+	m_playerNumber{ playerNumber },
 	m_spawnDirection{ direction }
 {
 
 	owner->SetName("Player");
 
-	if (playerNumber == 1)
+	if (m_playerNumber == 1)
 		m_playerSpriteSheet = "Sprites/Characters/Player/BobSpriteSheet.png";
-	if (playerNumber == 2)
+	if (m_playerNumber == 2)
 		m_playerSpriteSheet = "Sprites/Characters/Player/BubSpriteSheet.png";
 
 	owner->AddComponent<AnimationComponent>(m_playerSpriteSheet);
@@ -63,12 +64,12 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 
 	auto observer = owner->AddComponent<PlayerEventHandlerComponent>();
 	owner->AddComponent<StateComponent>();
-	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, m_spawnPosition, m_spawnDirection));
+	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, m_spawnPosition, m_spawnDirection, m_playerNumber));
 	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger)->AddObserver(observer);
 	owner->AddComponent<RigidBodyComponent>();
 
 
-	for(int i{}; i < 16; ++i)
+	for (int i{}; i < 16; ++i)
 	{
 		auto bubble = std::make_unique<GameObject>();
 		bubble->AddComponent<BubbleComponent>(m_playerSpriteSheet);
@@ -79,17 +80,31 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	owner->AddComponent<ShootBubble>(m_bubbles);
 
 
-	if (playerNumber == 2)
-		InputManager::GetInstance().AddController();
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(owner, glm::vec3{ -1.f, 0.f, 0.f }, m_speed));
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(owner, glm::vec3{ 1.f, 0.f, 0.f }, m_speed));
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::A, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
-	InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::B, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
 
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(owner, glm::vec3{ -1.f, 0.f, 0.f }, m_speed));
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(owner, glm::vec3{ 1.f, 0.f, 0.f }, m_speed));
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
+	if (playerNumber == 1)
+	{
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_LEFT, std::make_unique<MoveCommand>(owner, glm::vec3{ -1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_RIGHT, std::make_unique<MoveCommand>(owner, glm::vec3{ 1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_UP, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
+		InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
+
+		InputManager::GetInstance().AddController();
+		InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(owner, glm::vec3{ -1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(owner, glm::vec3{ 1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::A, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
+		InputManager::GetInstance().BindControllerCommand(Controller::One, XInputController::Button::B, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
+	}
+	if (playerNumber == 2)
+	{
+		InputManager::GetInstance().AddController();
+		InputManager::GetInstance().BindControllerCommand(Controller::Two, XInputController::Button::DPAD_LEFT, std::make_unique<MoveCommand>(owner, glm::vec3{ -1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindControllerCommand(Controller::Two, XInputController::Button::DPAD_RIGHT, std::make_unique<MoveCommand>(owner, glm::vec3{ 1.f, 0.f, 0.f }, m_speed));
+		InputManager::GetInstance().BindControllerCommand(Controller::Two, XInputController::Button::A, std::make_unique<JumpCommand>(owner), KeyState::ButtonUp);
+		InputManager::GetInstance().BindControllerCommand(Controller::Two, XInputController::Button::B, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
+	}
+
+
+
 
 
 

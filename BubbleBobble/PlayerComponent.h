@@ -25,9 +25,11 @@ namespace dae
 		void SetMoveSpeed(float speed) { m_speed = speed; }
 		const glm::vec3& GetSpawnPosition() const { return m_spawnPosition; }
 		const glm::vec3& GetSpawnDirection() const { return m_spawnDirection; }
+		int GetPlayerNumber() const { return m_playerNumber; }
 
 	private:
 		Transform* m_transform{ nullptr };
+		int m_playerNumber{};
 		int m_srcSize{ 16 };
 		int m_dstSize{ 32 };
 		float m_speed{ 64 };
@@ -35,7 +37,8 @@ namespace dae
 		glm::vec3 m_spawnPosition{};
 		glm::vec3 m_spawnDirection{};
 		std::string m_playerSpriteSheet{};
-		std::vector<GameObject*> m_bubbles{16};
+		std::vector<GameObject*> m_bubbles{ 16 };
+		
 
 	};
 }

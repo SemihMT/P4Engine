@@ -7,7 +7,7 @@ namespace dae
 	class FallState final : public State, public Subject
 	{
 	public:
-		explicit FallState(GameObject* owner);
+		explicit FallState(GameObject* owner, int playerNumber);
 
 		~FallState() override;
 
@@ -16,6 +16,8 @@ namespace dae
 		void OnExit() override;
 
 		void Update() override;
+	private:
+		int m_playerNumber{};
 	};
 }
 

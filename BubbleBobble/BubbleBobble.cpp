@@ -77,8 +77,18 @@ void load()
 			return player;
 		});
 
+	parser.RegisterColor({ 255,0,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+		{
 
-	parser.Parse("Levels/level1Platforms2.ppm");
+			auto player = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			auto startingDirection = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
+			auto playerNumber = 2;
+			player->AddComponent<PlayerComponent>(playerNumber, startingDirection);
+			return player;
+		});
+
+
+	parser.Parse("Levels/level1Platforms2Players.ppm");
 
 	auto textObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
 	textObject->AddComponent<Text>(smallFont, "Here cometh the UI, God willing");

@@ -32,7 +32,7 @@ void dae::BubbleShotState::OnEnter()
 
 	m_initialPlayerPos = m_playerTransform->GetWorldPosition();
 	m_playerForward = m_playerTransform->GetForwardDirection();
-	const auto bubbleShootPos = m_initialPlayerPos + glm::vec3{ 1,0,0 } *m_playerForward;
+	const auto bubbleShootPos = m_initialPlayerPos + glm::vec3{ 16,0,0 } *m_playerForward;
 	GetOwner()->GetTransform()->SetLocalPosition(bubbleShootPos);
 }
 
@@ -45,10 +45,10 @@ void dae::BubbleShotState::Update()
 {
 	const float dt = static_cast<float>(TimeManager::GetInstance().DeltaTime());
 	GetOwner()->GetTransform()->Translate(m_bubbleComponent->GetSpeed() * dt * m_playerForward);
-
-	if (abs(GetOwner()->GetTransform()->GetLocalPosition().x - m_initialPlayerPos.x) >= m_bubbleComponent->GetMoveDistance())
+	m_bubbleLifetimeTimer += dt;
+	if (abs(GetOwner()->GetTransform()->GetLocalPosition().x - m_initialPlayerPos.x) >= m_bubbleComponent->GetMoveDistance()
+		|| m_bubbleLifetimeTimer >= m_maxBubbleLifetime )
 	{
-
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<BubbleIdleState>(GetOwner()));
 	}
 }

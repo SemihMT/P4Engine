@@ -8,7 +8,7 @@
 #include "SpawnState.h"
 #include "TimeManager.h"
 
-dae::HitState::HitState(GameObject* owner) : State(owner)
+dae::HitState::HitState(GameObject* owner, int playerNumber) : State(owner), m_playerNumber(playerNumber)
 {
 }
 
@@ -42,7 +42,7 @@ void dae::HitState::Update()
 	{
 		auto pos = GetOwner()->GetComponent<PlayerComponent>()->GetSpawnPosition();
 		auto dir = GetOwner()->GetComponent<PlayerComponent>()->GetSpawnDirection();
-		std::unique_ptr<State> spawnState = std::make_unique<SpawnState>(GetOwner(),pos,dir);
+		std::unique_ptr<State> spawnState = std::make_unique<SpawnState>(GetOwner(),pos,dir,m_playerNumber);
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(spawnState));
 	}
 }

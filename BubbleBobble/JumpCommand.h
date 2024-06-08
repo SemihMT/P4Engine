@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "GameObjectCommand.h"
 #include "JumpState.h"
+#include "PlayerComponent.h"
 #include "StateComponent.h"
 namespace dae
 {
@@ -14,7 +15,7 @@ namespace dae
 		}
 		void Execute() override
 		{
-			GetGameObject()->GetComponent<StateComponent>()->SetState(std::make_unique<JumpState>(GetGameObject()));
+			GetGameObject()->GetComponent<StateComponent>()->SetState(std::make_unique<JumpState>(GetGameObject(), GetGameObject()->GetComponent<PlayerComponent>()->GetPlayerNumber()));
 		}
 	};
 }

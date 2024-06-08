@@ -11,7 +11,7 @@ namespace dae
 	class IdleState final : public State, public Subject
 	{
 	public:
-		explicit IdleState(GameObject* owner);
+		explicit IdleState(GameObject* owner, int playerNumber);
 
 		~IdleState() override;
 
@@ -20,5 +20,8 @@ namespace dae
 		void OnExit() override;
 
 		void Update() override;
+
+	private:
+		int m_playerNumber{};
 	};
 }

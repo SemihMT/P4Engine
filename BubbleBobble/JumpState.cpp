@@ -10,8 +10,9 @@
 #include "RigidBodyComponent.h"
 #include "StateComponent.h"
 
-dae::JumpState::JumpState(GameObject* owner) :
+dae::JumpState::JumpState(GameObject* owner, int playerNumber) :
 	State(owner),
+	m_playerNumber(playerNumber),
 	m_animationComponent(GetOwner()->GetComponent<AnimationComponent>()),
 	m_rb{ GetOwner()->GetComponent<RigidBodyComponent>() }
 {
@@ -28,16 +29,12 @@ void dae::JumpState::OnEnter()
 		AddObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 	Notify(Event::Player_Jump, {});
 
-	//Debug
-	std::cout << "Entered Jump state\n";
-
 	m_animationComponent->SetCurrentAnimation("JumpUp");
 	m_rb->Jump();
 }
 
 void dae::JumpState::OnExit()
 {
-	std::cout << "Exiting Jump state\n";
 	RemoveObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 }
 
@@ -47,23 +44,11 @@ void dae::JumpState::Update()
 	{
 		std::cout << "jumping upwards\n";
 		GetOwner()->GetComponent<ColliderComponent>()->StartJumping();
-		//Disable collision when jumping up
-		//GetOwner()->GetComponent<ColliderComponent>()->SetTopBottomCollision(false);
 	}
 	else
 	{
 		GetOwner()->GetComponent<ColliderComponent>()->Land();
-		std::unique_ptr<State> fallState = std::make_unique<FallState>(GetOwner());
+		std::unique_ptr<State> fallState = std::make_unique<FallState>(GetOwner(), m_playerNumber);
 		GetOwner()->GetComponent<StateComponent>()->SetState(std::move(fallState));
-		return;
 	}
-
-
-	auto worldPos = GetOwner()->GetTransform()->GetWorldPosition();
-	if (worldPos.y > 464)
-	{
-		GetOwner()->GetTransform()->SetLocalPosition(worldPos.x, 0, worldPos.z);
-	}
-
-
 }
