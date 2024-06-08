@@ -24,17 +24,17 @@ namespace dae
 			if (levelName == "1")
 			{
 				currentLevel->SetName("2");
-				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level1Platforms2.ppm");
+				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level2.ppm");
 			}
 			else if (levelName == "2")
 			{
 				currentLevel->SetName("3");
-				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level1Platforms2.ppm");
+				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level3.ppm");
 			}
 			else if (levelName == "3")
 			{
 				currentLevel->SetName("1");
-				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level1Platforms2.ppm");
+				GameSettings::GetInstance().GetParser()->Parse(currentLevel, "Levels/level1.ppm");
 			}
 		}
 	};

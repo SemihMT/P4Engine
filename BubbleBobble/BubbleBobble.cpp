@@ -50,6 +50,7 @@ void load()
 	auto parser = GameSettings::GetInstance().GetParser();
 
 	//Registering the color {255,0,0} to create a game object with a TileComponent
+	//Level 1
 	parser->RegisterColor({ 255, 128, 192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
 		{
 			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
@@ -64,6 +65,40 @@ void load()
 			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Platform);
 			return tileObject;
 		});
+	//////
+	// Level2
+	parser->RegisterColor({ 255, 255, 0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+		{
+			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			int tileIdx{ 1 };
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Wall);
+			return tileObject;
+		});
+	parser->RegisterColor({ 255, 128, 64 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+		{
+			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			int tileIdx{ 1 };
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Platform);
+			return tileObject;
+		});
+	/////////
+	// Level3
+	parser->RegisterColor({ 185, 7, 70 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+		{
+			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			int tileIdx{ 8 };
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Wall);
+			return tileObject;
+		});
+	parser->RegisterColor({ 105, 15, 150 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+		{
+			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			int tileIdx{ 8 };
+			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Platform);
+			return tileObject;
+		});
+	////////
+
 	parser->RegisterColor({ 0,128,255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 			auto zenChanObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
@@ -71,6 +106,14 @@ void load()
 			zenChanObject->AddComponent<ZenChanComponent>(direction, ColliderType::Trigger);
 			return zenChanObject;
 		});
+
+	/*parser->RegisterColor({ 192,192,192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+		{
+			auto maitaObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
+			auto direction = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
+			maitaObject->AddComponent<ZenChanComponent>(direction, ColliderType::Trigger);
+			return maitaObject;
+		});*/
 	parser->RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 
@@ -107,7 +150,7 @@ void load()
 	healthUI->AddComponent<HealthObserverComponent>();
 	levelScene.Add(std::move(healthUI));
 
-	parser->Parse(&levelScene,"Levels/level1Platforms2Players.ppm");
+	parser->Parse(&levelScene,"Levels/level1.ppm");
 
 	ServiceLocator::GetInstance().GetService<ISoundService>("Sound")->PlayMusic("MainTheme.mp3");
 	//Sound Controls
