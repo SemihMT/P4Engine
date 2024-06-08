@@ -180,6 +180,7 @@
     </ClCompile>
     <ClCompile Include="FallState.cpp" />
     <ClCompile Include="FrameCounter.cpp" />
+    <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
     <ClCompile Include="HitState.cpp" />
@@ -250,12 +251,14 @@
     </ClInclude>
     <ClInclude Include="Components.h" />
     <ClInclude Include="FallState.h" />
+    <ClInclude Include="GameSettings.h" />
     <ClInclude Include="HitState.h" />
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
     <ClInclude Include="LevelParser.h" />
     <ClInclude Include="MoveState.h" />
+    <ClInclude Include="NextLevelCommand.h" />
     <ClInclude Include="PlayerComponent.h">
       <SubType>
       </SubType>

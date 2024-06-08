@@ -7,7 +7,6 @@ void dae::SceneManager::Update()
 
 void dae::SceneManager::Render()
 {
-	//Rendering all scenes? should probably have one scene selected and render that one
 	m_currentScene->Render();
 }
 

@@ -50,7 +50,7 @@ namespace dae
 		};
 
 	public:
-		LevelParser(Scene* scene);
+		LevelParser();
 		~LevelParser() = default;
 
 		LevelParser(const LevelParser& other) = delete;
@@ -58,7 +58,7 @@ namespace dae
 		LevelParser& operator=(const LevelParser& other) = delete;
 		LevelParser& operator=(LevelParser&& other) = delete;
 
-		void Parse(const std::string& filename);
+		void Parse(Scene* scene,const std::string& filename);
 		void RegisterColor(const IColor& rgbColor, const std::function<std::unique_ptr<GameObject>(const glm::ivec2& pos, const std::optional<Metadata>& metadata)>& func);
 		void AddMetadataHandler(const std::string& newMetadataType, const std::function<void(const std::vector<std::string>&, Metadata&)>& handlerFunction);
 

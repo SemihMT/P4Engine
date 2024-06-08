@@ -6,7 +6,7 @@
 #include "GameObject.h"
 namespace dae
 {
-	
+
 	class Scene final
 	{
 		//Friend method for the SceneManager:
@@ -23,6 +23,8 @@ namespace dae
 		GameObject* Pop(GameObject* object);
 		GameObject* GetGameObject(const std::string& name);
 		void RemoveAll();
+		const std::string& GetName()const { return m_name; }
+		void SetName(const std::string& name) { m_name = name; }
 
 		void Update();
 		void Render() const;
@@ -30,14 +32,14 @@ namespace dae
 		void LateUpdate();
 
 		~Scene();
-		
+
 
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
 		Scene& operator=(const Scene& other) = delete;
 		Scene& operator=(Scene&& other) = delete;
 
-	private: 
+	private:
 		explicit Scene(const std::string& name);
 		std::string m_name;
 		std::vector< std::unique_ptr<GameObject>> m_objects{};

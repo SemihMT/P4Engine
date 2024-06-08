@@ -3,6 +3,8 @@
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
 #include "GameObject.h"
+#include "HealthComponent.h"
+#include "HealthObserverComponent.h"
 #include "IdleState.h"
 #include "InputManager.h"
 #include "JumpCommand.h"
@@ -73,6 +75,9 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 
 	auto scoreObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ScoreObserver");
 	owner->AddComponent<ScoreComponent>(0)->AddObserver(scoreObserver->GetComponent<ScoreObserverComponent>());
+
+	auto healthObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("HealthObserver");
+	owner->AddComponent<HealthComponent>(3)->AddObserver(healthObserver->GetComponent<HealthObserverComponent>());
 
 
 	for (int i{}; i < 16; ++i)

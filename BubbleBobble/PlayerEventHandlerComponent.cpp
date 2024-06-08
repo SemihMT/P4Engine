@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "GameObject.h"
+#include "HealthComponent.h"
 #include "HitState.h"
 #include "InputManager.h"
 #include "JumpCommand.h"
@@ -40,6 +41,7 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		{
 			GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<HitState>(GetOwner(), GetOwner()->GetComponent<PlayerComponent>()->GetPlayerNumber()));
 			UnbindAllControls(data.Get<int>("PlayerNumber"));
+			GetOwner()->GetComponent<HealthComponent>()->Damage(1);
 		}
 		break;
 	case Event::Player_ShootBubble:
@@ -82,7 +84,7 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		const auto poppedEnemy = data.Get<GameObject*>("PoppedEnemy");
 		auto poppedEnemyPos = poppedEnemy->GetTransform()->GetWorldPosition();
 		const auto poppedEnemyType = poppedEnemy->GetName();
-		SceneManager::GetInstance().GetCurrentScene()->Remove(poppedEnemy);
+		poppedEnemy->Kill();
 		if (poppedEnemyType == "ZenChanBubble")
 		{
 			auto watermelonItem = std::make_unique<GameObject>(poppedEnemyPos);
@@ -115,7 +117,7 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 			player->GetComponent<ScoreComponent>()->AddToScore(100);
 		else
 			player->GetComponent<ScoreComponent>()->AddToScore(200);
-		SceneManager::GetInstance().GetCurrentScene()->Remove(collectedItem);
+		collectedItem->Kill();
 
 		break;
 

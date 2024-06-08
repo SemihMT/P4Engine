@@ -14,6 +14,7 @@
 #include "ResourceManager.h"
 #include "ServiceLocator.h"
 #include "TimeManager.h"
+#include "../BubbleBobble/GameSettings.h"
 
 SDL_Window* g_window{};
 
@@ -79,6 +80,7 @@ dae::Minigin::Minigin(const std::string& dataPath)
 	Renderer::GetInstance().Init(g_window);
 
 	ResourceManager::GetInstance().Init(dataPath);
+	GameSettings::GetInstance().Init();
 
 	//The Service Locator is handled by the engine
 	ServiceLocator::GetInstance().RegisterService<LoggingSoundService>("Sound");

@@ -8,13 +8,13 @@
 #include "Scene.h"
 
 
-dae::LevelParser::LevelParser(Scene* scene) :
-	m_scene{ scene }
+dae::LevelParser::LevelParser()
 {
 }
 
-void dae::LevelParser::Parse(const std::string& filename)
+void dae::LevelParser::Parse(Scene* scene, const std::string& filename)
 {
+	m_scene = scene;
 	const auto extension = std::filesystem::path(filename).extension();
 	if (extension == ".ppm")
 	{

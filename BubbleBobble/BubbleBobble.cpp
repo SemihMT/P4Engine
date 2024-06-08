@@ -17,11 +17,13 @@
 #include "GameObject.h"
 #include "TimeManager.h"
 #include "Components.h"
+#include "GameSettings.h"
 #include "IdleState.h"
 #include "InputManager.h"
 #include "JumpCommand.h"
 #include "LevelParser.h"
 #include "MoveCommand.h"
+#include "NextLevelCommand.h"
 #include "PlayerComponent.h"
 #include "RigidBodyComponent.h"
 #include "ShootBubble.h"
@@ -40,36 +42,36 @@ void load()
 	const auto smallestFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 12);
 #pragma endregion
 
-	auto& scene = SceneManager::GetInstance().CreateScene("Level 1");
-	SceneManager::GetInstance().SetCurrentScene("Level 1");
+	auto& levelScene = SceneManager::GetInstance().CreateScene("1");
+	SceneManager::GetInstance().SetCurrentScene("1");
 
 	
 
-	LevelParser parser{ &scene };
+	auto parser = GameSettings::GetInstance().GetParser();
 
 	//Registering the color {255,0,0} to create a game object with a TileComponent
-	parser.RegisterColor({ 255, 128, 192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+	parser->RegisterColor({ 255, 128, 192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
 		{
 			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			int tileIdx{ 0 };
 			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Wall);
 			return tileObject;
 		});
-	parser.RegisterColor({ 255, 128, 255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
+	parser->RegisterColor({ 255, 128, 255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& /*metadata*/)
 		{
 			auto tileObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			int tileIdx{ 0 };
 			tileObject->AddComponent<TileComponent>(tileIdx, ColliderType::Platform);
 			return tileObject;
 		});
-	parser.RegisterColor({ 0,128,255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+	parser->RegisterColor({ 0,128,255 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 			auto zenChanObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			auto direction = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
 			zenChanObject->AddComponent<ZenChanComponent>(direction, ColliderType::Trigger);
 			return zenChanObject;
 		});
-	parser.RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+	parser->RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 
 			auto player = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
@@ -79,7 +81,7 @@ void load()
 			return player;
 		});
 
-	parser.RegisterColor({ 255,0,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+	parser->RegisterColor({ 255,0,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 
 			auto player = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
@@ -89,18 +91,28 @@ void load()
 			return player;
 		});
 
+	
+	
+
 	auto scoreUI = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
 	scoreUI->SetName("ScoreObserver");
 	scoreUI->AddComponent<Text>(smallFont," ");
 	scoreUI->AddComponent<ScoreObserverComponent>();
-	scene.Add(std::move(scoreUI));
-	
+	levelScene.Add(std::move(scoreUI));
 
-	parser.Parse("Levels/level1Platforms2Players.ppm");
 
+	auto healthUI = std::make_unique<GameObject>(glm::vec3{ 0,400,0 });
+	healthUI->SetName("HealthObserver");
+	healthUI->AddComponent<Text>(smallFont," ");
+	healthUI->AddComponent<HealthObserverComponent>();
+	levelScene.Add(std::move(healthUI));
+
+	parser->Parse(&levelScene,"Levels/level1Platforms2Players.ppm");
+
+	ServiceLocator::GetInstance().GetService<ISoundService>("Sound")->PlayMusic("MainTheme.mp3");
 	//Sound Controls
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_m, std::make_unique<ToggleSoundCommand>(), KeyState::ButtonUp);
-
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_F1, std::make_unique<NextLevelCommand>(),KeyState::ButtonUp);
 }
 
 int main(int, char* [])

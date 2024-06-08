@@ -144,6 +144,9 @@
     <ClCompile Include="ZenChanVulnerableState.cpp">
       <Filter>States\ZenChan</Filter>
     </ClCompile>
+    <ClCompile Include="GameSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObservableEvents.h">
@@ -283,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="ZenChanVulnerableState.h">
       <Filter>States\ZenChan</Filter>
+    </ClInclude>
+    <ClInclude Include="NextLevelCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSettings.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

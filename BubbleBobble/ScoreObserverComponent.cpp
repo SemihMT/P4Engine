@@ -6,6 +6,9 @@
 
 dae::ScoreObserverComponent::ScoreObserverComponent(GameObject* owner) : BaseComponent(owner)
 {
+		const auto scoreDisplay = GetOwner()->GetComponent<Text>();
+		scoreDisplay->SetText("" + std::to_string(m_player1Score) + "                                               " + std::to_string(m_player2Score));
+
 }
 
 void dae::ScoreObserverComponent::OnNotify(Event event, const EventData& data)
@@ -19,6 +22,6 @@ void dae::ScoreObserverComponent::OnNotify(Event event, const EventData& data)
 		else
 			m_player2Score = data.Get<int>("Score");
 
-		scoreDisplay->SetText("Score: " + std::to_string(m_player1Score) + "        Score: " + std::to_string(m_player2Score));
+		scoreDisplay->SetText("" + std::to_string(m_player1Score) + "                                               " + std::to_string(m_player2Score));
 	}
 }
