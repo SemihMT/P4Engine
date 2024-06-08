@@ -21,6 +21,7 @@ namespace dae
 		//is useful when re-parenting a gameobject owned by the scene (parent = nullptr) to another gameobject
 		//THE RETURNED OBJECT HAS TO GET OWNED BY SOMETHING ELSE TO PREVENT MEMORY LEAKS
 		GameObject* Pop(GameObject* object);
+		GameObject* GetGameObject(const std::string& name);
 		void RemoveAll();
 
 		void Update();

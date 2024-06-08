@@ -22,6 +22,7 @@ namespace dae
 		//void LateUpdate() override;
 		//void RenderImgui() override;
 		void Jump();
+		void JumpNoCollisionCheck();
 		float GetVerticalVelocity() const { return m_verticalVelocity; }
 	private:
 		Transform* m_transform;

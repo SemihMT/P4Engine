@@ -43,6 +43,8 @@ void load()
 	auto& scene = SceneManager::GetInstance().CreateScene("Level 1");
 	SceneManager::GetInstance().SetCurrentScene("Level 1");
 
+	
+
 	LevelParser parser{ &scene };
 
 	//Registering the color {255,0,0} to create a game object with a TileComponent
@@ -87,27 +89,17 @@ void load()
 			return player;
 		});
 
+	auto scoreUI = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
+	scoreUI->SetName("ScoreObserver");
+	scoreUI->AddComponent<Text>(smallFont," ");
+	scoreUI->AddComponent<ScoreObserverComponent>();
+	scene.Add(std::move(scoreUI));
+	
 
 	parser.Parse("Levels/level1Platforms2Players.ppm");
 
-	auto textObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
-	textObject->AddComponent<Text>(smallFont, "Here cometh the UI, God willing");
-
-	auto bubbleObject = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
-	bubbleObject->SetName("Bubble");
-	bubbleObject->AddComponent<SpriteComponent>("Sprites/Characters/Player/BubSpriteSheet.png", glm::ivec2{ 16 }, 3, 3, glm::ivec2{ 16 });
-	bubbleObject->AddComponent<BubbleMovementComponent>();
-	bubbleObject->Disable();
-
-
 	//Sound Controls
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_m, std::make_unique<ToggleSoundCommand>(), KeyState::ButtonUp);
-
-
-
-	scene.Add(std::move(bubbleObject));
-	scene.Add(std::move(textObject));
-
 
 }
 

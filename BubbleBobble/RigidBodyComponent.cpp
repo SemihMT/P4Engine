@@ -35,7 +35,7 @@ void RigidBodyComponent::Update()
 
 	}
 
-	m_verticalVelocity = std::clamp(m_verticalVelocity,-200.0f,200.0f);
+	m_verticalVelocity = std::clamp(m_verticalVelocity, -200.0f, 200.0f);
 	// Apply vertical velocity to the transform
 	m_transform->Translate(0.0f, m_verticalVelocity * dt, 0.0f);
 
@@ -53,4 +53,11 @@ void RigidBodyComponent::Jump()
 		m_verticalVelocity = m_jumpVelocity;
 		m_isJumping = true;
 	}
+}
+
+//For jumping when on a bubble
+void RigidBodyComponent::JumpNoCollisionCheck()
+{
+	m_verticalVelocity = m_jumpVelocity;
+	m_isJumping = true;
 }

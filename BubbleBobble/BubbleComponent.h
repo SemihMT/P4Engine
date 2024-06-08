@@ -27,7 +27,7 @@ namespace dae
 		bool m_isAvailable{ true };
 		int m_srcSize{ 16 };
 		int m_dstSize{ 32 };
-		float m_speed{ 64.0f };
+		float m_speed{ 128.0f };
 		int m_moveDistance{ 160 };
 		std::string m_spriteSheet{};
 	};

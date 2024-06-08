@@ -1,5 +1,4 @@
 #pragma once
-#include "BubbleComponent.h"
 #include "State.h"
 #include "Subject.h"
 

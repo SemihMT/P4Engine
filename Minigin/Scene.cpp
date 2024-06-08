@@ -17,162 +17,164 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 void Scene::DisplayHierarchy()
 {
 
-    ImGui::Begin("Hierarchy"); 
+	ImGui::Begin("Hierarchy");
 
-    //Making the whole hierarchy window a drop target to un-parent parented objects
-    //from: https://github.com/ocornut/imgui/issues/5539
-    const ImRect innerRect = ImGui::GetCurrentWindow()->InnerRect;
+	//Making the whole hierarchy window a drop target to un-parent parented objects
+	//from: https://github.com/ocornut/imgui/issues/5539
+	const ImRect innerRect = ImGui::GetCurrentWindow()->InnerRect;
 	GameObject* draggedObj{ nullptr };
-    if (ImGui::BeginDragDropTargetCustom(innerRect, ImGui::GetID("Hierarchy")))
-    {
-        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT", ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
-        {
-            if (payload && payload->Data)
-            {
+	if (ImGui::BeginDragDropTargetCustom(innerRect, ImGui::GetID("Hierarchy")))
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT", ImGuiDragDropFlags_AcceptBeforeDelivery | ImGuiDragDropFlags_AcceptNoDrawDefaultRect))
+		{
+			if (payload && payload->Data)
+			{
 
-                if (payload->IsPreview())
-                {
-                    ImGui::GetForegroundDrawList()->AddRectFilled(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget, 0.05f));
-                    ImGui::GetForegroundDrawList()->AddRect(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget), 0.0f, 0, 2.0f);
-                }
+				if (payload->IsPreview())
+				{
+					ImGui::GetForegroundDrawList()->AddRectFilled(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget, 0.05f));
+					ImGui::GetForegroundDrawList()->AddRect(innerRect.Min, innerRect.Max, ImGui::GetColorU32(ImGuiCol_DragDropTarget), 0.0f, 0, 2.0f);
+				}
 
-                if (payload->IsDelivery())
-                {
-                    draggedObj = *(GameObject**)payload->Data;
-                    draggedObj->SetParent(nullptr, true);
-                }
-            }
-        }
-        ImGui::EndDragDropTarget();
-    }
+				if (payload->IsDelivery())
+				{
+					draggedObj = *(GameObject**)payload->Data;
+					draggedObj->SetParent(nullptr, true);
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 
 
 
-    //Display the objects
-    for (const auto& object : m_objects)
-    {
-        if(!object) continue;
-        if (DisplayGameObject(object.get(),draggedObj)) {
-            // If an object is selected, update the selected object
-            m_selectedObject = object.get();
-        }
-        //DragGameObject(object.get());
-    }
-   
-    ImGui::End();
+	//Display the objects
+	for (const auto& object : m_objects)
+	{
+		if (!object) continue;
+		if (DisplayGameObject(object.get(), draggedObj))
+		{
+			// If an object is selected, update the selected object
+			m_selectedObject = object.get();
+		}
+		//DragGameObject(object.get());
+	}
 
-    // Display the object information window
-    if (m_selectedObject != nullptr) {
-        DisplayObjectInfo(m_selectedObject);
-    }
+	ImGui::End();
+
+	// Display the object information window
+	if (m_selectedObject != nullptr)
+	{
+		DisplayObjectInfo(m_selectedObject);
+	}
 }
 
 bool Scene::DisplayGameObject(GameObject* obj, GameObject* draggedObj)
 {
-    ImGuiTreeNodeFlags treeNodeFlags =
-        ImGuiTreeNodeFlags_OpenOnArrow |
-        ImGuiTreeNodeFlags_OpenOnDoubleClick |
-        ImGuiTreeNodeFlags_SpanAvailWidth;
+	ImGuiTreeNodeFlags treeNodeFlags =
+		ImGuiTreeNodeFlags_OpenOnArrow |
+		ImGuiTreeNodeFlags_OpenOnDoubleClick |
+		ImGuiTreeNodeFlags_SpanAvailWidth;
 
-    bool isRootObj = obj->m_children.empty();
-    if (isRootObj)
-        treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+	bool isRootObj = obj->m_children.empty();
+	if (isRootObj)
+		treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-    bool isNodeOpen = ImGui::TreeNodeEx(obj->GetName().c_str(), treeNodeFlags);
+	bool isNodeOpen = ImGui::TreeNodeEx(obj->GetName().c_str(), treeNodeFlags);
 
-    if (isNodeOpen)
-    {
-        // If the object is being dragged and dropped onto, set its parent
-        if (ImGui::BeginDragDropTarget())
-        {
-            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
-            {
-                if (payload && payload->Data)
-                {
-                    GameObject* droppedObj = *(GameObject**)payload->Data;
-                    // Set the parent of the dragged object to this object
-                    droppedObj->SetParent(obj, true);
-                }
-            }
-            ImGui::EndDragDropTarget();
-        }
-        DragGameObject(obj);
-        // Display children recursively
-        for (const auto& child : obj->m_children)
-        {
-            if (DisplayGameObject(child.get(), draggedObj))
-                //Child objects do not get selected as m_selectedObject gets overwritten by the first call to the function in DrawHierarchy
-                //Need to find a better way to do this, but its late now... ZzZzZzzzzz
-                //TODO:
-                m_selectedObject = child.get();
+	if (isNodeOpen)
+	{
+		// If the object is being dragged and dropped onto, set its parent
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GAMEOBJECT"))
+			{
+				if (payload && payload->Data)
+				{
+					GameObject* droppedObj = *(GameObject**)payload->Data;
+					// Set the parent of the dragged object to this object
+					droppedObj->SetParent(obj, true);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		DragGameObject(obj);
+		// Display children recursively
+		for (const auto& child : obj->m_children)
+		{
+			if (DisplayGameObject(child.get(), draggedObj))
+				//Child objects do not get selected as m_selectedObject gets overwritten by the first call to the function in DrawHierarchy
+				//Need to find a better way to do this, but its late now... ZzZzZzzzzz
+				//TODO:
+				m_selectedObject = child.get();
 
-        }
-        ImGui::TreePop();
-    }
-   
-    // Return true if the object is selected
-    return isNodeOpen && ImGui::IsItemClicked();
+		}
+		ImGui::TreePop();
+	}
+
+	// Return true if the object is selected
+	return isNodeOpen && ImGui::IsItemClicked();
 }
 
 void Scene::DisplayChildren(const GameObject* obj, GameObject* draggedObj)
 {
-    for (const auto& child : obj->m_children)
-    {
-        if (!child)
-            continue;
+	for (const auto& child : obj->m_children)
+	{
+		if (!child)
+			continue;
 
-        if (DisplayGameObject(child.get(), draggedObj))
-        {
-            // If an object is selected, update the selected object
-            m_selectedObject = child.get();
-        }
+		if (DisplayGameObject(child.get(), draggedObj))
+		{
+			// If an object is selected, update the selected object
+			m_selectedObject = child.get();
+		}
 
-        // Recursive call to handle children of the current child object
-        DisplayChildren(child.get(), draggedObj);
-    }
+		// Recursive call to handle children of the current child object
+		DisplayChildren(child.get(), draggedObj);
+	}
 }
 
 void Scene::DragGameObject(GameObject* obj)
 {
-    if (obj != nullptr)
-    {
-        // Start drag and drop operation
-        if (ImGui::BeginDragDropSource())
-        {
-            // Set payload with the object pointer
-            ImGui::SetDragDropPayload("GAMEOBJECT", &obj, sizeof(GameObject*));
+	if (obj != nullptr)
+	{
+		// Start drag and drop operation
+		if (ImGui::BeginDragDropSource())
+		{
+			// Set payload with the object pointer
+			ImGui::SetDragDropPayload("GAMEOBJECT", &obj, sizeof(GameObject*));
 
-            // Display object name as drag preview
-            ImGui::Text(obj->GetName().c_str());
+			// Display object name as drag preview
+			ImGui::Text(obj->GetName().c_str());
 
-            ImGui::EndDragDropSource();
-        }
-    }
+			ImGui::EndDragDropSource();
+		}
+	}
 }
 
 void Scene::DisplayObjectInfo(const GameObject* obj)
 {
-    // Begin the object information window
-    ImGui::Begin("Object Info",nullptr,ImGuiWindowFlags_NoFocusOnAppearing);
+	// Begin the object information window
+	ImGui::Begin("Object Info", nullptr, ImGuiWindowFlags_NoFocusOnAppearing);
 
-    // Display object information
-    ImGui::TextWrapped("Name: %s", obj->GetName().c_str());
-    ImGui::Separator();
-    ImGui::TextWrapped("pos: %.1f, %.1f, %.1f", obj->GetTransform()->GetLocalPosition().x, obj->GetTransform()->GetLocalPosition().y, obj->GetTransform()->GetLocalPosition().z);
-    ImGui::Separator();
+	// Display object information
+	ImGui::TextWrapped("Name: %s", obj->GetName().c_str());
+	ImGui::Separator();
+	ImGui::TextWrapped("pos: %.1f, %.1f, %.1f", obj->GetTransform()->GetLocalPosition().x, obj->GetTransform()->GetLocalPosition().y, obj->GetTransform()->GetLocalPosition().z);
+	ImGui::Separator();
 	ImGui::TextWrapped("Forward: %.1f", obj->GetTransform()->GetForwardDirection().x);
 
-    // Add more information here if needed
+	// Add more information here if needed
 
-    ImGui::End();
+	ImGui::End();
 
-    // Dock the object information window below the hierarchy window
-    ImGuiDockNode* dockspaceNode = ImGui::DockBuilderGetNode(ImGui::GetID("DockSpace"));
-    if (dockspaceNode != nullptr)
-    {
-        ImGui::DockBuilderDockWindow("Object Info", dockspaceNode->ID);
-        ImGui::DockBuilderSetNodeSize(dockspaceNode->ID, ImVec2(-1, ImGui::GetFrameHeightWithSpacing() * 6));
-    }
+	// Dock the object information window below the hierarchy window
+	ImGuiDockNode* dockspaceNode = ImGui::DockBuilderGetNode(ImGui::GetID("DockSpace"));
+	if (dockspaceNode != nullptr)
+	{
+		ImGui::DockBuilderDockWindow("Object Info", dockspaceNode->ID);
+		ImGui::DockBuilderSetNodeSize(dockspaceNode->ID, ImVec2(-1, ImGui::GetFrameHeightWithSpacing() * 6));
+	}
 }
 
 Scene::~Scene() = default;
@@ -189,32 +191,41 @@ void Scene::Add(std::unique_ptr<GameObject> object)
 
 void Scene::Remove(GameObject* object)
 {
-	std::erase_if(m_objects, [&](const auto& ptr) {
-		return ptr.get() == object;
+	std::erase_if(m_objects, [&](const auto& ptr)
+		{
+			return ptr.get() == object;
 		});
 }
 
 GameObject* Scene::Pop(GameObject* object)
 {
-    //Find the given GO in the list
-    const auto it = std::ranges::find_if(m_objects,
-        [&](const std::unique_ptr<GameObject>& ptr) {return ptr.get() == object; });
+	//Find the given GO in the list
+	const auto it = std::ranges::find_if(m_objects,
+		[&](const std::unique_ptr<GameObject>& ptr) { return ptr.get() == object; });
 
-    //If found
-    if (it != m_objects.end())
-    {
-        //store the found object's raw ptr
-        auto tmp = it->get();
+	//If found
+	if (it != m_objects.end())
+	{
+		//store the found object's raw ptr
+		auto tmp = it->get();
 
-        //Release the unique pointer from its cleanup/management duties
-        //(to prevent the destructor from being called when we remove it from the owning vector)
-        it->release();
-        //Remove the released unique pointer from the vector
-        //Which would be a unique pointer to nullptr 
-       m_objects.erase(it);
-       return tmp;
-    }
-    return nullptr;
+		//Release the unique pointer from its cleanup/management duties
+		//(to prevent the destructor from being called when we remove it from the owning vector)
+		it->release();
+		//Remove the released unique pointer from the vector
+		//Which would be a unique pointer to nullptr 
+		m_objects.erase(it);
+		return tmp;
+	}
+	return nullptr;
+}
+
+GameObject* Scene::GetGameObject(const std::string& name)
+{
+	const auto it = std::ranges::find_if(m_objects, [&](const auto& object) { return object->GetName() == name; });
+	if (it != m_objects.end())
+		return it->get();
+	return nullptr;
 }
 
 void Scene::RemoveAll()
@@ -252,7 +263,7 @@ void Scene::RenderImGui()
 
 	//Unity-like hierarchy of game objects ↓ (WIP)
 	DisplayHierarchy();
-	
+
 }
 
 void Scene::LateUpdate()

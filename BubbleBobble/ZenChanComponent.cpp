@@ -6,9 +6,11 @@
 #include "RigidBodyComponent.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
+#include "ZenChanCalmState.h"
+#include "ZenChanSpawnState.h"
 
 dae::ZenChanComponent::ZenChanComponent(GameObject* owner, const glm::vec3& direction, ColliderType type) : BaseComponent(owner),
-                                                                                         m_transform(owner->GetTransform())
+                                                                                                            m_transform(owner->GetTransform())
 {
 	owner->SetName("ZenChan");
 	
@@ -37,7 +39,7 @@ dae::ZenChanComponent::ZenChanComponent(GameObject* owner, const glm::vec3& dire
 
 	owner->AddComponent<ColliderComponent>(m_dstSize,type );
 	owner->AddComponent<RigidBodyComponent>();
-	//owner->AddComponent<StateComponent>();
+	owner->AddComponent<StateComponent>()->SetState(std::make_unique<ZenChanSpawnState>(owner));
 
 	auto pos = m_transform->GetLocalPosition();
 	m_transform->SetLocalPosition(pos.x * static_cast<float>(m_srcSize), pos.y * static_cast<float>(m_srcSize), pos.z);

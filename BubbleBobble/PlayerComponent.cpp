@@ -10,10 +10,12 @@
 #include "PlayerEventHandlerComponent.h"
 #include "RigidBodyComponent.h"
 #include "SceneManager.h"
+#include "ScoreComponent.h"
 #include "ShootBubble.h"
 #include "ShootCommand.h"
 #include "SpawnState.h"
 #include "StateComponent.h"
+#include "ScoreObserverComponent.h"
 
 dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction) :
 	BaseComponent(owner),
@@ -67,6 +69,10 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, m_spawnPosition, m_spawnDirection, m_playerNumber));
 	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger)->AddObserver(observer);
 	owner->AddComponent<RigidBodyComponent>();
+
+
+	auto scoreObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ScoreObserver");
+	owner->AddComponent<ScoreComponent>(0)->AddObserver(scoreObserver->GetComponent<ScoreObserverComponent>());
 
 
 	for (int i{}; i < 16; ++i)

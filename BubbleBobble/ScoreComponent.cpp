@@ -8,17 +8,13 @@ void dae::ScoreComponent::SetScore(int score)
 {
 	if (score > 0)
 		m_currentScore = score;
-	Notify(Event::Bubble_PopEnemy,
-		{
-			.data = {{"Score",m_currentScore},{"Player",GetOwner()}}
-		});
 }
 
 void dae::ScoreComponent::AddToScore(int scoreToAdd)
 {
 	if (scoreToAdd > 0)
 		m_currentScore += scoreToAdd;
-	Notify(Event::Bubble_PopEnemy,
+	Notify(Event::Item_Collected,
 		{
 			.data = {{"Score",m_currentScore},{"Player",GetOwner()}}
 		});

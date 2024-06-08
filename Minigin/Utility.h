@@ -1,6 +1,8 @@
 #pragma once
 #include <SDL_render.h>
 #include <glm/vec2.hpp>
+#include <random>
+
 
 namespace dae
 {
@@ -44,6 +46,16 @@ namespace dae
 		float hitDistance{};
 	};
 
+
+	inline float GetRandomFloat()
+	{
+		static std::default_random_engine engine(std::random_device{}());
+		static std::uniform_real_distribution<float> dist(0.0f, 1.0f);
+		return dist(engine);
+	}
+
+
+	// Tutorial Javidx9: https://www.youtube.com/watch?v=8JJ-4JgR7Dg&t=2552s
 	inline bool PointVsRect(const glm::vec2& p, const Collider& r)
 	{
 		return (p.x >= r.pos.x && p.y >= r.pos.y && p.x < r.pos.x + r.size.x && p.y < r.pos.y + r.size.y);

@@ -32,7 +32,7 @@ void dae::BubbleShotState::OnEnter()
 
 	m_initialPlayerPos = m_playerTransform->GetWorldPosition();
 	m_playerForward = m_playerTransform->GetForwardDirection();
-	const auto bubbleShootPos = m_initialPlayerPos + glm::vec3{ 16,0,0 } *m_playerForward;
+	const auto bubbleShootPos = m_initialPlayerPos + glm::vec3{ 32,0,0 } *m_playerForward;
 	GetOwner()->GetTransform()->SetLocalPosition(bubbleShootPos);
 }
 

@@ -220,10 +220,13 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="TrashTheCacheCmp.cpp" />
+    <ClCompile Include="ZenChanCalmState.cpp" />
     <ClCompile Include="ZenChanComponent.cpp">
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="ZenChanSpawnState.cpp" />
+    <ClCompile Include="ZenChanVulnerableState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AddScoreCommand.h" />
@@ -295,10 +298,13 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TrashTheCacheCmp.h" />
+    <ClInclude Include="ZenChanCalmState.h" />
     <ClInclude Include="ZenChanComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ZenChanSpawnState.h" />
+    <ClInclude Include="ZenChanVulnerableState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

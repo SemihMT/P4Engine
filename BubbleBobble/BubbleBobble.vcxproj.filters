@@ -25,6 +25,9 @@
     <Filter Include="States\Bubble">
       <UniqueIdentifier>{12853cfe-6d27-431e-be27-bd7b84c1570e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="States\ZenChan">
+      <UniqueIdentifier>{2ad7aa99-a709-47b5-ba28-f10a286c16a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp">
@@ -131,6 +134,15 @@
     </ClCompile>
     <ClCompile Include="BubblePopState.cpp">
       <Filter>States\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanCalmState.cpp">
+      <Filter>States\ZenChan</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanSpawnState.cpp">
+      <Filter>States\ZenChan</Filter>
+    </ClCompile>
+    <ClCompile Include="ZenChanVulnerableState.cpp">
+      <Filter>States\ZenChan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +274,15 @@
     </ClInclude>
     <ClInclude Include="BubblePopState.h">
       <Filter>States\Bubble</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanCalmState.h">
+      <Filter>States\ZenChan</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanSpawnState.h">
+      <Filter>States\ZenChan</Filter>
+    </ClInclude>
+    <ClInclude Include="ZenChanVulnerableState.h">
+      <Filter>States\ZenChan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

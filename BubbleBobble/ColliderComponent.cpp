@@ -7,6 +7,7 @@
 #include "PlayerComponent.h"
 #include "PlayerEventHandlerComponent.h"
 #include "Renderer.h"
+#include "RigidBodyComponent.h"
 #include "SpriteComponent.h"
 #include "StateComponent.h"
 #include "TextureComponent.h"
@@ -276,7 +277,16 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 			//Store the enemy we've hit, so we can modify its state
 			EventData data{};
 			data.data["PoppedEnemy"] = other->GetOwner();
-			Notify(Event::Bubble_PopEnemy, { data });
+			Notify(Event::Bubble_PopEnemy,  data);
+		}
+
+		if (otherName == "Watermelon"
+			|| otherName == "Fries")
+		{
+			EventData data{};
+			data.data["Item"] = other->GetOwner();
+			data.data["Player"] = GetOwner();
+			Notify(Event::Item_Collected,  data);
 		}
 	}
 
@@ -286,9 +296,10 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 		if (otherName == "ZenChan"
 			|| otherName == "Maita")
 		{
-			//Store the enemy we've hit, so we can modify its state
+			//Store the enemy we've hit and ourselves, so we can modify our states
 			EventData data{};
 			data.data["HitEnemy"] = other->GetOwner();
+			data.data["Bubble"] = GetOwner();
 			Notify(Event::Bubble_HitEnemy, data);
 
 		}
@@ -297,15 +308,18 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 		{
 			// Assume that if we're colliding with the player && something is touching the top side of the collider
 			// It's the player
-			if (IsCollidingTop())
+			if (other->GetOwner()->GetComponent<RigidBodyComponent>()->GetVerticalVelocity() > 0)
 			{
 				EventData data{};
 				data.data["Player"] = other->GetOwner();
+				data.data["Bubble"] = GetOwner();
 				Notify(Event::Bubble_PlayerJump, data);
 			}
 			else
 			{
-				Notify(Event::Bubble_PopNoEnemy, {});
+				EventData data{};
+				data.data["Bubble"] = GetOwner();
+				Notify(Event::Bubble_PopNoEnemy, data);
 			}
 		}
 	}
