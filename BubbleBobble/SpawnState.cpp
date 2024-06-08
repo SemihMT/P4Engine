@@ -19,6 +19,10 @@ dae::SpawnState::~SpawnState()
 
 void dae::SpawnState::OnEnter()
 {
+	if (std::is_base_of_v<Observer, PlayerEventHandlerComponent>)
+		AddObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
+	Notify(Event::Player_Spawn, {});
+
 	GetOwner()->GetTransform()->SetLocalPosition(m_spawnPos);
 	GetOwner()->GetTransform()->SetForwardDirection(m_spawnDir);
 
@@ -33,6 +37,7 @@ void dae::SpawnState::OnEnter()
 
 void dae::SpawnState::OnExit()
 {
+	RemoveObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 }
 
 void dae::SpawnState::Update()

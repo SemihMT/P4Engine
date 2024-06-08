@@ -1,5 +1,8 @@
 #pragma once
 #include <BaseComponent.h>
+#include <string>
+#include <vector>
+
 #include "Transform.h"
 
 namespace dae
@@ -31,6 +34,8 @@ namespace dae
 		float m_jumpForce{ 200 };
 		glm::vec3 m_spawnPosition{};
 		glm::vec3 m_spawnDirection{};
+		std::string m_playerSpriteSheet{};
+		std::vector<GameObject*> m_bubbles{16};
 
 	};
 }

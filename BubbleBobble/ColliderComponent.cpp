@@ -253,45 +253,55 @@ void dae::ColliderComponent::ResolveCollision(ColliderComponent* other)
 
 void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 {
+	const auto ourName = GetOwner()->GetName();
 	const auto otherName = other->GetOwner()->GetName();
 
-	// Touches free enemy / their projectiles
-	if (otherName == "ZenChan"
-		|| otherName == "Maita"
-		|| otherName == "MaitaBoulder")
-		Notify(Event::Player_Damaged, {});
-
-	if (otherName == "ZenChanBubble"
-		|| otherName == "MaitaBubble")
+	if (ourName == "Player")
 	{
-		//Store the enemy we've hit, so we can modify its state
-		EventData data{};
-		data.data["PoppedEnemy"] = other->GetOwner();
-		Notify(Event::Bubble_PopEnemy, { data });
-	}
+		// Touches free enemy / their projectiles
+		if (otherName == "ZenChan"
+			|| otherName == "Maita"
+			|| otherName == "MaitaBoulder")
+			Notify(Event::Player_Damaged, {});
 
-	// Bubble touches free enemy 
-	if (otherName == "ZenChan"
-		|| otherName == "Maita")
-	{
-		//Store the enemy we've hit, so we can modify its state
-		EventData data{};
-		data.data["HitEnemy"] = other->GetOwner();
-		Notify(Event::Bubble_HitEnemy, data);
 
-	}
-
-	if (otherName == "Player")
-	{
-		// Assume that if we're colliding with the player && something is touching the top side of the collider
-		// It's the player
-		if (IsCollidingTop())
+		if (otherName == "ZenChanBubble"
+			|| otherName == "MaitaBubble")
 		{
-			//Notify(Event::Player_BubbleJump,{});
+			//Store the enemy we've hit, so we can modify its state
+			EventData data{};
+			data.data["PoppedEnemy"] = other->GetOwner();
+			Notify(Event::Bubble_PopEnemy, { data });
 		}
-		else
+	}
+
+	if (ourName == "Bubble")
+	{
+		// Bubble touches free enemy 
+		if (otherName == "ZenChan"
+			|| otherName == "Maita")
 		{
-			Notify(Event::Bubble_PopNoEnemy, {});
+			//Store the enemy we've hit, so we can modify its state
+			EventData data{};
+			data.data["HitEnemy"] = other->GetOwner();
+			Notify(Event::Bubble_HitEnemy, data);
+
+		}
+
+		if (otherName == "Player")
+		{
+			// Assume that if we're colliding with the player && something is touching the top side of the collider
+			// It's the player
+			if (IsCollidingTop())
+			{
+				EventData data{};
+				data.data["Player"] = other->GetOwner();
+				Notify(Event::Bubble_PlayerJump, data);
+			}
+			else
+			{
+				Notify(Event::Bubble_PopNoEnemy, {});
+			}
 		}
 	}
 

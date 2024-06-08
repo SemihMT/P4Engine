@@ -22,6 +22,9 @@
     <Filter Include="States">
       <UniqueIdentifier>{882acf1b-38db-4948-aa70-458af19ada4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="States\Bubble">
+      <UniqueIdentifier>{12853cfe-6d27-431e-be27-bd7b84c1570e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp">
@@ -110,6 +113,24 @@
     </ClCompile>
     <ClCompile Include="ShootState.cpp">
       <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleSpawnState.cpp">
+      <Filter>States\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleEventHandlerComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleShotState.cpp">
+      <Filter>States\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="BubbleIdleState.cpp">
+      <Filter>States\Bubble</Filter>
+    </ClCompile>
+    <ClCompile Include="BubblePopState.cpp">
+      <Filter>States\Bubble</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +244,24 @@
     </ClInclude>
     <ClInclude Include="ShootState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleSpawnState.h">
+      <Filter>States\Bubble</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleEventHandlerComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleShotState.h">
+      <Filter>States\Bubble</Filter>
+    </ClInclude>
+    <ClInclude Include="BubbleIdleState.h">
+      <Filter>States\Bubble</Filter>
+    </ClInclude>
+    <ClInclude Include="BubblePopState.h">
+      <Filter>States\Bubble</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

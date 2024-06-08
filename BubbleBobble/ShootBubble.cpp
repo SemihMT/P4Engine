@@ -1,25 +1,27 @@
 #include "ShootBubble.h"
 
 #include "BubbleMovementComponent.h"
+#include "BubbleShotState.h"
+#include "BubbleSpawnState.h"
 #include "ColliderComponent.h"
 #include "GameObject.h"
-#include "SpriteComponent.h"
+#include "SceneManager.h"
 #include "StateComponent.h"
 
-dae::ShootBubble::ShootBubble(GameObject* owner) : BaseComponent(owner),
-                                                   m_bubble{std::make_unique<GameObject>(-100,-100,0)}
+dae::ShootBubble::ShootBubble(GameObject* owner, std::vector<GameObject*>& bubbles) :
+	BaseComponent(owner),
+	m_bubbles{ bubbles }
 {
-	m_bubble->AddComponent<StateComponent>()->SetState();
 }
 
 void dae::ShootBubble::Shoot() const
 {
-	const auto playerTransform = GetOwner()->GetTransform();
-	const auto playerPos = playerTransform->GetWorldPosition();
-	const auto playerDir = playerTransform->GetForwardDirection();
-	const auto bubbleShootPos = playerPos + glm::vec3{ 10,0,0 } * playerDir;
+	const auto iterator = std::ranges::find_if(m_bubbles, [](const GameObject* bubble) { return bubble->GetComponent<BubbleComponent>()->IsAvailable() == true; });
+	if (iterator != m_bubbles.end())
+	{
+		(*iterator)->GetComponent<StateComponent>()->SetState(std::make_unique<BubbleShotState>((*iterator),GetOwner()->GetTransform()));
 
-	/*m_pBubble->GetTransform()->SetLocalPosition(bubbleShootPos);
-	m_pBubble->GetComponent<BubbleMovementComponent>()->SetMovementDirection(playerDir);
-	m_pBubble->Enable();*/
+		/*(*iterator)->GetTransform()->SetLocalPosition(bubbleShootPos);
+		(*iterator)->GetComponent<BubbleMovementComponent>()->SetMovementDirection(playerDir);*/
+	}
 }

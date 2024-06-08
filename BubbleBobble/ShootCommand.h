@@ -13,7 +13,6 @@ namespace dae
 		}
 		void Execute() override
 		{
-			
 			GetGameObject()->GetComponent<StateComponent>()->SetState(std::make_unique<ShootState>(GetGameObject()));
 		}
 

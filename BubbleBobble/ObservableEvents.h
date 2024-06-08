@@ -20,11 +20,17 @@ namespace dae
 		Player_Fall,
 		Player_Move,
 
+		Bubble_Spawn,
+		Bubble_Shot,
 		Bubble_HitEnemy, //Bubble has touched an enemy
 		Bubble_PopEnemy, //Bubble with enemy in has been popped
 		Bubble_PopNoEnemy,
+		Bubble_PlayerJump,
 
-		Item_Collected
+		Item_Collected,
+
+
+		
 	};
 
 	struct EventData

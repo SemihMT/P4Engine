@@ -164,7 +164,16 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="BubbleBobble.cpp" />
+    <ClCompile Include="BubbleComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="BubbleEventHandlerComponent.cpp" />
+    <ClCompile Include="BubbleIdleState.cpp" />
     <ClCompile Include="BubbleMovementComponent.cpp" />
+    <ClCompile Include="BubblePopState.cpp" />
+    <ClCompile Include="BubbleShotState.cpp" />
+    <ClCompile Include="BubbleSpawnState.cpp" />
     <ClCompile Include="ColliderComponent.cpp">
       <SubType>
       </SubType>
@@ -222,7 +231,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="BubbleComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="BubbleEventHandlerComponent.h" />
+    <ClInclude Include="BubbleIdleState.h" />
     <ClInclude Include="BubbleMovementComponent.h" />
+    <ClInclude Include="BubblePopState.h" />
+    <ClInclude Include="BubbleShotState.h" />
+    <ClInclude Include="BubbleSpawnState.h" />
     <ClInclude Include="ColliderComponent.h">
       <SubType>
       </SubType>

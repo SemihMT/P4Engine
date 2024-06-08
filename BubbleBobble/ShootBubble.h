@@ -1,12 +1,16 @@
 #pragma once
 #include <BaseComponent.h>
+#include <string>
+#include <vector>
+
+#include "BubbleComponent.h"
 
 namespace dae
 {
 	class ShootBubble final:  public BaseComponent
 	{
 	public:
-		ShootBubble(GameObject* owner);
+		ShootBubble(GameObject* owner, std::vector<GameObject*>& bubbles);
 		virtual ~ShootBubble() override = default;
 
 		ShootBubble(const ShootBubble& other) = delete;
@@ -17,7 +21,7 @@ namespace dae
 		//Called from the ShootCommand
 		void Shoot() const;
 	private:
-		std::unique_ptr<GameObject> m_bubble{};
+		std::vector<GameObject*>& m_bubbles;
 
 	};
 }

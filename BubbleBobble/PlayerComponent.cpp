@@ -9,6 +9,7 @@
 #include "MoveCommand.h"
 #include "PlayerEventHandlerComponent.h"
 #include "RigidBodyComponent.h"
+#include "SceneManager.h"
 #include "ShootBubble.h"
 #include "ShootCommand.h"
 #include "SpawnState.h"
@@ -17,17 +18,17 @@
 dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const glm::vec3& direction) :
 	BaseComponent(owner),
 	m_transform{ owner->GetTransform() },
-	m_spawnDirection{direction}
+	m_spawnDirection{ direction }
 {
 
 	owner->SetName("Player");
-	std::string spriteSheet{};
-	if (playerNumber == 1)
-		spriteSheet = "Sprites/Characters/Player/BubSpriteSheet.png";
-	if (playerNumber == 2)
-		spriteSheet = "Sprites/Characters/Player/BobSpriteSheet.png";
 
-	owner->AddComponent<AnimationComponent>(spriteSheet);
+	if (playerNumber == 1)
+		m_playerSpriteSheet = "Sprites/Characters/Player/BobSpriteSheet.png";
+	if (playerNumber == 2)
+		m_playerSpriteSheet = "Sprites/Characters/Player/BubSpriteSheet.png";
+
+	owner->AddComponent<AnimationComponent>(m_playerSpriteSheet);
 	owner->GetComponent<AnimationComponent>()->SetDestinationSize({ m_dstSize,m_dstSize });
 	int row = 0;
 	int numFrames = 4;
@@ -53,11 +54,11 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	const AnimationData shootAnimation{ row,numFrames,16,0.25f };
 	owner->GetComponent<AnimationComponent>()->AddAnimation("Shoot", shootAnimation);
 
-	row = 5;
+	row = 7;
 	numFrames = 6;
 	const AnimationData deathAnimation{ row,numFrames,16,0.25f };
 	owner->GetComponent<AnimationComponent>()->AddAnimation("Death", deathAnimation);
-	
+
 	m_spawnPosition = m_transform->GetLocalPosition() * glm::vec3{ static_cast<float>(m_srcSize) };
 
 	auto observer = owner->AddComponent<PlayerEventHandlerComponent>();
@@ -66,8 +67,17 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	owner->AddComponent<ColliderComponent>(m_dstSize, ColliderType::Trigger)->AddObserver(observer);
 	owner->AddComponent<RigidBodyComponent>();
 
-	owner->AddComponent<ShootBubble>();
-	
+
+	for(int i{}; i < 16; ++i)
+	{
+		auto bubble = std::make_unique<GameObject>();
+		bubble->AddComponent<BubbleComponent>(m_playerSpriteSheet);
+		m_bubbles[i] = bubble.get();
+		SceneManager::GetInstance().GetCurrentScene()->Add(std::move(bubble));
+	}
+
+	owner->AddComponent<ShootBubble>(m_bubbles);
+
 
 	if (playerNumber == 2)
 		InputManager::GetInstance().AddController();
@@ -82,7 +92,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_SPACE, std::make_unique<ShootCommand>(owner), KeyState::ButtonUp);
 
 
-	
+
 
 }
 
