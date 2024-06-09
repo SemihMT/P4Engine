@@ -2,7 +2,7 @@
 
 #include "StateComponent.h"
 #include "TimeManager.h"
-#include "ZenChanCalmState.h"
+#include "ZenChanChaseState.h"
 
 dae::ZenChanVulnerableState::ZenChanVulnerableState(GameObject* owner) :
 	State(owner),
@@ -31,6 +31,6 @@ void dae::ZenChanVulnerableState::Update()
 	if (m_respawnTimer >= m_angryTime)
 		m_animationComponent->SetCurrentAnimation("AngryBubble");
 	if (m_respawnTimer >= m_maxVulnerableTime)
-		GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<ZenChanCalmState>(GetOwner()));
+		GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<ZenChanChaseState>(GetOwner()));
 
 }

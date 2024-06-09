@@ -28,6 +28,9 @@
     <Filter Include="States\ZenChan">
       <UniqueIdentifier>{2ad7aa99-a709-47b5-ba28-f10a286c16a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="States\Maita">
+      <UniqueIdentifier>{5407dcfb-8f89-4e5a-9b7c-aa14690bc1da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BubbleBobble.cpp">
@@ -135,7 +138,7 @@
     <ClCompile Include="BubblePopState.cpp">
       <Filter>States\Bubble</Filter>
     </ClCompile>
-    <ClCompile Include="ZenChanCalmState.cpp">
+    <ClCompile Include="ZenChanChaseState.cpp">
       <Filter>States\ZenChan</Filter>
     </ClCompile>
     <ClCompile Include="ZenChanSpawnState.cpp">
@@ -146,6 +149,27 @@
     </ClCompile>
     <ClCompile Include="GameSettings.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectorComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEndCheckerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaSpawnState.cpp">
+      <Filter>States\Maita</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaChaseState.cpp">
+      <Filter>States\Maita</Filter>
+    </ClCompile>
+    <ClCompile Include="BoulderComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaVulnerableState.cpp">
+      <Filter>States\Maita</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -278,7 +302,7 @@
     <ClInclude Include="BubblePopState.h">
       <Filter>States\Bubble</Filter>
     </ClInclude>
-    <ClInclude Include="ZenChanCalmState.h">
+    <ClInclude Include="ZenChanChaseState.h">
       <Filter>States\ZenChan</Filter>
     </ClInclude>
     <ClInclude Include="ZenChanSpawnState.h">
@@ -292,6 +316,27 @@
     </ClInclude>
     <ClInclude Include="GameSettings.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectorComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEndCheckerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaSpawnState.h">
+      <Filter>States\Maita</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaChaseState.h">
+      <Filter>States\Maita</Filter>
+    </ClInclude>
+    <ClInclude Include="BoulderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaVulnerableState.h">
+      <Filter>States\Maita</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

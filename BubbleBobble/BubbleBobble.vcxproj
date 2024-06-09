@@ -163,6 +163,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="BoulderComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="BubbleBobble.cpp" />
     <ClCompile Include="BubbleComponent.cpp">
       <SubType>
@@ -186,7 +190,18 @@
     <ClCompile Include="HitState.cpp" />
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="JumpState.cpp" />
+    <ClCompile Include="LevelEndCheckerComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="LevelParser.cpp" />
+    <ClCompile Include="MaitaChaseState.cpp" />
+    <ClCompile Include="MaitaComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="MaitaSpawnState.cpp" />
+    <ClCompile Include="MaitaVulnerableState.cpp" />
     <ClCompile Include="MoveState.cpp" />
     <ClCompile Include="PlayerComponent.cpp">
       <SubType>
@@ -203,6 +218,10 @@
     <ClCompile Include="RotationCmp.cpp" />
     <ClCompile Include="ScoreComponent.cpp" />
     <ClCompile Include="ScoreObserverComponent.cpp" />
+    <ClCompile Include="SelectorComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="ShootBubble.cpp" />
     <ClCompile Include="ShootState.cpp" />
     <ClCompile Include="SpawnState.cpp" />
@@ -221,7 +240,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="TrashTheCacheCmp.cpp" />
-    <ClCompile Include="ZenChanCalmState.cpp" />
+    <ClCompile Include="ZenChanChaseState.cpp" />
     <ClCompile Include="ZenChanComponent.cpp">
       <SubType>
       </SubType>
@@ -232,6 +251,10 @@
   <ItemGroup>
     <ClInclude Include="AddScoreCommand.h" />
     <ClInclude Include="AnimationComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="BoulderComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -256,7 +279,18 @@
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
+    <ClInclude Include="LevelEndCheckerComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="LevelParser.h" />
+    <ClInclude Include="MaitaChaseState.h" />
+    <ClInclude Include="MaitaComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MaitaSpawnState.h" />
+    <ClInclude Include="MaitaVulnerableState.h" />
     <ClInclude Include="MoveState.h" />
     <ClInclude Include="NextLevelCommand.h" />
     <ClInclude Include="PlayerComponent.h">
@@ -268,6 +302,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="RigidBodyComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="SelectorComponent.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -301,7 +339,7 @@
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextureComponent.h" />
     <ClInclude Include="TrashTheCacheCmp.h" />
-    <ClInclude Include="ZenChanCalmState.h" />
+    <ClInclude Include="ZenChanChaseState.h" />
     <ClInclude Include="ZenChanComponent.h">
       <SubType>
       </SubType>

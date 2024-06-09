@@ -1,7 +1,7 @@
 ﻿#include "ZenChanSpawnState.h"
 
 #include "StateComponent.h"
-#include "ZenChanCalmState.h"
+#include "ZenChanChaseState.h"
 
 dae::ZenChanSpawnState::ZenChanSpawnState(GameObject* owner) : State(owner)
 {
@@ -22,5 +22,5 @@ void dae::ZenChanSpawnState::OnExit()
 void dae::ZenChanSpawnState::Update()
 {
 	
-	GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<ZenChanCalmState>(GetOwner()));
+	GetOwner()->GetComponent<StateComponent>()->SetState(std::make_unique<ZenChanChaseState>(GetOwner()));
 }

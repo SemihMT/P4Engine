@@ -18,6 +18,7 @@ namespace dae
 		ScoreObserverComponent& operator=(ScoreObserverComponent&& other) = delete;
 
 		void OnNotify(Event event, const EventData& data) override;
+		void Init(int player1Score, int player2Score);
 
 	private:
 		int m_player1Score{ 0 };

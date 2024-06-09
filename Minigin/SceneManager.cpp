@@ -32,11 +32,29 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 
 void dae::SceneManager::SetCurrentScene(const std::string& name)
 {
-	const auto sceneIt = std::ranges::find_if(m_scenes, [&](const auto& scene) {return scene->m_name == name; });
+	const auto sceneIt = std::ranges::find_if(m_scenes, [&](const auto& scene) { return scene->m_name == name; });
 
-	if(sceneIt != m_scenes.end())
+	if (sceneIt != m_scenes.end())
 	{
 		m_currentScene = sceneIt->get();
+	}
+}
+
+void dae::SceneManager::RemoveScene(const std::string& name)
+{
+	for (auto it = m_scenes.begin(); it != m_scenes.end(); ++it)
+	{ if ((*it)->GetName() == name)
+        {
+            // Remove all objects and components from the scene
+            (*it)->RemoveAll();
+
+            m_scenes.erase(it);
+            if (m_currentScene && m_currentScene->GetName() == name)
+            {
+                m_currentScene = nullptr;
+            }
+            return;
+		}
 	}
 }
 

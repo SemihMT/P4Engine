@@ -1,10 +1,11 @@
-﻿#include "ZenChanCalmState.h"
+﻿#include "MaitaChaseState.h"
 
-#include "AnimationComponent.h"
+#include "BoulderComponent.h"
 #include "SceneManager.h"
 #include "TimeManager.h"
 
-dae::ZenChanCalmState::ZenChanCalmState(GameObject* owner) :
+dae::MaitaChaseState::MaitaChaseState(GameObject* owner)
+	:
 	State(owner),
 	m_ownerTransform(GetOwner()->GetTransform()),
 	m_ownerRb(GetOwner()->GetComponent<RigidBodyComponent>()),
@@ -13,26 +14,25 @@ dae::ZenChanCalmState::ZenChanCalmState(GameObject* owner) :
 {
 }
 
-dae::ZenChanCalmState::~ZenChanCalmState()
+dae::MaitaChaseState::~MaitaChaseState()
 {
 }
 
-void dae::ZenChanCalmState::OnEnter()
+void dae::MaitaChaseState::OnEnter()
 {
-    GetOwner()->SetName("ZenChan");
-    m_animationComponent->SetCurrentAnimation("Walk");
+	GetOwner()->SetName("Maita");
+	m_animationComponent->SetCurrentAnimation("Walk");
 
 	m_chosenPlayer = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("Player");
 	m_directionToPlayer = m_chosenPlayer->GetTransform()->GetWorldPosition() - GetOwner()->GetTransform()->GetWorldPosition();
 	m_directionToPlayer = glm::normalize(m_directionToPlayer);
-
 }
 
-void dae::ZenChanCalmState::OnExit()
+void dae::MaitaChaseState::OnExit()
 {
 }
 
-void dae::ZenChanCalmState::Update()
+void dae::MaitaChaseState::Update()
 {
 	const float dt = static_cast<float>(TimeManager::GetInstance().DeltaTime());
     glm::vec2 ownerPos = m_ownerTransform->GetWorldPosition();
@@ -73,14 +73,14 @@ void dae::ZenChanCalmState::Update()
     m_directionToPlayer = glm::normalize(m_directionToPlayer);
 }
 
-void dae::ZenChanCalmState::DecideNextAction()
+void dae::MaitaChaseState::DecideNextAction()
 {
-	 m_shouldJump = (m_directionToPlayer.y < 0) || (GetRandomFloat() < 0.02f);
+     m_shouldJump = (m_directionToPlayer.y < 0) || (GetRandomFloat() < 0.02f);
 
     if (!m_shouldJump) {
         if (GetRandomFloat() < 0.85f) {
-            // 5% chance to choose a random direction
             m_horizontalDirection = (GetRandomFloat() < 0.5f) ? glm::vec2{1,0} : glm::vec2{-1,0};
+            Shoot();
         } else {
             // Follow the player
             m_horizontalDirection = (m_directionToPlayer.x > 0) ? glm::vec2{1,0} : glm::vec2{-1,0};
@@ -90,21 +90,30 @@ void dae::ZenChanCalmState::DecideNextAction()
     }
 }
 
-void dae::ZenChanCalmState::MoveRight(float dt)
+void dae::MaitaChaseState::MoveRight(float dt)
 {
+    
 	m_ownerTransform->Translate(m_speed * dt, 0, 0);
     m_ownerTransform->SetForwardDirection({1,0,0});
 }
 
-void dae::ZenChanCalmState::MoveLeft(float dt)
+void dae::MaitaChaseState::MoveLeft(float dt)
 {
-	m_ownerTransform->Translate(-m_speed * dt, 0, 0);
+    m_ownerTransform->Translate(-m_speed * dt, 0, 0);
     m_ownerTransform->SetForwardDirection({-1,0,0});
-
 }
 
-void dae::ZenChanCalmState::Jump()
+void dae::MaitaChaseState::Jump()
 {
-	m_ownerRb->Jump();
+    m_ownerRb->Jump();
 	m_ownerCollider->StartJumping();
+}
+
+void dae::MaitaChaseState::Shoot()
+{
+    auto boulder = std::make_unique<GameObject>(m_ownerTransform->GetLocalPosition());
+    boulder->SetName("Boulder");
+    boulder->AddComponent<BoulderComponent>(m_ownerTransform->GetForwardDirection());
+
+    SceneManager::GetInstance().GetCurrentScene()->Add(std::move(boulder));
 }

@@ -28,6 +28,5 @@ namespace dae
 		int m_tileRow{};
 		int m_tileCol{ 0 };
 		std::string m_smallTileSheetPath{ "Sprites/Levels/Tiles/TileMap.png" };
-		std::string m_bigTileSheetPath{ "Sprites/Levels/Tiles/TileMap.png" };
 	};
 }

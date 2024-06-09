@@ -23,12 +23,14 @@ void dae::IdleState::OnEnter()
 	if (std::is_base_of_v<Observer, PlayerEventHandlerComponent>)
 		AddObserver(GetOwner()->GetComponent<PlayerEventHandlerComponent>());
 
-	Notify(Event::Player_Idle, {});
-
 	if (const auto animCmp = GetOwner()->GetComponent<AnimationComponent>())
 	{
 		animCmp->SetCurrentAnimation("Idle");
 	}
+
+	Notify(Event::Player_Idle, {});
+
+	
 
 }
 

@@ -1,21 +1,19 @@
-#include "ZenChanComponent.h"
+#include "MaitaComponent.h"
 
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
 #include "GameObject.h"
+#include "MaitaSpawnState.h"
 #include "RigidBodyComponent.h"
-#include "SpriteComponent.h"
 #include "StateComponent.h"
-#include "ZenChanChaseState.h"
-#include "ZenChanSpawnState.h"
-
-dae::ZenChanComponent::ZenChanComponent(GameObject* owner, const glm::vec3& direction, ColliderType type) : BaseComponent(owner),
-                                                                                                            m_transform(owner->GetTransform())
+dae::MaitaComponent::MaitaComponent(GameObject* owner, const glm::vec3& direction, ColliderType type) :
+BaseComponent(owner),
+m_transform(owner->GetTransform())
 {
-	owner->SetName("ZenChan");
-	
+	owner->SetName("Maita");
+
 	owner->AddComponent<AnimationComponent>(m_spriteSheetPath);
-	owner->GetComponent<AnimationComponent>()->SetDestinationSize(glm::vec2{static_cast<float>(m_dstSize)});
+	owner->GetComponent<AnimationComponent>()->SetDestinationSize(glm::vec2{ static_cast<float>(m_dstSize) });
 
 	int row = 0;
 	int numFrames = 2;
@@ -37,12 +35,12 @@ dae::ZenChanComponent::ZenChanComponent(GameObject* owner, const glm::vec3& dire
 	const AnimationData angryBubbleAnimation{ row,numFrames,16,0.25f };
 	owner->GetComponent<AnimationComponent>()->AddAnimation("AngryBubble", angryBubbleAnimation);
 
-	owner->AddComponent<ColliderComponent>(m_dstSize,type );
+	owner->AddComponent<ColliderComponent>(m_dstSize, type);
 	owner->AddComponent<RigidBodyComponent>();
-	owner->AddComponent<StateComponent>()->SetState(std::make_unique<ZenChanSpawnState>(owner));
+	owner->AddComponent<StateComponent>()->SetState(std::make_unique<MaitaSpawnState>(owner));
 
 	auto pos = m_transform->GetLocalPosition();
 	m_transform->SetLocalPosition(pos.x * static_cast<float>(m_srcSize), pos.y * static_cast<float>(m_srcSize), pos.z);
 	m_transform->SetForwardDirection(direction);
-}
 
+}

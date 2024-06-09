@@ -17,6 +17,7 @@ namespace dae
 		HealthObserverComponent& operator=(HealthObserverComponent&& other) = delete;
 
 		void OnNotify(Event event, const EventData& data) override;
+		void Init(int player1Health,int player2Health);
 
 	private:
 		int m_player1Health{ 3 };

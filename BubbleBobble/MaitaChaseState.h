@@ -6,12 +6,12 @@
 
 namespace dae
 {
-	class ZenChanCalmState final : public State, public Subject
+	class MaitaChaseState final : public State, public Subject
 	{
 	public:
-		explicit ZenChanCalmState(GameObject* owner);
+		explicit MaitaChaseState(GameObject* owner);
 
-		~ZenChanCalmState() override;
+		~MaitaChaseState() override;
 
 		void OnEnter() override;
 
@@ -23,6 +23,7 @@ namespace dae
 		void MoveRight(float dt);
 		void MoveLeft(float dt);
 		void Jump();
+		void Shoot();
 
 		glm::vec2 m_directionToPlayer{};
 		Transform* m_ownerTransform;

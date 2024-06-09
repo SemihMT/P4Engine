@@ -1,10 +1,11 @@
 #include "HealthObserverComponent.h"
 
 #include "GameObject.h"
+#include "GameSettings.h"
 #include "PlayerComponent.h"
 #include "Text.h"
 
-dae::HealthObserverComponent::HealthObserverComponent(GameObject* owner): BaseComponent(owner)
+dae::HealthObserverComponent::HealthObserverComponent(GameObject* owner) : BaseComponent(owner)
 {
 	const auto lifeDisplay = GetOwner()->GetComponent<Text>();
 	lifeDisplay->SetText("     " + std::to_string(m_player1Health) + "                                          " + std::to_string(m_player2Health));
@@ -24,4 +25,17 @@ void dae::HealthObserverComponent::OnNotify(Event event, const EventData& data)
 
 		lifeDisplay->SetText("     " + std::to_string(m_player1Health) + "                                          " + std::to_string(m_player2Health));
 	}
+
+	if(event == Event::Player_Death)
+	{
+		GameSettings::GetInstance().SetGameState(GameSettings::GameState::Gameover,-1);
+	}
+}
+
+void dae::HealthObserverComponent::Init(int player1Health,int player2Health)
+{
+	m_player1Health = player1Health;
+	m_player2Health = player2Health;
+	const auto lifeDisplay = GetOwner()->GetComponent<Text>();
+	lifeDisplay->SetText("     " + std::to_string(m_player1Health) + "                                          " + std::to_string(m_player2Health));
 }

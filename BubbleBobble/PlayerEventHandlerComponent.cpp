@@ -2,11 +2,13 @@
 #include <iostream>
 
 #include "GameObject.h"
+#include "GameSettings.h"
 #include "HealthComponent.h"
 #include "HitState.h"
 #include "InputManager.h"
 #include "JumpCommand.h"
 #include "MoveCommand.h"
+#include "NextLevelCommand.h"
 #include "PlayerComponent.h"
 #include "SceneManager.h"
 #include "ScoreComponent.h"
@@ -28,6 +30,15 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		break;
 	case Event::Player_Idle:
 		std::cout << "\033[32m" << "Player Idle Event;" << "\033[0m" << "\n";
+		if (!(SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ZenChan")
+			|| SceneManager::GetInstance().GetCurrentScene()->GetGameObject("Maita")
+			|| SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ZenChanBubble")
+			|| SceneManager::GetInstance().GetCurrentScene()->GetGameObject("MaitaBubble")))
+		{
+			int currentLevel = std::stoi(SceneManager::GetInstance().GetCurrentScene()->GetName());
+			currentLevel = (currentLevel % 3) + 1;
+			GameSettings::GetInstance().SetChangeLevelFlag(currentLevel);
+		}
 		break;
 	case Event::Player_Death:
 		std::cout << "\033[32m" << "Player Death Event;" << "\033[0m" << "\n";
@@ -90,7 +101,7 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 			auto watermelonItem = std::make_unique<GameObject>(poppedEnemyPos);
 			watermelonItem->SetName("Watermelon");
 			watermelonItem->AddComponent<SpriteComponent>("/Sprites/Items/Watermelon.png", glm::ivec2{ 16 }, 0, 0, glm::ivec2{ 32 });
-			watermelonItem->AddComponent<ColliderComponent>(32, ColliderType::Trigger);
+			watermelonItem->AddComponent<ColliderComponent>(16, ColliderType::Trigger);
 			SceneManager::GetInstance().GetCurrentScene()->Add(std::move(watermelonItem));
 		}
 		else
@@ -104,6 +115,8 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 			SceneManager::GetInstance().GetCurrentScene()->Add(std::move(friesItem));
 
 		}
+
+		
 	}
 	break;
 

@@ -160,7 +160,7 @@ void dae::LevelParser::ParseP3(std::ifstream& file)
 	ss >> m_ppmInfo.width >> m_ppmInfo.height;
 	file >> m_ppmInfo.maxColorValue;
 
-	for (int y{ 2 }; y < m_ppmInfo.height + 2; ++y)
+	for (int y{ }; y < m_ppmInfo.height; ++y)
 	{
 		for (int x{}; x < m_ppmInfo.width; ++x)
 		{
@@ -173,10 +173,10 @@ void dae::LevelParser::ParseP3(std::ifstream& file)
 			IColor color{ r,g,b };
 
 			// Find metadata for the current pixel
-			auto it = m_pixelToMetadataMap.find({ x, y - 2 });
+			auto it = m_pixelToMetadataMap.find({ x, y });
 			std::optional<Metadata> data = (it != m_pixelToMetadataMap.end()) ? std::make_optional(it->second) : std::nullopt;
 
-			ParsePixel(x, y, color, data);
+			ParsePixel(x, y+2, color, data);
 		}
 	}
 }

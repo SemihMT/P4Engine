@@ -7,29 +7,23 @@
 #endif
 #endif
 
-#include "AnimationComponent.h"
-#include "BubbleMovementComponent.h"
-#include "ColliderComponent.h"
+
 #include "Minigin.h"
 #include "Scene.h"
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "GameObject.h"
-#include "TimeManager.h"
 #include "Components.h"
 #include "GameSettings.h"
-#include "IdleState.h"
 #include "InputManager.h"
-#include "JumpCommand.h"
 #include "LevelParser.h"
-#include "MoveCommand.h"
+#include "MaitaComponent.h"
+
 #include "NextLevelCommand.h"
 #include "PlayerComponent.h"
-#include "RigidBodyComponent.h"
-#include "ShootBubble.h"
-#include "ShootCommand.h"
+#include "SelectorComponent.h"
 #include "SpriteComponent.h"
-#include "StateComponent.h"
+
 #include "TileComponent.h"
 #include "ToggleSoundCommand.h"
 #include "ZenChanComponent.h"
@@ -37,15 +31,9 @@ using namespace dae;
 void load()
 {
 #pragma region Resources
-	const auto font = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 36);
-	const auto smallFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 24);
-	const auto smallestFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 12);
+
 #pragma endregion
 
-	auto& levelScene = SceneManager::GetInstance().CreateScene("1");
-	SceneManager::GetInstance().SetCurrentScene("1");
-
-	
 
 	auto parser = GameSettings::GetInstance().GetParser();
 
@@ -107,13 +95,13 @@ void load()
 			return zenChanObject;
 		});
 
-	/*parser->RegisterColor({ 192,192,192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
+	parser->RegisterColor({ 192,192,192 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 			auto maitaObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			auto direction = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
-			maitaObject->AddComponent<ZenChanComponent>(direction, ColliderType::Trigger);
+			maitaObject->AddComponent<MaitaComponent>(direction, ColliderType::Trigger);
 			return maitaObject;
-		});*/
+		});
 	parser->RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)
 		{
 
@@ -134,28 +122,50 @@ void load()
 			return player;
 		});
 
-	
-	
-
-	auto scoreUI = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
-	scoreUI->SetName("ScoreObserver");
-	scoreUI->AddComponent<Text>(smallFont," ");
-	scoreUI->AddComponent<ScoreObserverComponent>();
-	levelScene.Add(std::move(scoreUI));
 
 
-	auto healthUI = std::make_unique<GameObject>(glm::vec3{ 0,400,0 });
-	healthUI->SetName("HealthObserver");
-	healthUI->AddComponent<Text>(smallFont," ");
-	healthUI->AddComponent<HealthObserverComponent>();
-	levelScene.Add(std::move(healthUI));
 
-	parser->Parse(&levelScene,"Levels/level1.ppm");
+
+
+	const auto smallFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 24);
+
+	auto& titleScene = SceneManager::GetInstance().CreateScene("Title");
+
+	auto bg = std::make_unique<GameObject>(0.0f, 0.0f, 0.0f);
+	bg->AddComponent<SpriteComponent>("/Sprites/Menu/Background.png", glm::ivec2{ 256,224 }, 0, 0, glm::ivec2{ 512,448 });
+
+	auto title = std::make_unique<GameObject>(100.0f, 50.0f, 0.0f);
+	title->AddComponent<Text>(smallFont, "Choose your gamemode!");
+
+	auto option1 = std::make_unique<GameObject>(164.0f, 150.0f, 0.0f);
+	option1->AddComponent<Text>(smallFont, "1. Singleplayer");
+
+	auto option2 = std::make_unique<GameObject>(164.0f, 250.0f, 0.0f);
+	option2->AddComponent<Text>(smallFont, "2. Co-op");
+
+	auto option3 = std::make_unique<GameObject>(164.0f, 350.0f, 0.0f);
+	option3->AddComponent<Text>(smallFont, "3. Versus");
+
+	auto selector = std::make_unique<GameObject>(100.0f, 150.0f, 0.0f);
+	selector->AddComponent<SpriteComponent>("/Sprites/Menu/Twinkles.png", glm::ivec2{ 8,8 }, 0, 0, glm::ivec2{ 32,32 });
+	selector->AddComponent<SelectorComponent>();
+
+
+
+	titleScene.Add(std::move(bg));
+	titleScene.Add(std::move(title));
+	titleScene.Add(std::move(selector));
+	titleScene.Add(std::move(option1));
+	titleScene.Add(std::move(option2));
+	titleScene.Add(std::move(option3));
+	SceneManager::GetInstance().SetCurrentScene("Title");
+
 
 	ServiceLocator::GetInstance().GetService<ISoundService>("Sound")->PlayMusic("MainTheme.mp3");
 	//Sound Controls
 	InputManager::GetInstance().BindKeyboardCommand(SDLK_m, std::make_unique<ToggleSoundCommand>(), KeyState::ButtonUp);
-	InputManager::GetInstance().BindKeyboardCommand(SDLK_F1, std::make_unique<NextLevelCommand>(),KeyState::ButtonUp);
+	//Skip to next level
+	InputManager::GetInstance().BindKeyboardCommand(SDLK_F1, std::make_unique<NextLevelCommand>(), KeyState::ButtonUp);
 }
 
 int main(int, char* [])

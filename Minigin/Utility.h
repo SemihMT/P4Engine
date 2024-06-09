@@ -1,8 +1,7 @@
 #pragma once
-#include <SDL_render.h>
-#include <glm/vec2.hpp>
 #include <random>
-
+#include <limits>
+#include "glm/glm.hpp"
 
 namespace dae
 {
@@ -54,7 +53,8 @@ namespace dae
 		return dist(engine);
 	}
 
-
+#undef max
+#undef min
 	// Tutorial Javidx9: https://www.youtube.com/watch?v=8JJ-4JgR7Dg&t=2552s
 	inline bool PointVsRect(const glm::vec2& p, const Collider& r)
 	{

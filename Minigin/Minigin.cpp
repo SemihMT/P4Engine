@@ -104,9 +104,6 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 	auto& time = TimeManager::GetInstance();
 
-	
-	
-
 	//using directive to shorten chrono calls
 	using namespace std::chrono;
 
@@ -118,8 +115,10 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		doContinue = input.ProcessInput();
 
+		GameSettings::GetInstance().Update();
 		sceneManager.Update();
 		sceneManager.LateUpdate();
+
 
 		renderer.Render();
 
