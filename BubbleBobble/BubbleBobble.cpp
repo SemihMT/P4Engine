@@ -134,7 +134,7 @@ void load()
 
 
 
-
+	InputManager::GetInstance().AddController();
 
 	const auto smallFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 24);
 

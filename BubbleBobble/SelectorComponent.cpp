@@ -11,16 +11,16 @@ dae::SelectorComponent::SelectorComponent(GameObject* owner) : BaseComponent(own
 
 void dae::SelectorComponent::Update()
 {
-	if (InputManager::GetInstance().IsPressed(SDLK_DOWN))
+	if (InputManager::GetInstance().IsDown(SDLK_DOWN) ||InputManager::GetInstance().IsDown(Controller::One,XInputController::Button::DPAD_DOWN))
 	{
 		Increment();
 	}
-	if (InputManager::GetInstance().IsPressed(SDLK_UP))
+	if (InputManager::GetInstance().IsDown(SDLK_UP) ||InputManager::GetInstance().IsDown(Controller::One,XInputController::Button::DPAD_UP))
 	{
 		Decrement();
 	}
 
-	if(InputManager::GetInstance().IsPressed(SDLK_RETURN))
+	if(InputManager::GetInstance().IsDown(SDLK_RETURN) ||InputManager::GetInstance().IsDown(Controller::One,XInputController::Button::A))
 	{
 		GameSettings::GetInstance().SetGameState(static_cast<GameSettings::GameState>(m_currentSelection),1);
 	}
