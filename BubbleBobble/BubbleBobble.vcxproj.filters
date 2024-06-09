@@ -171,6 +171,21 @@
     <ClCompile Include="MaitaVulnerableState.cpp">
       <Filter>States\Maita</Filter>
     </ClCompile>
+    <ClCompile Include="MaitaVersusComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaVersusFightState.cpp">
+      <Filter>States\Maita</Filter>
+    </ClCompile>
+    <ClCompile Include="MaitaVersusHitState.cpp">
+      <Filter>States\Maita</Filter>
+    </ClCompile>
+    <ClCompile Include="HighScoreDisplayComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="IdentifierComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObservableEvents.h">
@@ -337,6 +352,27 @@
     </ClInclude>
     <ClInclude Include="MaitaVulnerableState.h">
       <Filter>States\Maita</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaVersusComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaJumpCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaShootCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaVersusFightState.h">
+      <Filter>States\Maita</Filter>
+    </ClInclude>
+    <ClInclude Include="MaitaVersusHitState.h">
+      <Filter>States\Maita</Filter>
+    </ClInclude>
+    <ClInclude Include="HighScoreDisplayComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="IdentifierComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

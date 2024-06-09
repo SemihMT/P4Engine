@@ -18,6 +18,7 @@
 #include "InputManager.h"
 #include "LevelParser.h"
 #include "MaitaComponent.h"
+#include "MaitaVersusComponent.h"
 
 #include "NextLevelCommand.h"
 #include "PlayerComponent.h"
@@ -99,7 +100,15 @@ void load()
 		{
 			auto maitaObject = std::make_unique<GameObject>(glm::vec3{ pos.x,pos.y,0 });
 			auto direction = std::get<glm::vec3>(metadata.value().metadataMap.at("direction"));
-			maitaObject->AddComponent<MaitaComponent>(direction, ColliderType::Trigger);
+			if (GameSettings::GetInstance().GetGameState() == GameSettings::GameState::Versus)
+			{
+				maitaObject->AddComponent<MaitaVersusComponent>(direction, ColliderType::Trigger);
+			}
+			else
+			{
+				maitaObject->AddComponent<MaitaComponent>(direction, ColliderType::Trigger);
+
+			}
 			return maitaObject;
 		});
 	parser->RegisterColor({ 0,255,0 }, [](const glm::ivec2& pos, const std::optional<LevelParser::Metadata>& metadata)

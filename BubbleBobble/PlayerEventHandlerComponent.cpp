@@ -7,6 +7,7 @@
 #include "HitState.h"
 #include "InputManager.h"
 #include "JumpCommand.h"
+#include "MaitaVersusHitState.h"
 #include "MoveCommand.h"
 #include "NextLevelCommand.h"
 #include "PlayerComponent.h"
@@ -35,18 +36,18 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 			|| SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ZenChanBubble")
 			|| SceneManager::GetInstance().GetCurrentScene()->GetGameObject("MaitaBubble")))
 		{
+			int score = GetOwner()->GetComponent<ScoreComponent>()->GetScore();
+			GameSettings::GetInstance().SaveScore(score);
 			int currentLevel = std::stoi(SceneManager::GetInstance().GetCurrentScene()->GetName());
+			if(currentLevel == 3)
+			{
+				GameSettings::GetInstance().SetGameState(GameSettings::GameState::Gameover,-1);
+			}
 			currentLevel = (currentLevel % 3) + 1;
 			GameSettings::GetInstance().SetChangeLevelFlag(currentLevel);
 		}
 		break;
-	case Event::Player_Death:
-		std::cout << "\033[32m" << "Player Death Event;" << "\033[0m" << "\n";
-		//Go to end screen to save high score
-		break;
-	case Event::Player_Respawn:
-		std::cout << "\033[32m" << "Player Respawn Event;" << "\033[0m" << "\n";
-		break;
+
 	case Event::Player_Damaged:
 		std::cout << "\033[32m" << "Player Damaged Event;" << "\033[0m" << "\n";
 		{
@@ -55,12 +56,7 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 			GetOwner()->GetComponent<HealthComponent>()->Damage(1);
 		}
 		break;
-	case Event::Player_ShootBubble:
-		std::cout << "\033[32m" << "Player Shoot Event;" << "\033[0m" << "\n";
-		break;
-	case Event::Player_Jump:
-		std::cout << "\033[32m" << "Player Jump Event;" << "\033[0m" << "\n";
-		break;
+
 	case Event::Player_Fall:
 		if (data.Get<GameObject*>("Player")->GetComponent<PlayerComponent>()->GetPlayerNumber() == 1)
 		{
@@ -116,11 +112,12 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 
 		}
 
-		
+
 	}
 	break;
 
 	case Event::Item_Collected:
+	{
 		auto collectedItem = data.Get<GameObject*>("Item");
 		auto player = data.Get<GameObject*>("Player");
 
@@ -131,9 +128,15 @@ void dae::PlayerEventHandlerComponent::OnNotify(Event event, const EventData& da
 		else
 			player->GetComponent<ScoreComponent>()->AddToScore(200);
 		collectedItem->Kill();
+	}
 
-		break;
+	break;
+	case Event::Maita_Damaged:
+	{
+		auto maita = data.Get<GameObject*>("Maita");
+		maita->GetComponent<StateComponent>()->SetState(std::make_unique<MaitaVersusHitState>(maita));
 
+	}break;
 	}
 }
 

@@ -1,9 +1,12 @@
 ﻿#include "GameSettings.h"
 
 #include "HealthObserverComponent.h"
+#include "HighScoreDisplayComponent.h"
+#include "IdentifierComponent.h"
 #include "LevelEndCheckerComponent.h"
 #include "SceneManager.h"
 #include "ScoreObserverComponent.h"
+#include "SelectorComponent.h"
 #include "SpriteComponent.h"
 #include "Text.h"
 #include "TextureComponent.h"
@@ -58,6 +61,11 @@ namespace dae
 		}
 	}
 
+	void GameSettings::SaveScore(int score)
+	{
+		m_score += score;
+	}
+
 	void GameSettings::CreateSingleplayerScene(int level)
 	{
 		SceneManager::GetInstance().RemoveScene(std::to_string(level - 1));
@@ -106,11 +114,6 @@ namespace dae
 		healthUI->AddComponent<HealthObserverComponent>();
 		levelScene.Add(std::move(healthUI));
 
-		auto levelEndChecker = std::make_unique<GameObject>(glm::vec3{ 0,0,0 });
-		levelEndChecker->SetName("LevelEndChecker");
-		levelEndChecker->AddComponent<LevelEndCheckerComponent>();
-		levelScene.Add(std::move(levelEndChecker));
-
 		m_parser->Parse(&levelScene, "Levels/level" + std::to_string(level) + ".ppm");
 	}
 
@@ -140,12 +143,29 @@ namespace dae
 
 	void GameSettings::CreateGameOverScene()
 	{
+		const auto smallFont = ResourceManager::GetInstance().LoadFont(Text::s_defaultFont, 24);
+
 		auto& gameOverScene = SceneManager::GetInstance().CreateScene("GameOver");
 		SceneManager::GetInstance().SetCurrentScene("GameOver");
 
 		auto bg = std::make_unique<GameObject>(0.0f, 0.0f, 0.0f);
-		bg->AddComponent<SpriteComponent>("/Sprites/Menu/TitleScreen.png");
+		bg->AddComponent<SpriteComponent>("/Sprites/Menu/Background.png", glm::ivec2{ 256,224 }, 0, 0, glm::ivec2{ 512,448 });
+
+		auto title = std::make_unique<GameObject>(180.0f, 50.0f, 0.0f);
+		title->AddComponent<Text>(smallFont, "High scores:");
+
+		auto highscoreDisplay = std::make_unique<GameObject>(180.0f, 150.0f, 0.0f);
+		highscoreDisplay->AddComponent<Text>(smallFont," ");
+		highscoreDisplay->AddComponent<HighScoreDisplayComponent>();
+
+		auto identifier = std::make_unique<GameObject>(180.0f,250.0f,0.0f);
+		identifier->AddComponent<Text>(smallFont, " ");
+		identifier->AddComponent<IdentifierComponent>();
+
 
 		gameOverScene.Add(std::move(bg));
+		gameOverScene.Add(std::move(title));
+		gameOverScene.Add(std::move(highscoreDisplay));
+		gameOverScene.Add(std::move(identifier));
 	}
 }

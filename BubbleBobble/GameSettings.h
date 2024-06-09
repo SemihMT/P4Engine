@@ -27,15 +27,17 @@ namespace dae
 		void SetChangeLevelFlag(int level);
 
 		GameState GetGameState() const { return m_gameType; }
-		void StartNextLevel();
 		void Update();
+		void SaveScore(int score);
+		int GetScore() const {return m_score;}
+
 	private:
 		friend class Singleton<GameSettings>;
 		GameSettings() = default;
 
 		bool m_changeLevelFlag = false;
 		int m_newLevel = 0;
-
+		int m_score{};
 		std::unique_ptr<LevelParser> m_parser;
 		GameState m_gameType{ GameState::Selection };
 

@@ -30,7 +30,7 @@ namespace dae
 		Item_Collected,
 
 
-		
+		Maita_Damaged,
 	};
 
 	struct EventData

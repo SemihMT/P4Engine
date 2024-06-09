@@ -263,7 +263,7 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 		// Touches free enemy / their projectiles
 		if (otherName == "ZenChan"
 			|| otherName == "Maita"
-			|| otherName == "MaitaBoulder")
+			|| otherName == "Boulder")
 		{
 			EventData d{};
 			d.data["PlayerNumber"] = GetOwner()->GetComponent<PlayerComponent>()->GetPlayerNumber();
@@ -277,7 +277,7 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 			//Store the enemy we've hit, so we can modify its state
 			EventData data{};
 			data.data["PoppedEnemy"] = other->GetOwner();
-			Notify(Event::Bubble_PopEnemy,  data);
+			Notify(Event::Bubble_PopEnemy, data);
 		}
 
 		if (otherName == "Watermelon"
@@ -286,7 +286,7 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 			EventData data{};
 			data.data["Item"] = other->GetOwner();
 			data.data["Player"] = GetOwner();
-			Notify(Event::Item_Collected,  data);
+			Notify(Event::Item_Collected, data);
 		}
 	}
 
@@ -321,6 +321,16 @@ void dae::ColliderComponent::DispatchCollisionEvents(ColliderComponent* other)
 				data.data["Bubble"] = GetOwner();
 				Notify(Event::Bubble_PopNoEnemy, data);
 			}
+		}
+	}
+
+	if (ourName == "MaitaVersus")
+	{
+		if (otherName == "Bubble")
+		{
+			EventData data{};
+			data.data["Maita"] = GetOwner();
+			Notify(Event::Maita_Damaged, data);
 		}
 	}
 

@@ -139,7 +139,7 @@ bool dae::InputManager::ProcessControllerInput()
 unsigned dae::InputManager::AddController()
 {
 	// Return 999 if we've reached the limit of 4 controllers
-	if (m_controllers.size() >= 4)
+	if (m_controllers.size() >= 2)
 		return 999;
 
 	unsigned int controllerIdx = m_controllerCounter;

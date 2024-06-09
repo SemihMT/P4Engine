@@ -187,7 +187,15 @@
     <ClCompile Include="GameSettings.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="HealthObserverComponent.cpp" />
+    <ClCompile Include="HighScoreDisplayComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="HitState.cpp" />
+    <ClCompile Include="IdentifierComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="JumpState.cpp" />
     <ClCompile Include="LevelEndCheckerComponent.cpp">
@@ -201,6 +209,12 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="MaitaSpawnState.cpp" />
+    <ClCompile Include="MaitaVersusComponent.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="MaitaVersusFightState.cpp" />
+    <ClCompile Include="MaitaVersusHitState.cpp" />
     <ClCompile Include="MaitaVulnerableState.cpp" />
     <ClCompile Include="MoveState.cpp" />
     <ClCompile Include="PlayerComponent.cpp">
@@ -275,7 +289,15 @@
     <ClInclude Include="Components.h" />
     <ClInclude Include="FallState.h" />
     <ClInclude Include="GameSettings.h" />
+    <ClInclude Include="HighScoreDisplayComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="HitState.h" />
+    <ClInclude Include="IdentifierComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="IdleState.h" />
     <ClInclude Include="JumpCommand.h" />
     <ClInclude Include="JumpState.h" />
@@ -289,7 +311,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MaitaJumpCommand.h" />
+    <ClInclude Include="MaitaShootCommand.h" />
     <ClInclude Include="MaitaSpawnState.h" />
+    <ClInclude Include="MaitaVersusComponent.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MaitaVersusFightState.h" />
+    <ClInclude Include="MaitaVersusHitState.h" />
     <ClInclude Include="MaitaVulnerableState.h" />
     <ClInclude Include="MoveState.h" />
     <ClInclude Include="NextLevelCommand.h" />

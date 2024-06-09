@@ -30,7 +30,10 @@ m_speed(75.0f)
 
 void dae::BoulderComponent::Update()
 {
-	if (glm::length(GetOwner()->GetTransform()->GetLocalPosition() - glm::vec3{ m_initialPos,0 }) < m_maxDistance)
+	m_lifetimeTimer += static_cast<float>(TimeManager::GetInstance().DeltaTime());
+
+	if (glm::length(GetOwner()->GetTransform()->GetLocalPosition() - glm::vec3{ m_initialPos,0 }) < m_maxDistance 
+		|| m_lifetimeTimer < m_maxLifetime)
 	{
 		GetOwner()->GetTransform()->Translate(glm::vec3{ m_direction,0 }*m_speed * static_cast<float>(TimeManager::GetInstance().DeltaTime()));
 	}

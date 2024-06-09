@@ -23,7 +23,9 @@ namespace dae
 		glm::vec2 m_initialPos{};
 		glm::vec2 m_direction{};
 		float m_speed{};
-		float m_maxDistance{200};
+		float m_maxDistance{80};
 		int m_dstSize{16};
+		float m_lifetimeTimer{};
+		float m_maxLifetime{10.0f};
 	};
 }
