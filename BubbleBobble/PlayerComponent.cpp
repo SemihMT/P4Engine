@@ -66,6 +66,13 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 
 	m_spawnPosition = m_transform->GetLocalPosition() * glm::vec3{ static_cast<float>(m_srcSize) };
 
+	auto scoreObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ScoreObserver");
+	owner->AddComponent<ScoreComponent>(0)->AddObserver(scoreObserver->GetComponent<ScoreObserverComponent>());
+
+	auto healthObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("HealthObserver");
+	owner->AddComponent<HealthComponent>(3)->AddObserver(healthObserver->GetComponent<HealthObserverComponent>());
+
+
 	auto observer = owner->AddComponent<PlayerEventHandlerComponent>();
 	owner->AddComponent<StateComponent>();
 	owner->GetComponent<StateComponent>()->SetState(std::make_unique<SpawnState>(owner, m_spawnPosition, m_spawnDirection, m_playerNumber));
@@ -73,11 +80,7 @@ dae::PlayerComponent::PlayerComponent(GameObject* owner, int playerNumber, const
 	owner->AddComponent<RigidBodyComponent>();
 
 
-	auto scoreObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ScoreObserver");
-	owner->AddComponent<ScoreComponent>(0)->AddObserver(scoreObserver->GetComponent<ScoreObserverComponent>());
-
-	auto healthObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("HealthObserver");
-	owner->AddComponent<HealthComponent>(3)->AddObserver(healthObserver->GetComponent<HealthObserverComponent>());
+	
 
 
 	for (int i{}; i < 16; ++i)

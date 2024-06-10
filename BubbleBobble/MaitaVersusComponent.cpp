@@ -52,10 +52,18 @@ m_spawnDir{direction}
 	owner->GetComponent<AnimationComponent>()->AddAnimation("Death", deathAnimation);
 
 
+	auto scoreObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("ScoreObserver");
+	owner->AddComponent<ScoreComponent>(0)->AddObserver(scoreObserver->GetComponent<ScoreObserverComponent>());
+
+	auto healthObserver = SceneManager::GetInstance().GetCurrentScene()->GetGameObject("HealthObserver");
+	owner->AddComponent<HealthComponent>(3)->AddObserver(healthObserver->GetComponent<HealthObserverComponent>());
+
 	auto observer = owner->AddComponent<PlayerEventHandlerComponent>();
 	owner->AddComponent<ColliderComponent>(m_dstSize, type)->AddObserver(observer);
 	owner->AddComponent<RigidBodyComponent>();
 	owner->AddComponent<StateComponent>();
+
+	
 
 	auto pos = m_transform->GetLocalPosition();
 	m_transform->SetLocalPosition(pos.x * static_cast<float>(m_srcSize), pos.y * static_cast<float>(m_srcSize), pos.z);
