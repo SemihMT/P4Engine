@@ -1,6 +1,8 @@
 # P4Engine
 
-Welcome to the **P4Engine** repository! This project comprises two main components: a robust game engine (P4Engine) written in modern C++ and a faithful recreation of the classic Bubble Bobble game. The engine provides a foundation upon which developers can build their own game systems, leveraging a variety of features and adhering to modern C++ core guidelines.
+Welcome to the **P4Engine** repository! This project comprises two main components: a game engine (P4Engine) written in modern C++ and a recreation of the classic Bubble Bobble game. The engine provides a foundation upon which developers can build their own game systems, leveraging a variety of features and adhering to modern C++ core guidelines.
+
+Disclaimer: This project was created using the [Minigin Template](https://github.com/avadae/minigin) for the course Programming 4 at Digital Arts & Entertainment.
 
 ## Table of Contents
 
