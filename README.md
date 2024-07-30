@@ -1,18 +1,66 @@
-# Minigin
+# P4Engine
 
-Minigin is a very small project using [SDL2](https://www.libsdl.org/) and [glm](https://github.com/g-truc/glm) for 2D c++ game projects. It is in no way a game engine, only a barebone start project where everything sdl related has been set up. It contains glm for vector math, to aleviate the need to write custom vector and matrix classes.
+Welcome to the **P4Engine** repository! This project comprises two main components: a robust game engine (P4Engine) written in modern C++ and a faithful recreation of the classic Bubble Bobble game. The engine provides a foundation upon which developers can build their own game systems, leveraging a variety of features and adhering to modern C++ core guidelines.
 
-[![Build Status](https://github.com/avadae/minigin/actions/workflows/msbuild.yml/badge.svg)](https://github.com/avadae/msbuild/actions)
-[![GitHub Release](https://img.shields.io/github/v/release/avadae/minigin?logo=github&sort=semver)](https://github.com/avadae/minigin/releases/latest)
+## Table of Contents
 
-# Goal
+- [Overview](#overview)
+- [Features](#features)
+- [Bubble Bobble Game](#bubble-bobble-game)
+- [PPMEdit](#ppmedit)
 
-Minigin can/may be used as a start project for the exam assignment in the course 'Programming 4' at DAE. In that assignment students need to recreate a popular 80's arcade game with a game engine they need to program themselves. During the course we discuss several game programming patterns, using the book '[Game Programming Patterns](https://gameprogrammingpatterns.com/)' by Robert Nystrom as reading material. 
+## Overview
 
-# Disclaimer
+The **P4Engine** is a static library game engine designed with modern C++ practices in mind. Inspired by the book "Game Programming Patterns," it incorporates various design patterns to offer flexibility and extendibility. This repository includes both the game engine and a recreation of Bubble Bobble, showcasing the engine's capabilities and providing a template for your own game development projects.
 
-Minigin is, despite perhaps the suggestion in its name, not a game engine. It is just a very simple sdl2 ready project with some of the scaffolding in place to get started. None of the patterns discussed in the course are used yet (except singleton which use we challenge during the course). It is up to the students to implement their own vision for their engine, apply patterns as they see fit, create their game as efficient as possible.
+## Features
 
-# Use
+The P4Engine offers a basic set of features to give developers the freedom to build their own systems:
 
-Download the latest release of this project and compile/run in visual studio. Since students need to have their work on github too, they can use this repository as a template.
+- **Scene Manager**: Manage different scenes within your game.
+- **Renderer**: A rendering system for drawing graphics.
+- **Service Locator**: A pattern to manage global access to services, with support for creating custom services.
+- **Singleton Base Class**: Simplify the creation of singleton classes (use with caution).
+- **Time Manager**: A singleton class for easy access to frame times and total time.
+- **Input Manager**: Support for XInput, facilitating game controller input.
+- **Resource Manager**: Manage fonts and textures efficiently.
+- **GameObject Base Class**: A foundational class for all game objects.
+- **Component Base Class**: A base class for creating modular components that can be attached to game objects.
+
+
+## Bubble Bobble Game
+
+This repository includes a recreation of the classic Bubble Bobble game, built using P4Engine. The game demonstrates the engine's capabilities and serves as a practical example of its features. The game supports loading custom levels via PPM files.
+
+### Game Modes
+<img width="384" alt="BubbleBobble Game Mode selection" src="https://github.com/user-attachments/assets/a4cccc6f-94c4-4857-8add-b0f4b8bbaf2e">
+
+#
+
+**Singleplayer Mode**: Enjoy the classic Bubble Bobble gameplay on your own.
+
+<img width="384" alt="BubbleBobble Single Player Mode" src="https://github.com/user-attachments/assets/19992870-d942-48f5-b689-2ed9d4b86bf6">
+
+#
+
+**Co-op Mode**: Team up with a friend to tackle levels together.
+
+<img width="384" alt="BubbleBobble Co-Op Mode" src="https://github.com/user-attachments/assets/e5663887-8f76-4c4b-8121-e0217997cbef">
+
+#
+  
+**Versus Mode**: Compete against a friend in PvP mode where one player controls an enemy, changing the dynamic to a player versus player game.
+
+<img width="384" alt="BubbleBobble Versus Mode" src="https://github.com/user-attachments/assets/c1cb61f9-9c48-4bb4-8360-f66f99953624">
+
+#
+
+### Custom Levels
+
+To create and load custom levels, use the PPMEdit tool available in the [PPMEdit repository](https://github.com/SemihMT/PPMEdit). This tool allows you to design levels with metadata for game tiles.
+
+## PPMEdit
+
+PPMEdit is a custom tool developed alongside P4Engine for creating and editing PPM files used in Bubble Bobble. It provides a user-friendly interface to design levels and add metadata to pixels, representing different game tiles.
+
+For more information, visit the [PPMEdit repository](https://github.com/SemihMT/PPMEdit).
